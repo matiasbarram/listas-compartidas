@@ -91,12 +91,15 @@ export interface IListItem {
     list_id: number;
 }
 export interface IListItems {
-    list_items: {
+    list: {
         id: number;
         name: string;
         description: string;
         group_id: number;
-        items: IListItem[];
+    }
+    items: {
+        completedItems: IListItem[];
+        uncompletedItems: IListItem[];
     }
 }
 
@@ -161,4 +164,11 @@ export interface IModalField {
     placeholder: string,
     required?: boolean,
     onChange: (e: any) => void
+}
+
+export interface IItemsData {
+    items: {
+        completedItems: IListItem[];
+        uncompletedItems: IListItem[];
+    }
 }
