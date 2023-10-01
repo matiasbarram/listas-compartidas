@@ -3,14 +3,16 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 24 24 27;
+  --background-end-rgb: 24 24 27;
 
-  --toastify-icon-color-success: #2ecc71 !important;
+  --toastify-color-dark: rgb(24, 24, 27) !important;
+  --toastify-icon-color-success: rgb(46, 204, 113) !important;
+  --toastify-color-progress-success: rgb(46, 204, 113) !important;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 24 24 27;
@@ -20,7 +22,7 @@
     --toastify-icon-color-success: rgb(46, 204, 113) !important;
     --toastify-color-progress-success: rgb(46, 204, 113) !important;
   }
-}
+} */
 
 body {
   color: rgb(var(--foreground-rgb));
