@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  db: 
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_USER=listas-user
+      - POSTGRES_PASSWORD=listas-password
+    ports:
+      - '5432:5432'
+    volumes: 
+      - ./docker-data/db:/var/lib/postgresql/data
+      - ./dumps/tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+

@@ -1,0 +1,57 @@
+[
+    {
+        "name": "Bulbasaur",
+        "email": "bulbasaur@gmail.com",
+        "password": "bulbasaur"
+    },
+    {
+        "name": "Charmander",
+        "email": "charmander@hotmail.com",
+        "password": "charmander123"
+    },
+    {
+        "name": "Squirtle",
+        "email": "squirtle@yahoo.com",
+        "password": "squirtlepass"
+    },
+    {
+        "name": "Pikachu",
+        "email": "pikachu@gmail.com",
+        "password": "pikapika"
+    },
+    {
+        "name": "Jigglypuff",
+        "email": "jigglypuff@aol.com",
+        "password": "lullaby55"
+    },
+    {
+        "name": "Mewtwo",
+        "email": "mewtwo@outlook.com",
+        "password": "psychicpower"
+    },
+    {
+        "name": "Eevee",
+        "email": "eevee@gmail.com",
+        "password": "evolution1"
+    },
+    {
+        "name": "Gengar",
+        "email": "gengar@yahoo.com",
+        "password": "shadow123"
+    },
+    {
+        "name": "Snorlax",
+        "email": "snorlax@hotmail.com",
+        "password": "zzzzz99"
+    },
+    {
+        "name": "Machop",
+        "email": "machop@gmail.com",
+        "password": "strongarm"
+    },
+    {
+        "name": "Pidgey",
+        "email": "pidgey@aol.com",
+        "password": "flyhigh67"
+    }
+]

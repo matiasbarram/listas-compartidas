@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model comments {
+  id         Int       @id @default(autoincrement())
+  content    String
+  item_id    Int
+  user_id    Int
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  items      items     @relation(fields: [item_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model groups {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(255)
+  description String       @db.VarChar(255)
+  created_at  DateTime?    @default(now()) @db.Timestamp(6)
+  updated_at  DateTime?    @updatedAt @db.Timestamp(6)
+  lists       lists[]
+  user_group  user_group[]
+}
+
+model item_tag {
+  id      Int   @id @default(autoincrement())
+  item_id Int
+  tag_id  Int
+  items   items @relation(fields: [item_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tags    tags  @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model items {
+  id            Int        @id @default(autoincrement())
+  description   String
+  is_completed  Boolean?   @default(false)
+  quantity      Decimal?   @db.Decimal(10, 2)
+  notes         String?
+  priority      String?    @db.VarChar(50)
+  due_date      DateTime?  @db.Date
+  creation_date DateTime?  @default(dbgenerated("CURRENT_DATE")) @db.Date
+  modified_date DateTime?  @default(dbgenerated("CURRENT_DATE")) @db.Date
+  assigned_to   Int?
+  reminder      DateTime?  @db.Timestamp(6)
+  url           String?    @db.VarChar(2048)
+  cost          Decimal?   @db.Decimal(10, 2)
+  location      String?
+  recurring     String?    @db.VarChar(50)
+  list_id       Int
+  comments      comments[]
+  item_tag      item_tag[]
+  lists         lists?     @relation(fields: [list_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model lists {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(255)
+  description String  @db.VarChar(255)
+  group_id    Int
+  items       items[]
+  groups      groups  @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model tags {
+  id          Int        @id @default(autoincrement())
+  name        String     @db.VarChar(255)
+  description String     @db.VarChar(255)
+  item_tag    item_tag[]
+}
+
+model user_group {
+  id       Int    @id @default(autoincrement())
+  user_id  Int
+  group_id Int
+  groups   groups @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  users    users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id             Int              @id @default(autoincrement())
+  name           String           @db.VarChar(255)
+  email          String           @unique @db.VarChar(255)
+  password       String           @db.VarChar(255)
+  comments       comments[]
+  user_group     user_group[]
+  refresh_tokens refresh_tokens[]
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+}
+
+model refresh_tokens {
+  id           String   @id @unique @default(uuid())
+  hashed_token String
+  user_id      Int
+  users        users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  revoked      Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+}
