@@ -15,6 +15,9 @@ export interface IListKeysProps {
 export interface NestedParams {
     params: IListKeysProps;
 }
+export interface IGroupParams {
+    params: PageProps;
+}
 
 export interface IList {
     id: string,

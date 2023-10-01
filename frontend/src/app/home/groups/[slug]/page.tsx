@@ -1,6 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
-import { IList, PageProps } from "../../../../../types";
+import { IGroupParams, IList } from "../../../../../types";
 import { showLists } from "@/app/components/home/group/page/showLists";
 import { groupLists } from "./actions/getGroupLists";
 import AddItemBtn from "@/app/components/home/addItemBtn";
@@ -11,7 +11,7 @@ interface IGroupResponse {
     lists: IList[];
 }
 
-export const GroupPage = async ({ params }: { params: PageProps }) => {
+export default async function GroupListsPage({ params }: IGroupParams) {
 
     const session = await getServerSession(authOptions)
     if (!session) {
@@ -33,5 +33,3 @@ export const GroupPage = async ({ params }: { params: PageProps }) => {
         </>
     )
 }
-
-export default GroupPage
