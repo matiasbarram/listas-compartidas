@@ -13,7 +13,10 @@ export const lists = async (req: Request, res: Response) => {
             name: true,
             description: true,
         },
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     return res.status(200).json({
         groupId,
         lists,
@@ -42,7 +45,10 @@ export const createList = async (req: Request, res: Response) => {
             name,
             description: description
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     return res.status(200).json({
         groupId: id,
         list,

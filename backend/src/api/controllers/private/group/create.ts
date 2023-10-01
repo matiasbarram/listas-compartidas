@@ -51,7 +51,10 @@ export const createGroup = async (req: Request, res: Response) => {
             name,
             description,
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
 
     const users = await prisma.users.findMany({
         where: {
@@ -59,7 +62,10 @@ export const createGroup = async (req: Request, res: Response) => {
                 in: emails,
             }
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
 
     const usersIds = users.map((user) => user.id);
     usersIds.push(payload.id);
@@ -69,7 +75,10 @@ export const createGroup = async (req: Request, res: Response) => {
             group_id: group.id,
             user_id: userId,
         }))
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
 
     return res.status(200).json({
         group,

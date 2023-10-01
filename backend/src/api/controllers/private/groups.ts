@@ -31,7 +31,10 @@ export const getGroups = async (req: Request, res: Response) => {
         orderBy: {
             created_at: 'asc'
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     const groups = user_groups.map((user_group) => {
         const users = user_group.user_group.map((user) => {
             const { password, ...rest } = user.users;
@@ -70,7 +73,10 @@ export const inviteUserToGroup = async (req: Request, res: Response) => {
         where: {
             email,
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     if (!user) {
         return res.status(400).json({
             error: "User not found"
@@ -81,7 +87,10 @@ export const inviteUserToGroup = async (req: Request, res: Response) => {
             user_id: user.id,
             group_id: groupId,
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     if (userGroup) {
         return res.status(400).json({
             error: "User already in group"
@@ -92,7 +101,10 @@ export const inviteUserToGroup = async (req: Request, res: Response) => {
             user_id: user.id,
             group_id: groupId
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     return res.status(200).json({
         message: "User added to group"
     });
@@ -116,7 +128,10 @@ export const usersGroup = async (req: Request, res: Response) => {
         include: {
             users: true,
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     return res.status(200).json({
         users,
     });

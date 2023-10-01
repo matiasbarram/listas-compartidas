@@ -1,7 +1,7 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { API_URL } from "@/app/lib/constants";
 import { Session, getServerSession } from "next-auth";
-import { IListItem, IListItems, IListKeysProps, NestedParams } from "../../../../../../../types";
+import { IListItem, IListItemsResponse, IListKeysProps, NestedParams } from "../../../../../../../types";
 import { ItemCard } from "@/app/components/home/lists/itemCard";
 import AddItemBtn from "@/app/components/home/addItemBtn";
 
@@ -28,7 +28,7 @@ export default async function ListItemPage({ params }: NestedParams) {
                 cache: "no-cache"
             })
             if (res.ok) {
-                const data: IListItems = await res.json();
+                const data: IListItemsResponse = await res.json();
                 return data;
             }
         }
@@ -38,7 +38,7 @@ export default async function ListItemPage({ params }: NestedParams) {
     }
 
     const itemsData = await getListItems({ slug: params.slug, listId: params.listId, session: session });
-    if (itemsData === undefined) {
+    if (itemsData === undefined || itemsData === null) {
         return {
             redirect: {
                 destination: '/home/groups',
@@ -47,32 +47,40 @@ export default async function ListItemPage({ params }: NestedParams) {
         }
     }
     const { uncompletedItems, completedItems } = itemsData.items
-    const totalItems = uncompletedItems.length;
+    const totalItems = uncompletedItems?.length;
     return (
         <div>
-            <h2 className="text-2xl font-bold">Pendientes ({totalItems})</h2>
             <ul className="mt-4 space-y-4 mb-16">
-                {uncompletedItems.map((item: IListItem) => (
-                    <form key={item.id}
-                        name={`checkbox-${item.id}`}
-                        id={`checkbox-${item.id}`}
-                        className="flex flex-col"
-                    >
-                        <ItemCard item={item} params={params} itemsData={itemsData} />
-                    </form>
-                ))}
+                {uncompletedItems === undefined || uncompletedItems === null ? <p>No hay items</p> :
+                    <>
+                        <h2 className="text-2xl font-bold">Pendientes ({totalItems})</h2>
+                        {uncompletedItems.map((item: IListItem) => (
+                            <form key={item.id}
+                                name={`checkbox-${item.id}`}
+                                id={`checkbox-${item.id}`}
+                                className="flex flex-col"
+                            >
+                                <ItemCard item={item} params={params} />
+                            </form>
+                        ))}
+                    </>
+                }
             </ul>
-            <h2 className="text-xl font-bold">Completados</h2>
             <ul className="mt-4 space-y-4 mb-16">
-                {completedItems.map((item: IListItem) => (
-                    <form key={item.id}
-                        name={`checkbox-${item.id}`}
-                        id={`checkbox-${item.id}`}
-                        className="flex flex-col"
-                    >
-                        <ItemCard item={item} params={params} itemsData={itemsData} />
-                    </form>
-                ))}
+                {completedItems === undefined || completedItems === null ? <p>No hay items</p> :
+                    <>
+                        <h2 className="text-xl font-bold">Completados</h2>
+                        {completedItems.map((item: IListItem) => (
+                            <form key={item.id}
+                                name={`checkbox-${item.id}`}
+                                id={`checkbox-${item.id}`}
+                                className="flex flex-col"
+                            >
+                                <ItemCard item={item} params={params} />
+                            </form>
+                        ))}
+                    </>
+                }
             </ul>
             <AddItemBtn data={params} />
         </div>

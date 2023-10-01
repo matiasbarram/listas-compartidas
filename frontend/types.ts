@@ -90,17 +90,20 @@ export interface IListItem {
     recurring: string;
     list_id: number;
 }
+
 export interface IListItems {
+    completedItems?: IListItem[];
+    uncompletedItems?: IListItem[];
+}
+
+export interface IListItemsResponse {
     list: {
         id: number;
         name: string;
         description: string;
         group_id: number;
     }
-    items: {
-        completedItems: IListItem[];
-        uncompletedItems: IListItem[];
-    }
+    items: IListItems;
 }
 
 export interface ModalProps {
@@ -166,9 +169,3 @@ export interface IModalField {
     onChange: (e: any) => void
 }
 
-export interface IItemsData {
-    items: {
-        completedItems: IListItem[];
-        uncompletedItems: IListItem[];
-    }
-}
