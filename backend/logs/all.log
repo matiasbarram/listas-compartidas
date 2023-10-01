@@ -22153,3 +22153,14 @@
 2023-10-01 12:26:22:2622 [32mdebug[39m: [32mApp backend listas compartidas with api version v1 is starting[39m
 2023-10-01 12:26:22:2622 [32mdebug[39m: [32mServer running on port 3333[39m
 >>>>>>> e9b7887 (deploy fixes)
+2023-10-01 14:05:34:534 [32mdebug[39m: [32mApp backend listas compartidas with api version v1 is starting[39m
+2023-10-01 14:05:34:534 [32mdebug[39m: [32mServer running on port 3333[39m
+2023-10-01 14:07:02:72 [32mdebug[39m: [32mApp backend listas compartidas with api version v1 is starting[39m
+2023-10-01 14:07:02:72 [32mdebug[39m: [32mServer running on port 3333[39m
+2023-10-01 14:07:13:713 [32mdebug[39m: [32m{[39m
+[32m  id: 18,[39m
+[32m  name: 'Matias Barra',[39m
+[32m  email: 'matias.barra64@gmail.com',[39m
+[32m  created_at: '2023-10-01T02:09:16.315Z',[39m
+[32m  updated_at: '2023-10-01T02:09:16.315Z'[39m
+[32m}[39m
