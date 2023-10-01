@@ -20,7 +20,10 @@ export default async function searchUsers(req: SearchUsersRequest, res: Response
             email: true,
             name: true,
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     return res.status(200).json({
         users
     })

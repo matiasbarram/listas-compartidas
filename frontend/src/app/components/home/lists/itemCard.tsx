@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { Checkbox } from "./checkbox";
-import { IItemsData, IListItem, IListKeysProps } from "../../../../../types";
+import { IListItem, IListKeysProps } from "../../../../../types";
 import { useSession } from "next-auth/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import DropdownMenu from "./itemCard/dropdownMenu";
 import { markAsCompleted } from "@/app/lib/actions";
 import { useRouter } from 'next/navigation';
 
-export function ItemCard({ item, params, itemsData }: { item: IListItem, params: IListKeysProps, itemsData: IItemsData }) {
+export function ItemCard({ item, params }: { item: IListItem, params: IListKeysProps }) {
     const [itemSelected, setItemSelected] = useState(item.is_completed);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 

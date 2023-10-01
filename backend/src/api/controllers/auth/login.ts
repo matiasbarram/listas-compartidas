@@ -16,7 +16,10 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
                 email: email,
                 password: encodedPassword
             }
+        }).finally(() => {
+            prisma.$disconnect()
         })
+
         if (!user) {
             return res.status(400).json({
                 message: 'Invalid email or password',

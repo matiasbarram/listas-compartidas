@@ -44,16 +44,14 @@ export const getItems = async (req: Request, res: Response) => {
                 }
             }
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     if (!list_items) {
         return res.status(404).json({
             error: "List not found"
         })
-    }
-    if (list_items.items.length === 0) {
-        return res.status(200).json({
-            list_items,
-        });
     }
     const completedItems = list_items?.items.filter(item => item.is_completed === true);
     const uncompletedItems = list_items?.items.filter(item => item.is_completed === false);
@@ -102,7 +100,10 @@ export const createItem = async (req: Request, res: Response) => {
             description,
             list_id: listId,
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     if (existDescription) {
         return res.status(400).json({
             error: "Description already exists"
@@ -115,7 +116,10 @@ export const createItem = async (req: Request, res: Response) => {
             description,
             quantity,
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     return res.status(200).json({
         groupId,
         listId,
@@ -154,7 +158,10 @@ export const changeStatus = async (req: Request, res: Response) => {
             is_completed: status === "completed" ? true : false,
             modified_date: new Date(),
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
     return res.status(200).json({
         groupId,
         listId,

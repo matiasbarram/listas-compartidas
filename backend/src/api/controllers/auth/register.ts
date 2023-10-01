@@ -10,7 +10,10 @@ const createGroup = async (user_id: number, name: string, prisma: PrismaClient) 
             description: `Personal group for ${name}`,
         }
 
+    }).finally(() => {
+        prisma.$disconnect()
     })
+
 
     return group;
 }
@@ -29,7 +32,10 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                 email: email,
                 password: encryptedPassword
             }
+        }).finally(() => {
+            prisma.$disconnect()
         })
+
 
         const group = await createGroup(user.id, user.name, prisma);
         const user_group = await prisma.user_group.create({
@@ -37,7 +43,10 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
                 user_id: user.id,
                 group_id: group.id,
             }
+        }).finally(() => {
+            prisma.$disconnect()
         })
+
 
         const payload = createPayload(user);
         const jwtToken = createJwt(payload);
