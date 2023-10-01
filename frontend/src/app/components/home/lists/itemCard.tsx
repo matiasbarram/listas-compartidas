@@ -37,7 +37,7 @@ export function ItemCard({ item, params }: { item: IListItem, params: IListKeysP
     }
 
     return (
-        <div className="bg-white dark:bg-zinc-800 space-x-4 shadow rounded-lg cursor-pointer mx-autopy-4 py-4 relative">
+        <div className="bg-zinc-800 space-x-4 shadow rounded-lg cursor-pointer mx-autopy-4 py-4 relative">
             <li
                 key={item.id}
                 onClick={() => markAsCompleted({ isCompleted: !itemSelected, params, session, item, setItemSelected })}
@@ -45,12 +45,12 @@ export function ItemCard({ item, params }: { item: IListItem, params: IListKeysP
             >
                 <Checkbox postId={item.id} selected={itemSelected} />
                 <div>
-                    <h3 className={`text-lg font-medium text-gray-900 dark:text-gray-100 ${itemSelected ? "line-through" : ""}`}
+                    <h3 className={`text-lg font-medium text-gray-100 ${itemSelected ? "line-through" : ""}`}
                     >{item.description}</h3>
                     <small className="text-gray-500 dark:text-gray-400">{item.notes}</small>
                 </div>
                 <button
-                    className="absolute right-1 top-1 z-2 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-zinc-600 cursor-pointer"
+                    className="absolute right-1 top-1 z-2 p-2 rounded-fullhover:bg-zinc-600 cursor-pointer"
                     type="button"
                     onClick={e => toggleMenu(e)}
                 >
