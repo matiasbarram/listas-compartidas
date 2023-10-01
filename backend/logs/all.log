@@ -22128,3 +22128,21 @@
 [32m  created_at: '2023-10-01T01:52:52.716Z',[39m
 [32m  updated_at: '2023-10-01T01:52:52.716Z'[39m
 [32m}[39m
+2023-10-01 12:53:19:5319 [32mdebug[39m: [32mApp backend listas compartidas with api version v1 is starting[39m
+2023-10-01 12:53:19:5319 [32mdebug[39m: [32mServer running on port 3333[39m
+2023-10-01 12:53:45:5345 [36minfo[39m: [36mValidating login data[39m
+2023-10-01 12:53:45:5345 [36minfo[39m: [36mValidation passed[39m
+2023-10-01 12:56:15:5615 [32mdebug[39m: [32mApp backend listas compartidas with api version v1 is starting[39m
+2023-10-01 12:56:15:5615 [32mdebug[39m: [32mServer running on port 3333[39m
+2023-10-01 12:56:20:5620 [36minfo[39m: [36mValidating login data[39m
+2023-10-01 12:56:20:5620 [36minfo[39m: [36mValidation passed[39m
+2023-10-01 12:57:52:5752 [32mdebug[39m: [32mApp backend listas compartidas with api version v1 is starting[39m
+2023-10-01 12:57:52:5752 [32mdebug[39m: [32mServer running on port 3333[39m
+2023-10-01 12:58:01:581 [36minfo[39m: [36mValidating login data[39m
+2023-10-01 12:58:01:581 [36minfo[39m: [36mValidation passed[39m
+2023-10-01 12:58:09:589 [36minfo[39m: [36mValidating login data[39m
+2023-10-01 12:58:09:589 [36minfo[39m: [36mValidation passed[39m
+2023-10-01 13:01:33:133 [32mdebug[39m: [32mApp backend listas compartidas with api version v1 is starting[39m
+2023-10-01 13:01:33:133 [32mdebug[39m: [32mServer running on port 3333[39m
+2023-10-01 13:01:34:134 [36minfo[39m: [36mValidating login data[39m
+2023-10-01 13:01:34:134 [36minfo[39m: [36mValidation passed[39m
