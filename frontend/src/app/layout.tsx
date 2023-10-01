@@ -4,6 +4,8 @@ import { Inter } from 'next/font/google'
 import Providers from './components/Providers'
 import { ReactNode } from 'react'
 import ToastProvider from './components/common/ToastContainer'
+import NextTopLoader from 'nextjs-toploader';
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className + ' w-full min-h-screen'}>
+        <NextTopLoader />
         <Providers>
           <ToastProvider>
             {children}

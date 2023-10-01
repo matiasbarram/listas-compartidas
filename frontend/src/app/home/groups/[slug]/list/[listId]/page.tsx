@@ -46,19 +46,31 @@ export default async function ListItemPage({ params }: NestedParams) {
             },
         }
     }
-    const { items } = itemsData.list_items
-    const totalItems = items.length;
+    const { uncompletedItems, completedItems } = itemsData.items
+    const totalItems = uncompletedItems.length;
     return (
         <div>
-            <h2 className="text-2xl font-bold">Total productos ({totalItems})</h2>
+            <h2 className="text-2xl font-bold">Pendientes ({totalItems})</h2>
             <ul className="mt-4 space-y-4 mb-16">
-                {items.map((item: IListItem) => (
+                {uncompletedItems.map((item: IListItem) => (
                     <form key={item.id}
                         name={`checkbox-${item.id}`}
                         id={`checkbox-${item.id}`}
                         className="flex flex-col"
                     >
-                        <ItemCard item={item} params={params} />
+                        <ItemCard item={item} params={params} itemsData={itemsData} />
+                    </form>
+                ))}
+            </ul>
+            <h2 className="text-xl font-bold">Completados</h2>
+            <ul className="mt-4 space-y-4 mb-16">
+                {completedItems.map((item: IListItem) => (
+                    <form key={item.id}
+                        name={`checkbox-${item.id}`}
+                        id={`checkbox-${item.id}`}
+                        className="flex flex-col"
+                    >
+                        <ItemCard item={item} params={params} itemsData={itemsData} />
                     </form>
                 ))}
             </ul>

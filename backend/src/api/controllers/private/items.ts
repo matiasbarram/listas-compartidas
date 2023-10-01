@@ -2,6 +2,25 @@ import { Request, Response } from "express";
 import { payloadData } from "../../../utils/jwt/payloadData";
 import { PrismaClient } from "@prisma/client";
 
+interface IItem {
+    id: number;
+    list_id: number;
+    creation_date: Date;
+    modified_date: Date;
+    description: string | null;
+    is_completed: boolean | null;
+    quantity: string | null;
+    notes: string | null;
+    priority: string | null;
+    due_date: Date | null;
+    assigned_to: string | null;
+    reminder: string | null;
+    url: string | null;
+    cost: string | null;
+    location: string | null;
+    recurring: string | null;
+}
+
 export const getItems = async (req: Request, res: Response) => {
     const payload = payloadData(req, res);
     if (typeof payload === 'string') {
@@ -13,7 +32,7 @@ export const getItems = async (req: Request, res: Response) => {
     const groupId = Number(req.params.groupId);
     const listId = Number(req.params.listId);
     const prisma = new PrismaClient();
-    const list_items = await prisma.lists.findUnique({
+    let list_items = await prisma.lists.findUnique({
         where: {
             group_id: groupId,
             id: listId,
@@ -21,17 +40,39 @@ export const getItems = async (req: Request, res: Response) => {
         include: {
             items: {
                 orderBy: {
-                    creation_date: 'asc'
+                    modified_date: 'desc'
                 }
             }
         }
     })
+    if (!list_items) {
+        return res.status(404).json({
+            error: "List not found"
+        })
+    }
+    if (list_items.items.length === 0) {
+        return res.status(200).json({
+            list_items,
+        });
+    }
+    const completedItems = list_items?.items.filter(item => item.is_completed === true);
+    const uncompletedItems = list_items?.items.filter(item => item.is_completed === false);
+    const listData = {
+        id: list_items.id,
+        name: list_items.name,
+        description: list_items.description,
+        group_id: list_items.group_id,
+    }
+
 
     return res.status(200).json({
-        list_items,
-    });
+        list: listData,
+        items: {
+            completedItems,
+            uncompletedItems,
+        }
+    })
 }
-
 
 export const createItem = async (req: Request, res: Response) => {
     const listId = Number(req.params.listId);

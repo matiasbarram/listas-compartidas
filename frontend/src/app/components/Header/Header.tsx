@@ -12,6 +12,7 @@ interface MenuProps {
 
 function Menu({ onClickOutside }: MenuProps) {
     const ref = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -23,6 +24,7 @@ function Menu({ onClickOutside }: MenuProps) {
             document.removeEventListener('click', handleClickOutside, true);
         };
     }, [onClickOutside]);
+
     return (
         <div ref={ref}
             className="absolute right-0 w-48 py-2 mt-2 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 bg-zinc-900">
