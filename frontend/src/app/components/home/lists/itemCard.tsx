@@ -38,7 +38,7 @@ export function ItemCard({ item, params, itemsData }: { item: IListItem, params:
         console.log("Eliminando");
     }
     const handleCheckbox = async (e: React.MouseEvent) => {
-        markAsCompleted({ isCompleted: !itemSelected, params, session, item, setItemSelected });
+        await markAsCompleted({ isCompleted: !itemSelected, params, session, item, setItemSelected });
         router.refresh();
     }
 
