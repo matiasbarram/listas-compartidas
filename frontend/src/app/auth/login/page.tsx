@@ -57,7 +57,6 @@ export default function LoginPage() {
                 callbackUrl: "/home",
             });
         } catch (error) {
-            console.log(error);
             createToast({
                 toastType: "error",
                 message: "Error al iniciar sesión, por favor intenta de nuevo."
