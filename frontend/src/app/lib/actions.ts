@@ -1,8 +1,14 @@
-import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse } from "../../../types";
+import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues } from "../../../types";
 import { API_URL, defaultDataItem, defaultDataList } from "./constants";
 import { createToast } from "./common";
 import { Error409 } from "./erros";
-import { signIn } from "next-auth/react";
+
+
+interface ICreateGroupData {
+    name: string,
+    description: string,
+    emails: string[]
+}
 
 async function callApi<T>({ method, token, body, url }: IApiConfig): Promise<IApiResponse<T>> {
     try {
@@ -76,7 +82,6 @@ export const createProduct = async ({ session, url, newItem, router, closeModal,
             else {
                 setNewItem(defaultDataList);
             }
-            router.refresh();
         }
         else { throw new Error("Error creating product") }
     }
@@ -135,5 +140,58 @@ export const getListItems = async ({ slug, listId, session }: KeysWithSession) =
     }
     catch (error) {
         console.log(error);
+    }
+}
+
+
+export const createGroup = async ({ group, token, closeModal }: { group: ICreateGroupData, token: string, closeModal: () => void }) => {
+    try {
+        const res = await callApi({
+            url: "/private/groups/create",
+            method: "POST",
+            token,
+            body: { ...group }
+        })
+
+        if (!res.ok) throw new Error("Error al crear el grupo");
+
+        createToast({
+            message: "Grupo creado correctamente",
+            toastType: "success",
+        })
+
+    } catch (error) {
+        createToast({
+            message: "Error al crear el grupo",
+            toastType: "error",
+        })
+    }
+    finally {
+        closeModal();
+    }
+}
+
+
+export const createList = async ({ data, token, groupId }: { data: INewListValues, token: string, groupId: string }) => {
+    try {
+        const res = await callApi({
+            url: `/private/groups/${groupId}/lists/create`,
+            method: "POST",
+            token,
+            body: { ...data }
+        })
+
+        if (!res.ok) throw new Error("Error al crear la lista");
+
+        createToast({
+            message: "Lista creada correctamente",
+            toastType: "success",
+        })
+
+    } catch (error) {
+        createToast({
+            message: "Error al crear la lista",
+            toastType: "error",
+        })
     }
 }

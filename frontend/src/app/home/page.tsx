@@ -28,7 +28,7 @@ export default async function HomePage() {
                 <CreateGroupModal />
             </div>
             <div className="overflow-x-auto">
-                <div className="flex" style={{ width: `calc(100% * ${groups.length} * 0.6)` }}>
+                <div className="flex my-4" style={{ width: `calc(100% * ${groups.length} * 0.6)` }}>
                     {
                         groups.map((group, index) => (
                             <GroupCard props={group} index={index} key={index} />

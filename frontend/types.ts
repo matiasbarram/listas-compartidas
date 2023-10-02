@@ -195,3 +195,17 @@ export const registerSchema = z.object({
 
 export type ISignUpFormValues = z.infer<typeof signUpSchema>;
 export type ILoginFormValues = z.infer<typeof registerSchema>;
+
+export const schemaItem = z.object({
+    description: z.string().nonempty("Nombre es obligatorio"),
+    quantity: z.number().int("Cantidad debe ser un número entero").min(1, "Cantidad mínima es 1"),
+    comments: z.string().optional(),
+});
+
+export const schemaList = z.object({
+    name: z.string().nonempty("Nombre es obligatorio"),
+    description: z.string().nonempty("Descripción es obligatorio")
+});
+
+export type INewItemValues = z.infer<typeof schemaItem>;
+export type INewListValues = z.infer<typeof schemaList>;
