@@ -60,7 +60,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
         });
     }
     catch (error) {
-        return res.status(400).json({
+        return res.status(409).json({
             message: 'User already exists'
         });
     }

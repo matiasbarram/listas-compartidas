@@ -1,6 +1,8 @@
 import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse } from "../../../types";
 import { API_URL, defaultDataItem, defaultDataList } from "./constants";
 import { createToast } from "./common";
+import { Error409 } from "./erros";
+import { signIn } from "next-auth/react";
 
 async function callApi<T>({ method, token, body, url }: IApiConfig): Promise<IApiResponse<T>> {
     try {
@@ -17,13 +19,14 @@ async function callApi<T>({ method, token, body, url }: IApiConfig): Promise<IAp
         });
 
         if (!response.ok) {
-            throw new Error("Error in API response");
+            const responseBody = await response.json()
+            return { ok: false, error: responseBody, status: response.status };
         }
-
         const data: T = await response.json();
         return { ok: true, data };
+
     } catch (error: any) {
-        throw new Error(error.message);
+        return { ok: false, error: error.message, status: error.status };
     }
 }
 
@@ -96,16 +99,26 @@ export const signUp = async ({ email, password, name }: { email: string, passwor
             })
         }
         else {
-            console.log(res);
-            throw new Error("Error creating user")
+            if (res.status === 409) throw new Error409("El email ya existe");
+            else throw new Error("Error al crear usuario");
+
         }
     }
     catch (error) {
-        createToast({
-            toastType: "error",
-            message: "Error al crear usuario",
-            duration: 1000
-        })
+        if (error instanceof Error409) {
+            createToast({
+                toastType: "error",
+                message: error.message,
+                duration: 1000
+            })
+        }
+        else {
+            createToast({
+                toastType: "error",
+                message: "Error al crear usuario",
+                duration: 1000
+            })
+        }
     }
 }
 

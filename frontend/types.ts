@@ -153,6 +153,7 @@ export interface IApiResponse<T> {
     ok: boolean;
     data?: T;
     error?: string;
+    status?: number;
 }
 
 export interface IApiConfig {
@@ -182,4 +183,15 @@ export const signUpSchema = z.object({
     password: z.string().min(8, "Al menos 8 caracteres"),
 });
 
+export const registerSchema = z.object({
+    username: z.string().min(3, "Al menos 3 caracteres"),
+    email: z.string().email(),
+    password: z.string().min(8, "Al menos 8 caracteres"),
+    confirmPassword: z.string().min(8, "Al menos 8 caracteres"),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["password"],
+});
+
 export type ISignUpFormValues = z.infer<typeof signUpSchema>;
+export type ILoginFormValues = z.infer<typeof registerSchema>;
