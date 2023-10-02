@@ -5,6 +5,7 @@ import { showLists } from "@/app/components/home/group/page/showLists";
 import { groupLists } from "./actions/getGroupLists";
 import AddItemBtn from "@/app/components/home/addItemBtn";
 import { emptyListComponent } from "@/app/components/home/group/emptyLists";
+import { BackBtn } from "@/app/components/BackBtn";
 
 interface IGroupResponse {
     groupId: number;
@@ -25,6 +26,8 @@ export default async function GroupListsPage({ params }: IGroupParams) {
     const { lists }: IGroupResponse = await groupLists(session.token, params.slug)
     return (
         <>
+            <BackBtn />
+
             <div>
                 <h1 className="text-2xl font-bold mb-4">Listas compartidas del grupo</h1>
                 {lists.length === 0 ? emptyListComponent(params) : showLists(lists, params.slug)}

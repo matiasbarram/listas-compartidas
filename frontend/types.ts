@@ -169,3 +169,7 @@ export interface IModalField {
     onChange: (e: any) => void
 }
 
+
+export interface KeysWithSession extends IListKeysProps {
+    session: Session;
+}
