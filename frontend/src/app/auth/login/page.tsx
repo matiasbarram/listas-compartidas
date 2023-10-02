@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { createToast } from "@/app/lib/common";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISignUpFormValues, signUpSchema } from "../../../../types";
@@ -24,9 +24,8 @@ const ForgotPassword = () => {
 
 
 const checkErrors = (router: AppRouterInstance): void => {
-    const params = new URLSearchParams(window.location.search);
-    const callbackUrl = params.get("callbackUrl");
-    const error = params.get("error");
+    const searchParams = useSearchParams();
+    const error = searchParams.getAll("error")
     if (error) {
         createToast({
             toastType: "error",
