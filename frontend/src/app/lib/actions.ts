@@ -27,7 +27,6 @@ async function callApi<T>({ method, token, body, url }: IApiConfig): Promise<IAp
     }
 }
 
-
 export const markAsCompleted = async ({ isCompleted, params, session, item, setItemSelected }: IMarkAsCompletedProps) => {
     const { status }: ICompleted = { status: isCompleted ? "completed" : "uncompleted" }
 

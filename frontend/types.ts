@@ -2,6 +2,8 @@ import { Session } from "next-auth";
 import { SessionContextValue } from "next-auth/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { ComponentType, Dispatch, SetStateAction } from "react";
+import { z } from "zod";
+
 
 export interface PageProps {
     slug: string;
@@ -173,3 +175,11 @@ export interface IModalField {
 export interface KeysWithSession extends IListKeysProps {
     session: Session;
 }
+
+
+export const signUpSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8, "Al menos 8 caracteres"),
+});
+
+export type ISignUpFormValues = z.infer<typeof signUpSchema>;
