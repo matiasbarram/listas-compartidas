@@ -2,6 +2,7 @@ import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, 
 import { API_URL, defaultDataItem, defaultDataList } from "./constants";
 import { createToast } from "./common";
 import { Error409 } from "./erros";
+import { signIn } from "next-auth/react";
 
 async function callApi<T>({ method, token, body, url }: IApiConfig): Promise<IApiResponse<T>> {
     try {

@@ -6,7 +6,6 @@ import Link from "next/link";
 import { createToast } from "@/app/lib/common";
 import { useForm } from "react-hook-form";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
-import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISignUpFormValues, signUpSchema } from "../../../../types";
 import Spinner from "@/app/components/common/Spinner";
@@ -34,7 +33,6 @@ const checkErrors = (searchParams: ReadonlyURLSearchParams): void => {
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
-
     checkErrors(searchParams);
 
     const {

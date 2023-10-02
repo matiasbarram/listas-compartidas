@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { signUp } from "@/app/lib/actions";
 import { createToast } from "@/app/lib/common";
 import Link from "next/link";
@@ -29,7 +29,12 @@ export default function RegisterPage() {
             email: data.email,
             password: data.password,
         });
-        router.push("/auth/login");
+        await signIn("credentials", {
+            email: data.email,
+            password: data.password,
+            redirect: true,
+            callbackUrl: "/home",
+        });
     }
 
     return (
@@ -96,11 +101,9 @@ export default function RegisterPage() {
                             <button
                                 type="submit"
                                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-slate-600 hover:bg-slate-700 focus:ring-slate-800"
+                                disabled={isSubmitting}
                             >
-                                {
-                                    !isSubmitting ? "Registrarse" : <Spinner />
-
-                                }
+                                {!isSubmitting ? "Registrarse" : <Spinner />}
                             </button>
                         </form>
                         <p className="text-sm font-light text-gray-400">
