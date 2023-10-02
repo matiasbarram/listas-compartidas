@@ -1,13 +1,12 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { API_URL } from "@/app/lib/constants";
 import { Session, getServerSession } from "next-auth";
-import { IListItem, IListItemsResponse, IListKeysProps, NestedParams } from "../../../../../../../types";
+import { IListItem, NestedParams } from "../../../../../../../types";
 import { ItemCard } from "@/app/components/home/lists/itemCard";
 import AddItemBtn from "@/app/components/home/addItemBtn";
+import { BackBtn } from "@/app/components/BackBtn";
+import { getListItems } from "@/app/lib/actions";
 
-interface KeysWithSession extends IListKeysProps {
-    session: Session;
-}
+
 
 export default async function ListItemPage({ params }: NestedParams) {
     const session = await getServerSession(authOptions);
@@ -17,23 +16,6 @@ export default async function ListItemPage({ params }: NestedParams) {
                 destination: '/auth/signin',
                 permanent: false,
             },
-        }
-    }
-    const getListItems = async ({ slug, listId, session }: KeysWithSession) => {
-        try {
-            const res = await fetch(API_URL + `/private/groups/${slug}/lists/${listId}/items`, {
-                headers: {
-                    "Authorization": `Bearer ${session.token}`
-                },
-                cache: "no-cache"
-            })
-            if (res.ok) {
-                const data: IListItemsResponse = await res.json();
-                return data;
-            }
-        }
-        catch (error) {
-            console.log(error);
         }
     }
 
@@ -50,10 +32,11 @@ export default async function ListItemPage({ params }: NestedParams) {
     const totalItems = uncompletedItems?.length;
     return (
         <div>
+            <BackBtn />
             <ul className="mt-4 space-y-4 mb-16">
-                {uncompletedItems === undefined || uncompletedItems === null ? <p>No hay items</p> :
+                <h2 className="text-2xl font-bold">Pendientes ({totalItems})</h2>
+                {uncompletedItems?.length === 0 || uncompletedItems === undefined ? <p className="text-gray-500 text-center">No hay items</p> :
                     <>
-                        <h2 className="text-2xl font-bold">Pendientes ({totalItems})</h2>
                         {uncompletedItems.map((item: IListItem) => (
                             <form key={item.id}
                                 name={`checkbox-${item.id}`}
@@ -67,23 +50,23 @@ export default async function ListItemPage({ params }: NestedParams) {
                 }
             </ul>
             <ul className="mt-4 space-y-4 mb-16">
-                {completedItems === undefined || completedItems === null ? <p>No hay items</p> :
+                <h2 className="text-xl font-bold">Completados ✅</h2>
+                {completedItems === undefined || completedItems.length === 0 ? <p className="text-gray-500 text-center">No hay items</p> :
                     <>
-                        <h2 className="text-xl font-bold">Completados</h2>
                         {completedItems.map((item: IListItem) => (
                             <form key={item.id}
                                 name={`checkbox-${item.id}`}
                                 id={`checkbox-${item.id}`}
                                 className="flex flex-col"
                             >
-                                <ItemCard item={item} params={params} />
+                                <ItemCard item={item} params={params} className="filter grayscale brightness-75" />
                             </form>
                         ))}
                     </>
                 }
             </ul>
             <AddItemBtn data={params} />
-        </div>
+        </div >
     )
 
 }

@@ -9,7 +9,7 @@ interface IItem {
     modified_date: Date;
     description: string | null;
     is_completed: boolean | null;
-    quantity: string | null;
+    quantity: number | null;
     notes: string | null;
     priority: string | null;
     due_date: Date | null;

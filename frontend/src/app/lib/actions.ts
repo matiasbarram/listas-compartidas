@@ -1,4 +1,4 @@
-import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList } from "../../../types";
+import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse } from "../../../types";
 import { API_URL, defaultDataItem, defaultDataList } from "./constants";
 import { createToast } from "./common";
 
@@ -107,5 +107,21 @@ export const signUp = async ({ email, password, name }: { email: string, passwor
             message: "Error al crear usuario",
             duration: 1000
         })
+    }
+}
+
+export const getListItems = async ({ slug, listId, session }: KeysWithSession) => {
+    try {
+        const res = await callApi({
+            url: `/private/groups/${slug}/lists/${listId}/items`,
+            method: "GET",
+            token: session.token,
+        })
+        if (res.ok) {
+            return res.data as IListItemsResponse;
+        }
+    }
+    catch (error) {
+        console.log(error);
     }
 }
