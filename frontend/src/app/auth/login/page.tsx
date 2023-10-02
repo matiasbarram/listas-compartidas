@@ -24,7 +24,7 @@ const ForgotPassword = () => {
 
 const checkErrors = (searchParams: ReadonlyURLSearchParams): void => {
     const error = searchParams.getAll("error")
-    if (error) {
+    if (error.length > 0) {
         createToast({
             toastType: "error",
             message: "Error al iniciar sesión, por favor intenta de nuevo."
@@ -57,6 +57,7 @@ export default function LoginPage() {
                 callbackUrl: "/home",
             });
         } catch (error) {
+            console.log(error);
             createToast({
                 toastType: "error",
                 message: "Error al iniciar sesión, por favor intenta de nuevo."
