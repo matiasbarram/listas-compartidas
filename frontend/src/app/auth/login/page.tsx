@@ -5,11 +5,10 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { createToast } from "@/app/lib/common";
 import { useForm } from "react-hook-form";
-import { useRouter, useSearchParams } from "next/navigation";
+import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISignUpFormValues, signUpSchema } from "../../../../types";
-import { z } from "zod";
 import Spinner from "@/app/components/common/Spinner";
 
 const ForgotPassword = () => {
@@ -23,8 +22,7 @@ const ForgotPassword = () => {
 }
 
 
-const checkErrors = (router: AppRouterInstance): void => {
-    const searchParams = useSearchParams();
+const checkErrors = (searchParams: ReadonlyURLSearchParams): void => {
     const error = searchParams.getAll("error")
     if (error) {
         createToast({
@@ -35,8 +33,9 @@ const checkErrors = (router: AppRouterInstance): void => {
 }
 
 export default function LoginPage() {
-    const router = useRouter();
-    checkErrors(router);
+    const searchParams = useSearchParams();
+
+    checkErrors(searchParams);
 
     const {
         register,
@@ -58,11 +57,10 @@ export default function LoginPage() {
                 callbackUrl: "/home",
             });
         } catch (error) {
-            if (error instanceof z.ZodError) {
-                const { fieldErrors } = error.flatten();
-            }
-        }
-        finally {
+            createToast({
+                toastType: "error",
+                message: "Error al iniciar sesión, por favor intenta de nuevo."
+            })
         }
     };
 
