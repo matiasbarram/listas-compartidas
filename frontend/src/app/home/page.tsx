@@ -1,21 +1,10 @@
 import { HomeCard } from "../components/home/card"
-import { IList, IUserGroupsData } from "../../../types"
-import { Session, getServerSession } from "next-auth"
+import { getServerSession } from "next-auth"
 import { authOptions } from "../api/auth/[...nextauth]/route"
-import { API_URL } from "../lib/constants"
 import { GroupCard } from "../components/home/groupCard"
 import CreateGroupModal from "../components/home/group/createGroup/createGroupModal"
+import { getGroups } from "../lib/actions"
 
-async function getGroups(token: string | undefined) {
-    const groups = await fetch(`${API_URL}/private/groups`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-        cache: "no-cache"
-    })
-    const data: IUserGroupsData = await groups.json()
-    return data
-}
 
 export default async function HomePage() {
     const session = await getServerSession(authOptions)

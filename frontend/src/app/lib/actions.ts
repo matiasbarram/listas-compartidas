@@ -1,4 +1,4 @@
-import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues, IListKeysProps, INewItemValues, IListItem, ICreateItemResponse } from "../../../types";
+import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues, IListKeysProps, INewItemValues, IListItem, ICreateItemResponse, IUserGroupsData } from "../../../types";
 import { API_URL, defaultDataItem, defaultDataList } from "./constants";
 import { createToast } from "./common";
 import { Error409 } from "./erros";
@@ -36,9 +36,21 @@ export async function callApi<T>({ method, token, body, url }: IApiConfig): Prom
     }
 }
 
+export async function getGroups(token: string | undefined) {
+    const groups = await callApi({
+        url: "/private/groups",
+        method: "GET",
+        token: token,
+    })
+    return groups.data as IUserGroupsData;
+}
+
+
+
 export const markAsCompleted = async ({ isCompleted, params, session, item }: IMarkAsCompletedProps) => {
     const { status }: ICompleted = { status: isCompleted ? "completed" : "uncompleted" }
-    console.log("status", status);
+
+    console.log({ isCompleted, params, session, item })
 
     callApi({
         url: `/private/groups/${params.slug}/lists/${params.listId}/items/${item.id}/change`,
