@@ -6,15 +6,12 @@ import { Fragment, useState } from "react";
 import Input from "../../../common/Input";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { API_URL } from "@/app/lib/constants";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { createToast } from "@/app/lib/common";
 import EmailList from "./addEmail";
-import CustomModal from "@/app/components/common/Modal";
-import { CloseBtn } from "@/app/components/closeBtn";
 import { createGroup } from "@/app/lib/actions";
-import { set } from "react-hook-form";
+import CustomModal from "@/app/components/common/Modals/Modal";
+import { CloseBtn } from "@/app/components/common/Modals/closeBtn";
 
 
 interface ModalProps {

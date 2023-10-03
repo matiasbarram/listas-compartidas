@@ -1,24 +1,24 @@
 "use client"
 
 import { useCallback, useEffect, useState, useRef } from "react";
-import { IListItem, IListItemsResponse, IListKeysProps } from "../../../../../types";
-import { ItemCard } from "./itemCard";
+import { IApiResponse, IListItem, IListItemsResponse, IListKeysProps } from "../../../../../types";
+import { ItemCard } from "./itemCard/itemCard";
 import { markAsCompleted } from "@/app/lib/actions";
 import { useSession } from "next-auth/react";
 import AddItemBtn from "../addItemBtn";
-import { debounce } from "lodash";
+import { DebouncedFunc, debounce } from "lodash";
+import SavingStatus from "../../common/Toast/savingStatusToast";
 
 export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse, params: IListKeysProps }) => {
 
     const [listItems, setListItems] = useState<IListItem[]>(itemsData.items);
+    const [saving, setSaving] = useState<boolean>(false);
     const listItemsRef = useRef(listItems);
-    useEffect(() => {
-        listItemsRef.current = listItems;
-    }, [listItems]);
 
     const { data: session } = useSession();
 
     const updateItemCompletion = (itemId: number, isCompleted: boolean) => {
+        setSaving(true);
         const newItems = listItemsRef.current.map((item: IListItem) => {
             if (item.id === itemId) {
                 item.is_completed = isCompleted;
@@ -28,7 +28,6 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
         setListItems(newItems);
     };
 
-    // Utiliza un mapa para realizar el seguimiento de las llamadas debounced individuales
     const debouncedMarkAsCompletedMap = useRef(new Map<number, () => void>());
 
     const toggleItemCompletion = (itemId: number) => {
@@ -42,13 +41,11 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
         if (!debouncedFn) {
             debouncedFn = debounce(async () => {
                 if (session === null) return null;
-
-                await markAsCompleted({ isCompleted: newIsCompleted, item, params, session: session });
+                await markAsCompleted({ isCompleted: newIsCompleted, item, params, session: session })
+                setSaving(false);
             }, 2000);
             debouncedMarkAsCompletedMap.current.set(itemId, debouncedFn);
         }
-
-        // Ejecuta la función debounced
         debouncedFn();
     };
 
@@ -57,17 +54,20 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
     }
 
     useEffect(() => {
+        listItemsRef.current = listItems;
+    }, [listItems]);
+
+    useEffect(() => {
+        const mapRef = debouncedMarkAsCompletedMap.current; // Capture the current value of the ref
         return () => {
-            // Cancela todas las funciones debounced al desmontar el componente
-            debouncedMarkAsCompletedMap.current.forEach((debouncedFn) => {
-                // @ts-ignore
-                debouncedFn.cancel();
+            mapRef.forEach((debouncedFn) => {
+                (debouncedFn as DebouncedFunc<() => void>).cancel();
             });
         };
     }, []);
-
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {<SavingStatus saving={saving} />}
             <h2 className="text-2xl font-bold text-gray-100 pb-4">Pendientes</h2>
             {
                 listItems.map((item: IListItem) => {

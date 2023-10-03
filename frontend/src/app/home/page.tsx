@@ -1,4 +1,4 @@
-import { HomeCard } from "../components/home/card"
+import { HomeCard } from "../components/home/homeCard"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../api/auth/[...nextauth]/route"
 import { GroupCard } from "../components/home/groupCard"

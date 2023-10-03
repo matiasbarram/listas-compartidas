@@ -1,7 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Providers from './components/Providers'
+import Providers from './components/auth/AuthProviders'
 import { ReactNode } from 'react'
 import ToastProvider from './components/common/ToastContainer'
 import NextTopLoader from 'nextjs-toploader';

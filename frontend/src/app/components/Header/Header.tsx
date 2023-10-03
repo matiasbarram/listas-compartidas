@@ -1,7 +1,7 @@
 "use client"
 
-import { SearchBar } from "../SearchBar"
-import { NavBarMenu } from "../NavBarMenu"
+import { SearchBar } from "../common/Header/SearchBar"
+import { NavBarMenu } from "../common/Header/NavBarMenu"
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useSession } from "next-auth/react"

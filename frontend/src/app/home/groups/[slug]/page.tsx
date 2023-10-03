@@ -5,7 +5,7 @@ import { showLists } from "@/app/components/home/group/page/showLists";
 import { groupLists } from "./actions/getGroupLists";
 import AddItemBtn from "@/app/components/home/addItemBtn";
 import { emptyListComponent } from "@/app/components/home/group/emptyLists";
-import { BackBtn } from "@/app/components/BackBtn";
+import { BackBtn } from "@/app/components/common/BackBtn";
 
 interface IGroupResponse {
     groupId: number;

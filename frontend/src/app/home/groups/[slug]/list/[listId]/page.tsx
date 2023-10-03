@@ -1,10 +1,10 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import AddItemBtn from "@/app/components/home/addItemBtn";
-import { BackBtn } from "@/app/components/BackBtn";
 import { getListItems } from "@/app/lib/actions";
 import { ItemsGrid } from "@/app/components/home/lists/itemsGrid";
 import { NestedParams } from "../../../../../../../types";
+import { BackBtn } from "@/app/components/common/BackBtn";
 
 export default async function ListItemPage({ params }: NestedParams) {
     const session = await getServerSession(authOptions);
