@@ -13,6 +13,8 @@ import { createToast } from "@/app/lib/common";
 import EmailList from "./addEmail";
 import CustomModal from "@/app/components/common/Modal";
 import { CloseBtn } from "@/app/components/closeBtn";
+import { createGroup } from "@/app/lib/actions";
+import { set } from "react-hook-form";
 
 
 interface ModalProps {
@@ -53,44 +55,35 @@ function CreateGroupForm({ authSession, router, closeModal }: {
     ) => {
         e.preventDefault();
         if (!authSession) return
+
         const { name, description, emails } = group;
         const token = authSession?.token;
-        try {
-            const res = await fetch(API_URL + "/private/groups/create", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ name, description, emails }),
-            });
-            if (!res.ok) throw new Error("Error al crear el grupo");
-            const data = await res.json();
-            console.log(data);
-            createToast({
-                message: "Grupo creado correctamente",
-                toastType: "success",
-            })
-        } catch (error) {
-            console.log(error);
-            createToast({
-                message: "Error al crear el grupo",
-                toastType: "error",
-            })
-        }
-        finally {
-            closeModal();
-        }
+        await createGroup({ group, token, closeModal });
         router.refresh();
     }
 
     return (
         <form onSubmit={handleFormSubmit}>
             <div className="mt-4">
-                <Input type="text" name="name" id="name" placeholder="Nombre del grupo" inputChangeFn={handleInputChange} labelText="Nombre" />
+                <Input
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Nombre del grupo"
+                    inputChangeFn={handleInputChange}
+                    labelText="Nombre"
+                />
             </div>
             <div className="mt-4">
-                <Input type="text" name="description" id="description" placeholder="Este grupo es para..." tag="textarea" textareaChangeFn={handleTextareaChange} labelText="Descripción" />
+                <Input
+                    type="text"
+                    name="description"
+                    id="description"
+                    placeholder="Este grupo es para..."
+                    tag="textarea"
+                    textareaChangeFn={handleTextareaChange}
+                    labelText="Descripción"
+                />
             </div>
             <div className="mt-4">
                 <EmailList emails={group.emails} setGroup={setGroup} />
@@ -127,22 +120,19 @@ export default function CreateGroupModal() {
     const { data: session, status } = useSession()
     const router = useRouter()
     if (!session) return
-
-    const openModal = () => {
-        setShowModal(true);
-    };
-    const closeModal = () => {
-        setShowModal(false);
-    };
-
     return (
         <div>
             <PlusSmallIcon
                 className="h-6 w-6 active:text-gray-700 hover:text-gray-700 cursor-pointer"
                 aria-hidden="true"
-                onClick={openModal}
+                onClick={() => setShowModal(true)}
             />
-            <Modal isOpen={showModal} closeModal={closeModal} session={session} router={router} />
+            <Modal
+                isOpen={showModal}
+                closeModal={() => setShowModal(false)}
+                session={session}
+                router={router}
+            />
         </div>
     );
 }
