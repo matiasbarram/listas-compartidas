@@ -1,4 +1,4 @@
-import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues, IListKeysProps, INewItemValues } from "../../../types";
+import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues, IListKeysProps, INewItemValues, IListItem, ICreateItemResponse } from "../../../types";
 import { API_URL, defaultDataItem, defaultDataList } from "./constants";
 import { createToast } from "./common";
 import { Error409 } from "./erros";
@@ -10,7 +10,7 @@ interface ICreateGroupData {
     emails: string[]
 }
 
-async function callApi<T>({ method, token, body, url }: IApiConfig): Promise<IApiResponse<T>> {
+export async function callApi<T>({ method, token, body, url }: IApiConfig): Promise<IApiResponse<T>> {
     try {
         const headers: Record<string, string> = {
             "Content-Type": "application/json",
@@ -36,26 +36,16 @@ async function callApi<T>({ method, token, body, url }: IApiConfig): Promise<IAp
     }
 }
 
-export const markAsCompleted = async ({ isCompleted, params, session, item, setItemSelected }: IMarkAsCompletedProps) => {
+export const markAsCompleted = async ({ isCompleted, params, session, item }: IMarkAsCompletedProps) => {
     const { status }: ICompleted = { status: isCompleted ? "completed" : "uncompleted" }
+    console.log("status", status);
 
-    try {
-        await callApi({
-            url: `/private/groups/${params.slug}/lists/${params.listId}/items/${item.id}/change`,
-            method: "PUT",
-            token: session.token,
-            body: { status }
-        })
-        setItemSelected(isCompleted);
-        item.is_completed = isCompleted;
-    }
-    catch (error) {
-        createToast({
-            toastType: "error",
-            message: `Error al actualizar ${item.description}`,
-            duration: 1000
-        })
-    }
+    callApi({
+        url: `/private/groups/${params.slug}/lists/${params.listId}/items/${item.id}/change`,
+        method: "PUT",
+        token: session.token,
+        body: { status: status }
+    })
 
 }
 
@@ -165,7 +155,7 @@ export const createList = async ({ data, token, groupId }: { data: INewListValue
     }
 }
 
-export const createProduct = async ({ data, params, token }: { data: INewItemValues, params: IListKeysProps, token: string }) => {
+export const createProduct = async ({ data, params, token }: { data: INewItemValues, params: IListKeysProps, token: string }): Promise<IListItem | undefined> => {
     try {
         const res = await callApi({
             url: `/private/groups/${params.slug}/lists/${params.listId}/items/create`,
@@ -180,6 +170,8 @@ export const createProduct = async ({ data, params, token }: { data: INewItemVal
             message: "Producto creado correctamente",
             toastType: "success",
         })
+        const newItem = res.data as ICreateItemResponse;
+        return newItem.item;
 
     } catch (error) {
         createToast({

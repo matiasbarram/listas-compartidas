@@ -2,25 +2,26 @@
 
 import { PlusIcon } from "@heroicons/react/24/solid"
 import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react";
-import { IListKeysProps, INewItem, INewList, PageProps } from "../../../../types";
-import { useRouter } from "next/navigation";
+import { IListItem, IListKeysProps, PageProps } from "../../../../types";
 import AddItemModal from "./lists/addItemModal";
 import styles from './modals.module.css'
 
-function isIListKeys(params: IListKeysProps | PageProps): { value: boolean, fields: "item" | "list" } {
-    const val = 'listId' in params
-    return {
-        value: val,
-        fields: val ? "item" : "list"
-    }
+interface IAddItemBtnProps {
+    params: IListKeysProps | PageProps,
+    type?: "static" | "fixed",
+    addItem?: (item: IListItem) => void
 }
 
-export default function AddItemBtn({ data, type }: { data: IListKeysProps | PageProps, type?: "static" }) {
+function isIListKeys(params: IListKeysProps | PageProps): { value: boolean, fields: "item" | "list" } {
+    const val = 'listId' in params
+    return { value: val, fields: val ? "item" : "list" }
+}
+
+export default function AddItemBtn({ params, type, addItem }: IAddItemBtnProps) {
     const [showModal, setShowModal] = useState(false);
     const [showBtn, setShowBtn] = useState(true);
 
-    const { value: isListKeys, fields } = isIListKeys(data);
+    const { value: isListKeys, fields } = isIListKeys(params);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -58,8 +59,9 @@ export default function AddItemBtn({ data, type }: { data: IListKeysProps | Page
                 </button >
             }
             {
-                isListKeys ? <AddItemModal fields={fields} showModal={showModal} closeModal={closeModal} />
-                    : <AddItemModal fields={fields} showModal={showModal} closeModal={closeModal} />
+                addItem ?
+                    isListKeys ? <AddItemModal fields={fields} showModal={showModal} closeModal={closeModal} addItem={addItem} /> : <AddItemModal fields={fields} showModal={showModal} closeModal={closeModal} addItem={addItem} />
+                    : null
             }
 
         </>

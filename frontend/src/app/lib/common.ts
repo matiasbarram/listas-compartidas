@@ -15,4 +15,3 @@ export const createToast = ({ message, duration = 3000, toastType }: IToast) =>
         position: "top-center",
         hideProgressBar: true
     })
-

@@ -3,13 +3,18 @@
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
+import { IListItem, IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "../../common/Spinner";
 import { createProduct } from "@/app/lib/actions";
 
+interface IAddItemForm {
+    closeModal: () => void;
+    addItem: (item: IListItem) => void;
+}
 
-export default function AddItemForms({ closeModal }: any) {
+
+export default function AddItemForms({ closeModal, addItem }: IAddItemForm) {
     const {
         register,
         handleSubmit,
@@ -32,14 +37,15 @@ export default function AddItemForms({ closeModal }: any) {
         }
         try {
             schemaItem.parse(data);
-            await createProduct({
+            const newItem = await createProduct({
                 data,
                 params: paramsData,
                 token: session?.token
             });
 
+            if (addItem) { newItem !== undefined ? addItem(newItem) : null; }
+
             closeModal();
-            router.refresh();
 
         } catch (error) {
             console.log(error);
