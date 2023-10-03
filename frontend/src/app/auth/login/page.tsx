@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISignUpFormValues, signUpSchema } from "../../../../types";
-import Spinner from "@/app/components/common/Spinner";
+import Spinner from "@/app/components/common/Spinner/Spinner";
 
 const ForgotPassword = () => {
     return (

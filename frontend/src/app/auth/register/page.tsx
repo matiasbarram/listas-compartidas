@@ -9,7 +9,7 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ILoginFormValues, registerSchema } from "../../../../types";
-import Spinner from "@/app/components/common/Spinner";
+import Spinner from "@/app/components/common/Spinner/Spinner";
 
 export default function RegisterPage() {
     const router = useRouter();

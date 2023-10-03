@@ -3,7 +3,7 @@
 import { PlusIcon } from "@heroicons/react/24/solid"
 import { useEffect, useState } from "react"
 import { IListItem, IListKeysProps, PageProps } from "../../../../types";
-import AddItemModal from "./lists/addItemModal";
+import AddItemModal from "../common/Modals/addItemModal";
 import styles from './modals.module.css'
 
 interface IAddItemBtnProps {

@@ -1,6 +1,6 @@
 "use client"
 
-import { CloseBtn } from "@/app/components/closeBtn";
+import { CloseBtn } from "./closeBtn";
 import { Dialog, Transition } from "@headlessui/react";
 import { Session } from "next-auth";
 import { Fragment } from "react";

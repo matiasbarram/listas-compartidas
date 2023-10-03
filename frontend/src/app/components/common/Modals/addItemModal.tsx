@@ -1,7 +1,9 @@
-import CustomModal from "../../common/Modal"
-import AddItemForm from "./addItemForm"
-import AddListForm from "../group/createGroup/addListForm"
+import CustomModal from "./Modal"
+import AddListForm from "../../home/group/createGroup/addListForm";
+import AddItemForm from "../../home/lists/addItemForm";
 import { IListItem } from "../../../../../types";
+
+AddItemForm
 
 interface IAddItemModal {
     fields: "item" | "list"

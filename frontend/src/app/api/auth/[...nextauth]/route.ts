@@ -1,5 +1,4 @@
 import { API_URL } from "@/app/lib/constants";
-import { axiosClient } from "@/app/utils/axios";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";

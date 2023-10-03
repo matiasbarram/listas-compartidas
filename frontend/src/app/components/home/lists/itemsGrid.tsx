@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useState, useRef } from "react";
 import { IListItem, IListItemsResponse, IListKeysProps } from "../../../../../types";
-import { ItemCard } from "./itemCard";
+import { ItemCard } from "./itemCard/itemCard";
 import { markAsCompleted } from "@/app/lib/actions";
 import { useSession } from "next-auth/react";
 import AddItemBtn from "../addItemBtn";
-import { debounce } from "lodash";
+import { DebouncedFunc, debounce } from "lodash";
 
 export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse, params: IListKeysProps }) => {
 
@@ -28,7 +28,6 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
         setListItems(newItems);
     };
 
-    // Utiliza un mapa para realizar el seguimiento de las llamadas debounced individuales
     const debouncedMarkAsCompletedMap = useRef(new Map<number, () => void>());
 
     const toggleItemCompletion = (itemId: number) => {
@@ -47,8 +46,6 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
             }, 2000);
             debouncedMarkAsCompletedMap.current.set(itemId, debouncedFn);
         }
-
-        // Ejecuta la función debounced
         debouncedFn();
     };
 
@@ -57,15 +54,13 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
     }
 
     useEffect(() => {
+        const mapRef = debouncedMarkAsCompletedMap.current; // Capture the current value of the ref
         return () => {
-            // Cancela todas las funciones debounced al desmontar el componente
-            debouncedMarkAsCompletedMap.current.forEach((debouncedFn) => {
-                // @ts-ignore
-                debouncedFn.cancel();
+            mapRef.forEach((debouncedFn) => {
+                (debouncedFn as DebouncedFunc<() => void>).cancel();
             });
         };
     }, []);
-
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <h2 className="text-2xl font-bold text-gray-100 pb-4">Pendientes</h2>

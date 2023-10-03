@@ -3,10 +3,10 @@
 import { useForm } from 'react-hook-form';
 import { INewListValues, schemaList } from '../../../../../../types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Spinner from '@/app/components/common/Spinner';
 import { useParams, useRouter } from 'next/navigation';
 import { createList } from '@/app/lib/actions';
 import { useSession } from 'next-auth/react';
+import Spinner from '@/app/components/common/Spinner/Spinner';
 
 interface IAddListFormProps {
     closeModal: () => void;
