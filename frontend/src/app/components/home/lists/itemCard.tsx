@@ -15,9 +15,7 @@ export function ItemCard({ item, params, className }: { item: IListItem, params:
 
     const router = useRouter();
     const { data: session } = useSession();
-    if (!session) {
-        return null;
-    }
+    if (!session) return null;
 
     const toggleMenu = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -38,18 +36,19 @@ export function ItemCard({ item, params, className }: { item: IListItem, params:
         console.log("Eliminando");
     }
     const handleCheckbox = async (e: React.MouseEvent) => {
-        e.preventDefault();
         await markAsCompleted({ isCompleted: !itemSelected, params, session, item, setItemSelected });
         router.refresh();
     }
 
 
     return (
-        <div className={"bg-zinc-800 shadow rounded-lg cursor-pointer mx-auto py-4 w-full " + className}>
+        <div
+            className={"bg-zinc-800 shadow rounded-lg cursor-pointer mx-auto py-4 w-full " + className}
+            onClick={e => handleCheckbox(e)}
+        >
             <div className="flex items-center space-x-4 w-11/12 mx-auto relative">
                 <li
                     key={item.id}
-                    onClick={e => handleCheckbox}
                     className="w-11/12 mx-auto flex items-center space-x-4"
                 >
                     <Checkbox postId={item.id} selected={itemSelected} />

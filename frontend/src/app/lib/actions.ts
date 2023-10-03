@@ -40,6 +40,7 @@ export const markAsCompleted = async ({ isCompleted, params, session, item, setI
     const { status }: ICompleted = { status: isCompleted ? "completed" : "uncompleted" }
 
     try {
+        console.log("params", params);
         await callApi({
             url: `/private/groups/${params.slug}/lists/${params.listId}/items/${item.id}/change`,
             method: "PUT",
@@ -57,10 +58,6 @@ export const markAsCompleted = async ({ isCompleted, params, session, item, setI
         })
     }
 
-}
-
-function checkIsItem(item: INewItem | INewList): boolean {
-    return (item as INewItem).description !== undefined;
 }
 
 export const signUp = async ({ email, password, name }: { email: string, password: string, name: string }) => {
