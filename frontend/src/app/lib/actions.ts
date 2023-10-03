@@ -49,16 +49,13 @@ export async function getGroups(token: string | undefined) {
 
 export const markAsCompleted = async ({ isCompleted, params, session, item }: IMarkAsCompletedProps) => {
     const { status }: ICompleted = { status: isCompleted ? "completed" : "uncompleted" }
-
-    console.log({ isCompleted, params, session, item })
-
     callApi({
         url: `/private/groups/${params.slug}/lists/${params.listId}/items/${item.id}/change`,
         method: "PUT",
         token: session.token,
         body: { status: status }
     })
-
+    console.log({ isCompleted, params, session, item })
 }
 
 export const signUp = async ({ email, password, name }: { email: string, password: string, name: string }) => {
