@@ -2,18 +2,13 @@
 
 import { PlusIcon } from "@heroicons/react/24/solid"
 import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react";
-import { IListKeysProps, INewItem, INewList, PageProps } from "../../../../types";
-import { useRouter } from "next/navigation";
+import { IListKeysProps, PageProps } from "../../../../types";
 import AddItemModal from "./lists/addItemModal";
 import styles from './modals.module.css'
 
 function isIListKeys(params: IListKeysProps | PageProps): { value: boolean, fields: "item" | "list" } {
     const val = 'listId' in params
-    return {
-        value: val,
-        fields: val ? "item" : "list"
-    }
+    return { value: val, fields: val ? "item" : "list" }
 }
 
 export default function AddItemBtn({ data, type }: { data: IListKeysProps | PageProps, type?: "static" }) {

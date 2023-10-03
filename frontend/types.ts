@@ -93,10 +93,6 @@ export interface IListItem {
     list_id: number;
 }
 
-export interface IListItems {
-    completedItems?: IListItem[];
-    uncompletedItems?: IListItem[];
-}
 
 export interface IListItemsResponse {
     list: {
@@ -105,7 +101,7 @@ export interface IListItemsResponse {
         description: string;
         group_id: number;
     }
-    items: IListItems;
+    items: IListItem[]
 }
 
 export interface ModalProps {
@@ -137,7 +133,6 @@ export interface IMarkAsCompletedProps {
     params: IListKeysProps;
     session: Session;
     item: IListItem;
-    setItemSelected: (isCompleted: boolean) => void;
 }
 
 export interface ICreateProduct {

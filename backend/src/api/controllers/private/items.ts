@@ -53,8 +53,7 @@ export const getItems = async (req: Request, res: Response) => {
             error: "List not found"
         })
     }
-    const completedItems = list_items?.items.filter(item => item.is_completed === true);
-    const uncompletedItems = list_items?.items.filter(item => item.is_completed === false);
+
     const listData = {
         id: list_items.id,
         name: list_items.name,
@@ -65,10 +64,7 @@ export const getItems = async (req: Request, res: Response) => {
 
     return res.status(200).json({
         list: listData,
-        items: {
-            completedItems,
-            uncompletedItems,
-        }
+        items: list_items.items
     })
 }
 
