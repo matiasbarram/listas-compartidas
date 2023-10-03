@@ -59,10 +59,6 @@ export const markAsCompleted = async ({ isCompleted, params, session, item, setI
 
 }
 
-function checkIsItem(item: INewItem | INewList): boolean {
-    return (item as INewItem).description !== undefined;
-}
-
 export const signUp = async ({ email, password, name }: { email: string, password: string, name: string }) => {
     const url = "/auth/register"
     const body = { email, password, name };
