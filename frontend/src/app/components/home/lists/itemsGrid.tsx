@@ -5,6 +5,7 @@ import { IListItem, IListItemsResponse, IListKeysProps } from "../../../../../ty
 import { ItemCard } from "./itemCard";
 import { markAsCompleted } from "@/app/lib/actions";
 import { useSession } from "next-auth/react";
+import AddItemBtn from "../addItemBtn";
 
 export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse, params: IListKeysProps }) => {
 
@@ -26,6 +27,10 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
         markAsCompleted({ isCompleted: item.is_completed, item, params, session });
         setListItems(newItems);
     };
+
+    const addItem = (item: IListItem) => {
+        setListItems([...listItems, item]);
+    }
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -51,6 +56,8 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
                     return null
                 })
             }
+            <AddItemBtn params={params} addItem={addItem} />
+
         </div>
     );
 };

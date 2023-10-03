@@ -93,6 +93,12 @@ export interface IListItem {
     list_id: number;
 }
 
+export interface ICreateItemResponse {
+    groupId: number;
+    listId: number;
+    item: IListItem;
+}
+
 
 export interface IListItemsResponse {
     list: {

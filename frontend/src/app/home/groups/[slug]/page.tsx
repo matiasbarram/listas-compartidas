@@ -32,7 +32,7 @@ export default async function GroupListsPage({ params }: IGroupParams) {
                 <h1 className="text-2xl font-bold mb-4">Listas compartidas del grupo</h1>
                 {lists.length === 0 ? emptyListComponent(params) : showLists(lists, params.slug)}
             </div >
-            <AddItemBtn data={params} />
+            <AddItemBtn params={params} />
         </>
     )
 }

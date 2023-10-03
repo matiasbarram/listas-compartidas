@@ -1,4 +1,4 @@
-import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues, IListKeysProps, INewItemValues } from "../../../types";
+import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues, IListKeysProps, INewItemValues, IListItem, ICreateItemResponse } from "../../../types";
 import { API_URL, defaultDataItem, defaultDataList } from "./constants";
 import { createToast } from "./common";
 import { Error409 } from "./erros";
@@ -155,7 +155,7 @@ export const createList = async ({ data, token, groupId }: { data: INewListValue
     }
 }
 
-export const createProduct = async ({ data, params, token }: { data: INewItemValues, params: IListKeysProps, token: string }) => {
+export const createProduct = async ({ data, params, token }: { data: INewItemValues, params: IListKeysProps, token: string }): Promise<IListItem | undefined> => {
     try {
         const res = await callApi({
             url: `/private/groups/${params.slug}/lists/${params.listId}/items/create`,
@@ -170,6 +170,8 @@ export const createProduct = async ({ data, params, token }: { data: INewItemVal
             message: "Producto creado correctamente",
             toastType: "success",
         })
+        const newItem = res.data as ICreateItemResponse;
+        return newItem.item;
 
     } catch (error) {
         createToast({

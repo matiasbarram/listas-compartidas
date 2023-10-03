@@ -24,7 +24,6 @@ export default async function ListItemPage({ params }: NestedParams) {
         <div>
             <BackBtn />
             <ItemsGrid itemsData={itemsData} params={params} />
-            <AddItemBtn data={params} />
         </div >
     )
 
