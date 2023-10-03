@@ -40,7 +40,6 @@ export const markAsCompleted = async ({ isCompleted, params, session, item, setI
     const { status }: ICompleted = { status: isCompleted ? "completed" : "uncompleted" }
 
     try {
-        console.log("params", params);
         await callApi({
             url: `/private/groups/${params.slug}/lists/${params.listId}/items/${item.id}/change`,
             method: "PUT",
