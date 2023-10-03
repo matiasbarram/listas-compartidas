@@ -18,8 +18,8 @@ export default function AddItemModal({ fields, showModal, closeModal }: IAddItem
                     Agregar {fields === "item" ? "producto" : "lista"}
                 </h2>
                 {
-                    fields === "item" ?
-                        <AddItemForm closeModal={closeModal} /> : <AddListForm closeModal={closeModal} />
+                    // fields === "item" ?
+                    //     <AddItemForm closeModal={closeModal} /> : <AddListForm closeModal={closeModal} />
                 }
 
             </div>
