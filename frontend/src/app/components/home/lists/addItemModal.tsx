@@ -1,8 +1,5 @@
-import { useForm } from "react-hook-form"
-import { INewItemValues, INewListValues, schemaItem, schemaList } from "../../../../../types"
+import { INewItemValues, INewListValues } from "../../../../../types"
 import CustomModal from "../../common/Modal"
-import { zodResolver } from "@hookform/resolvers/zod"
-import Spinner from "../../common/Spinner"
 import AddItemForm from "./addItemForm"
 import AddListForm from "../group/createGroup/addListForm"
 
@@ -20,10 +17,9 @@ export default function AddItemModal({ fields, showModal, closeModal }: IAddItem
                 <h2 className="text-2xl font-bold text-center mb-8">
                     Agregar {fields === "item" ? "producto" : "lista"}
                 </h2>
-                {fields === "item" ?
-                    <AddItemForm closeModal={closeModal} />
-                    :
-                    <AddListForm closeModal={closeModal} />
+                {
+                    fields === "item" ?
+                        <AddItemForm closeModal={closeModal} /> : <AddListForm closeModal={closeModal} />
                 }
 
             </div>

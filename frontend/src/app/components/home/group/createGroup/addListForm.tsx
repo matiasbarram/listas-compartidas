@@ -13,6 +13,7 @@ export default function AddListForm({ closeModal }: any) {
     const { data: session } = useSession();
     const router = useRouter();
     if (!session) return null;
+
     const {
         register,
         handleSubmit,
