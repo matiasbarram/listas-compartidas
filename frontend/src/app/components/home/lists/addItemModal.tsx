@@ -6,7 +6,6 @@ import AddListForm from "../group/createGroup/addListForm"
 interface IAddItemModal {
     fields: string;
     showModal: boolean;
-    newItem: INewItemValues | INewListValues;
     closeModal: () => void;
 }
 

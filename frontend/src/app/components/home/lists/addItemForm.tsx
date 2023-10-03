@@ -9,13 +9,7 @@ import Spinner from "../../common/Spinner";
 import { createProduct } from "@/app/lib/actions";
 
 
-export default function ({ closeModal }: any) {
-
-    const params = useParams()
-    const { data: session } = useSession();
-    const router = useRouter();
-    if (!session) return null;
-
+export default function AddItemForms({ closeModal }: any) {
     const {
         register,
         handleSubmit,
@@ -23,6 +17,12 @@ export default function ({ closeModal }: any) {
     } = useForm<INewItemValues>({
         resolver: zodResolver(schemaItem),
     });
+
+    const params = useParams()
+    const { data: session } = useSession();
+    const router = useRouter();
+    if (!session) return null;
+
 
 
     const handleCreateProduct = async (data: INewItemValues) => {

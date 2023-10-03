@@ -13,11 +13,6 @@ interface IAddListFormProps {
 }
 
 export default function AddListForm({ closeModal }: IAddListFormProps) {
-    const params = useParams()
-    const { data: session } = useSession();
-    const router = useRouter();
-    if (!session) return null;
-
     const {
         register,
         handleSubmit,
@@ -25,6 +20,10 @@ export default function AddListForm({ closeModal }: IAddListFormProps) {
     } = useForm<INewListValues>({
         resolver: zodResolver(schemaList),
     });
+    const params = useParams()
+    const { data: session } = useSession();
+    const router = useRouter();
+    if (!session) return null;
 
     const handleCreateProduct = async (data: INewListValues) => {
         try {
