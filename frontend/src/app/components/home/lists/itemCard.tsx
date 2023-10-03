@@ -38,6 +38,7 @@ export function ItemCard({ item, params, className }: { item: IListItem, params:
         console.log("Eliminando");
     }
     const handleCheckbox = async (e: React.MouseEvent) => {
+        e.preventDefault();
         await markAsCompleted({ isCompleted: !itemSelected, params, session, item, setItemSelected });
         router.refresh();
     }
@@ -48,7 +49,7 @@ export function ItemCard({ item, params, className }: { item: IListItem, params:
             <div className="flex items-center space-x-4 w-11/12 mx-auto relative">
                 <li
                     key={item.id}
-                    onClick={e => handleCheckbox(e)}
+                    onClick={e => handleCheckbox}
                     className="w-11/12 mx-auto flex items-center space-x-4"
                 >
                     <Checkbox postId={item.id} selected={itemSelected} />

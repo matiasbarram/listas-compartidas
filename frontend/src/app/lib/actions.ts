@@ -1,4 +1,4 @@
-import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues } from "../../../types";
+import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues, IListKeysProps, INewItemValues } from "../../../types";
 import { API_URL, defaultDataItem, defaultDataList } from "./constants";
 import { createToast } from "./common";
 import { Error409 } from "./erros";
@@ -40,7 +40,7 @@ export const markAsCompleted = async ({ isCompleted, params, session, item, setI
     const { status }: ICompleted = { status: isCompleted ? "completed" : "uncompleted" }
 
     try {
-        const { data } = await callApi({
+        await callApi({
             url: `/private/groups/${params.slug}/lists/${params.listId}/items/${item.id}/change`,
             method: "PUT",
             token: session.token,
@@ -61,33 +61,6 @@ export const markAsCompleted = async ({ isCompleted, params, session, item, setI
 
 function checkIsItem(item: INewItem | INewList): boolean {
     return (item as INewItem).description !== undefined;
-}
-
-export const createProduct = async ({ session, url, newItem, router, closeModal, setNewItem }: ICreateItem) => {
-    try {
-        const token = session.data?.token;
-        if (!token) throw new Error("No token found");
-        const res = await callApi({
-            url: url,
-            method: "POST",
-            token,
-            body: newItem
-        })
-        if (res.ok) {
-            const isValid = checkIsItem(newItem);
-            closeModal();
-            if (isValid) {
-                setNewItem(defaultDataItem);
-            }
-            else {
-                setNewItem(defaultDataList);
-            }
-        }
-        else { throw new Error("Error creating product") }
-    }
-    catch (error) {
-        console.log(error);
-    }
 }
 
 export const signUp = async ({ email, password, name }: { email: string, password: string, name: string }) => {
@@ -191,6 +164,30 @@ export const createList = async ({ data, token, groupId }: { data: INewListValue
     } catch (error) {
         createToast({
             message: "Error al crear la lista",
+            toastType: "error",
+        })
+    }
+}
+
+export const createProduct = async ({ data, params, token }: { data: INewItemValues, params: IListKeysProps, token: string }) => {
+    try {
+        const res = await callApi({
+            url: `/private/groups/${params.slug}/lists/${params.listId}/items/create`,
+            method: "POST",
+            token,
+            body: { ...data }
+        })
+
+        if (!res.ok) throw new Error("Error al crear el producto");
+
+        createToast({
+            message: "Producto creado correctamente",
+            toastType: "success",
+        })
+
+    } catch (error) {
+        createToast({
+            message: "Error al crear el producto",
             toastType: "error",
         })
     }
