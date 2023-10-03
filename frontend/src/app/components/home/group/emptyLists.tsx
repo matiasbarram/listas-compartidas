@@ -9,7 +9,7 @@ export const emptyListComponent = (params: PageProps) => {
             <p className="text-gray-500">
                 No hay listas en este grupo
             </p>
-            <AddItemBtn params={params} type="static" />
+            <AddItemBtn params={params} btnType="static" />
         </div>
     )
 }

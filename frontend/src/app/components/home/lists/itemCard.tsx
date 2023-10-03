@@ -4,20 +4,16 @@ import { Checkbox } from "./checkbox";
 
 interface IItemCardProps {
     item: IListItem;
-    onToggleCompletion: (itemId: number) => void;
+    onToggleCompletion: any
 }
 
 export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
-    const handleClick = () => {
-        onToggleCompletion(item.id);
-    };
-
     return (
         <>
             < div
                 className={`bg-zinc-800 shadow rounded-lg cursor-pointer mx-auto py-4 w-full ${item.is_completed ? "grayscale" : ""}`
                 }
-                onClick={handleClick}
+                onClick={() => onToggleCompletion(item.id)}
             >
                 <div className="flex items-center space-x-4 w-11/12 mx-auto relative">
                     <li

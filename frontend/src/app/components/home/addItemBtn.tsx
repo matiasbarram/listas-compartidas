@@ -8,20 +8,20 @@ import styles from './modals.module.css'
 
 interface IAddItemBtnProps {
     params: IListKeysProps | PageProps,
-    type?: "static" | "fixed",
+    btnType?: "static" | "fixed",
     addItem?: (item: IListItem) => void
 }
 
-function isIListKeys(params: IListKeysProps | PageProps): { value: boolean, fields: "item" | "list" } {
+function isIListKeys(params: IListKeysProps | PageProps): { value: boolean, formType: "item" | "list" } {
     const val = 'listId' in params
-    return { value: val, fields: val ? "item" : "list" }
+    return { value: val, formType: val ? "item" : "list" }
 }
 
-export default function AddItemBtn({ params, type, addItem }: IAddItemBtnProps) {
+export default function AddItemBtn({ params, btnType, addItem }: IAddItemBtnProps) {
     const [showModal, setShowModal] = useState(false);
     const [showBtn, setShowBtn] = useState(true);
 
-    const { value: isListKeys, fields } = isIListKeys(params);
+    const { value: isListKeys, formType } = isIListKeys(params);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -42,7 +42,7 @@ export default function AddItemBtn({ params, type, addItem }: IAddItemBtnProps) 
 
     return (
         <>
-            {type === "static" ?
+            {btnType === "static" ?
                 <button
                     onClick={() => setShowModal(true)}
                     className={`bg-indigo-800 rounded-md px-4 py-2 hover:bg-green-800 cursor-pointer`}
@@ -59,9 +59,8 @@ export default function AddItemBtn({ params, type, addItem }: IAddItemBtnProps) 
                 </button >
             }
             {
-                addItem ?
-                    isListKeys ? <AddItemModal fields={fields} showModal={showModal} closeModal={closeModal} addItem={addItem} /> : <AddItemModal fields={fields} showModal={showModal} closeModal={closeModal} addItem={addItem} />
-                    : null
+                isListKeys ? <AddItemModal fields={formType} showModal={showModal} closeModal={closeModal} addItem={addItem} /> : <AddItemModal fields={formType} showModal={showModal} closeModal={closeModal} addItem={addItem} />
+
             }
 
         </>
