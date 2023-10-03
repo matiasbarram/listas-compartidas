@@ -8,7 +8,11 @@ import { useParams, useRouter } from 'next/navigation';
 import { createList } from '@/app/lib/actions';
 import { useSession } from 'next-auth/react';
 
-export default function AddListForm({ closeModal }: any) {
+interface IAddListFormProps {
+    closeModal: () => void;
+}
+
+export default function AddListForm({ closeModal }: IAddListFormProps) {
     const params = useParams()
     const { data: session } = useSession();
     const router = useRouter();

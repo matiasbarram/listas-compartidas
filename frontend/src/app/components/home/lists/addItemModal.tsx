@@ -17,6 +17,10 @@ export default function AddItemModal({ fields, showModal, closeModal }: IAddItem
                 <h2 className="text-2xl font-bold text-center mb-8">
                     Agregar {fields === "item" ? "producto" : "lista"}
                 </h2>
+                {
+                    fields === "item" ?
+                        <AddItemForm closeModal={closeModal} /> : <AddListForm closeModal={closeModal} />
+                }
 
             </div>
         </CustomModal>
