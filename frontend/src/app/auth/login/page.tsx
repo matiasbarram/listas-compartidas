@@ -9,6 +9,8 @@ import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISignUpFormValues, signUpSchema } from "../../../../types";
 import Spinner from "@/app/components/common/Spinner/Spinner";
+import SocialLogin from "./socialProviders";
+
 
 const ForgotPassword = () => {
     return (
@@ -43,8 +45,6 @@ export default function LoginPage() {
         resolver: zodResolver(signUpSchema),
     });
 
-
-
     const loginUser = async (data: ISignUpFormValues) => {
         try {
             const validatedData = signUpSchema.parse(data);
@@ -66,9 +66,10 @@ export default function LoginPage() {
         <section className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <div className="w-full  rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 border-zinc-700 bg-zinc-800">
                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
+                    <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white text-center">
                         Ingresa con tu cuenta
                     </h1>
+                    <SocialLogin />
                     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(loginUser)}>
                         <div>
                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-white">
