@@ -1,5 +1,5 @@
 import { API_URL, clientId, clientSecret } from "@/app/lib/constants";
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, User } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -36,7 +36,14 @@ export const authOptions: NextAuthOptions = {
         GoogleProvider({
             name: "Google",
             clientId: clientId,
-            clientSecret: clientSecret
+            clientSecret: clientSecret,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code",
+                },
+            },
         })
     ],
 
@@ -55,14 +62,13 @@ export const authOptions: NextAuthOptions = {
 
         async signIn({ user, account, profile }) {
             if (account && account.provider === "google" && profile) {
-                console.log("profile", profile)
-                console.log("profile_at_hash", profile.at_hash)
+                user as unknown as User
+                const googleProfile = profile as unknown as GoogleProfile
                 const googleUser = {
-                    name: profile.name,
-                    email: profile.email,
-                    password: profile.name + profile.email
+                    name: googleProfile.name,
+                    email: googleProfile.email,
+                    password: googleProfile.name + googleProfile.email
                 }
-                console.log("googleUser", googleUser)
                 const res = await fetch(API_URL + "/auth/google", {
                     method: "POST",
                     body: JSON.stringify(googleUser),
@@ -71,7 +77,6 @@ export const authOptions: NextAuthOptions = {
                 const { token, user: responseUser }: ILoginApiResponse = await res.json()
                 user.token = token
                 user.user = responseUser
-
             }
             return true
         }
