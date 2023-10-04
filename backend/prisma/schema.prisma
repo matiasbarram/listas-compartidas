@@ -78,27 +78,16 @@ model user_group {
   user_id  Int
   group_id Int
   groups   groups @relation(fields: [group_id], references: [id], onDelete: Cascade)
-  users    users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users    users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model users {
-  id             Int              @id @default(autoincrement())
-  name           String           @db.VarChar(255)
-  email          String           @unique @db.VarChar(255)
-  password       String           @db.VarChar(255)
-  created_at     DateTime         @default(now())
-  updated_at     DateTime         @updatedAt
-  comments       comments[]
-  refresh_tokens refresh_tokens[]
-  user_group     user_group[]
-}
-
-model refresh_tokens {
-  id           String   @id @unique @default(uuid())
-  hashed_token String
-  user_id      Int
-  revoked      Boolean  @default(false)
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
-  users        users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar(255)
+  email      String       @unique @db.VarChar(255)
+  password   String       @db.VarChar(255)
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  comments   comments[]
+  user_group user_group[]
 }

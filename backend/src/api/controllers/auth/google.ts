@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
-import { createJwt } from "../../../utils/jwt/createJwt";
+import { createJwt, createPayload } from "../../../utils/jwt/createJwt";
+import { createGroup } from "./group/createGroup";
+import { createUser } from "./user/createUser";
+import { encryptText } from "../../../utils/encrypt";
 
 interface GoogleUser {
     email: string,
@@ -11,45 +14,39 @@ interface GoogleUser {
 }
 
 export const loginGoogle = async (req: Request, res: Response, next: NextFunction) => {
-    const googleUser = req.body as GoogleUser
-    console.log(googleUser)
+    const { email, name, password } = req.body as GoogleUser
     const prisma = new PrismaClient()
+    const encryptedPassword = await encryptText(password);
+
+
     const user = await prisma.users.findUnique({
         where: {
-            email: googleUser.email
+            email: email
         }
+    }).finally(() => {
+        prisma.$disconnect()
     })
-    // check if user exists
+
     if (user === null) {
-        // create user and return jwt token
-        const newUser = await prisma.users.create({
-            data: {
-                email: googleUser.email,
-                name: googleUser.name,
-                password: googleUser.password
-            }
+        const newUser = await createUser({
+            user: {
+                email: email,
+                name: name,
+                password: encryptedPassword
+            }, prisma
         })
-        const payload = {
-            id: newUser.id,
-            email: newUser.email,
-            name: newUser.name,
-            created_at: newUser.created_at,
-            updated_at: newUser.updated_at,
-        }
+        await createGroup({ user_id: newUser.id, prisma })
+        const payload = createPayload(newUser);
         const jwtToken = createJwt(payload)
+
         return res.status(200).json({
             token: jwtToken,
             user: payload
         });
     }
+
     else {
-        const payload = {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            created_at: user.created_at,
-            updated_at: user.updated_at,
-        }
+        const payload = createPayload(user);
         const jwtToken = createJwt(payload)
         return res.status(200).json({
             token: jwtToken,
