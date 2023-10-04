@@ -1,45 +1,44 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { IListItem } from "../../../../../../types";
+import { motion, AnimatePresence, Variants } from "framer-motion";
+import { useOutsideClick } from "@/app/hooks/clickOutside";
 
 interface IDropdownMenu {
-    isOpen: boolean;
-    onEdit: (e: React.MouseEvent) => void;
-    onDelete: (e: React.MouseEvent) => void;
-    onClose: (e: React.MouseEvent) => void;
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>
+    item: IListItem;
 }
 
-export default function DropdownMenu({ isOpen, onEdit, onDelete, onClose }: IDropdownMenu) {
-    const [isActive, setIsActive] = useState(false);
+const menu = {
+    closed: {
+        scale: 0,
+    },
+    open: {
+        scale: 1,
+        transition: {
+            type: "spring",
+            duration: 0.4,
+            delayChildren: 0.2,
+            staggerChildren: 0.05,
+        },
+    },
+} satisfies Variants;
 
-    useEffect(() => {
-        if (isOpen) {
-            setIsActive(true);
-        }
-    }, [isOpen]);
-
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (isActive) {
-                const dropdown = document.querySelector('.dropdown-menu');
-                if (dropdown && !dropdown.contains(e.target as Node)) {
-                    onClose(e as unknown as React.MouseEvent);
-                }
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isActive, onClose]);
-
-    if (!isOpen) return null;
-
-
+export default function DropdownMenu({ open, setOpen, item }: IDropdownMenu) {
     return (
-        <div className="absolute top-10 right-2 shadow-md rounded-md w-2/4 z-20 bg-gray-700 p-2 dropdown-menu">
-            <ul className="flex flex-col space-y-2">
-                <li onClick={onEdit} className="p-1 rounded-md hover:bg-gray-600" >Editar</li>
-                <li onClick={onDelete} className="p-1 rounded-md hover:bg-gray-600" >Eliminar</li>
-            </ul>
-        </div>
+        <AnimatePresence initial={false}>
+            <motion.div
+                className="absolute top-10 right-2 shadow-md rounded-md w-2/4 z-20 bg-gray-700 p-2 dropdown-menu"
+                variants={menu}
+                animate={open ? "open" : "closed"}
+                initial="closed"
+                exit="closed"
+            >
+                <ul className="flex flex-col space-y-2">
+                    <li className="p-1 rounded-md hover:bg-gray-600" >Editar</li>
+                    <li className="p-1 rounded-md hover:bg-gray-600" >Eliminar</li>
+                </ul>
+            </motion.div>
+        </AnimatePresence>
     )
 }

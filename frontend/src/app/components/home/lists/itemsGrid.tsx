@@ -8,14 +8,18 @@ import { useSession } from "next-auth/react";
 import AddItemBtn from "../addItemBtn";
 import { DebouncedFunc, debounce } from "lodash";
 import SavingStatus from "../../common/Toast/savingStatusToast";
+import { useRouter } from "next/navigation";
+import { usePathname, useSearchParams } from 'next/navigation'
+
 
 export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse, params: IListKeysProps }) => {
 
     const [listItems, setListItems] = useState<IListItem[]>(itemsData.items);
     const [saving, setSaving] = useState<boolean>(false);
     const listItemsRef = useRef(listItems);
-
     const { data: session } = useSession();
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
 
     const updateItemCompletion = (itemId: number, isCompleted: boolean) => {
         setSaving(true);
@@ -65,6 +69,7 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
             });
         };
     }, []);
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {<SavingStatus saving={saving} />}

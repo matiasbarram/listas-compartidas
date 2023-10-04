@@ -1,7 +1,9 @@
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { IListItem } from "../../../../../../types";
 import { Checkbox } from "./checkbox";
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useRef } from "react";
+import DropdownMenu from "./dropdownMenu";
+import { useOutsideClick } from "@/app/hooks/clickOutside";
 
 interface IItemCardProps {
     item: IListItem;
@@ -11,11 +13,17 @@ interface IItemCardProps {
 export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
     const [showDropdown, setShowDropdown] = useState(false)
 
+    const menuRef = useRef<HTMLButtonElement>(null);
+
+    useOutsideClick(menuRef.current, () => {
+        console.log("click outside")
+        setShowDropdown(false)
+    })
+
     const handleDropdown = (e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         e.preventDefault()
         setShowDropdown(!showDropdown)
-        console.log("show", showDropdown)
     }
 
     return (
@@ -43,11 +51,17 @@ export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
                         <button
                             className="rounded-fullhover:bg-zinc-600 cursor-pointer block"
                             type="button"
+                            ref={menuRef}
                             onClick={handleDropdown}
                         >
                             <EllipsisHorizontalIcon className="h-5 w-5 text-gray-400" />
                         </button>
                     </div>
+                    <DropdownMenu
+                        open={showDropdown}
+                        setOpen={setShowDropdown}
+                        item={item}
+                    />
                 </div >
             </div >
         </>
