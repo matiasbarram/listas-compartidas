@@ -61,13 +61,14 @@ export const authOptions: NextAuthOptions = {
         },
 
         async signIn({ user, account, profile }) {
+            const randomVal = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
             if (account && account.provider === "google" && profile) {
                 user as unknown as User
                 const googleProfile = profile as unknown as GoogleProfile
                 const googleUser = {
                     name: googleProfile.name,
                     email: googleProfile.email,
-                    password: googleProfile.name + googleProfile.email
+                    password: googleProfile.name + randomVal + googleProfile.email
                 }
                 const res = await fetch(API_URL + "/auth/google", {
                     method: "POST",
