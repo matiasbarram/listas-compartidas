@@ -1,7 +1,10 @@
-import { API_URL } from "@/app/lib/constants";
+import { API_URL, clientId, clientSecret } from "@/app/lib/constants";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import { ILoginApiResponse } from "../../../../../types";
+import type { GoogleProfile } from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
     pages: {
@@ -29,6 +32,11 @@ export const authOptions: NextAuthOptions = {
                 const user = await res.json()
                 return user
             }
+        }),
+        GoogleProvider({
+            name: "Google",
+            clientId: clientId,
+            clientSecret: clientSecret
         })
     ],
 
@@ -37,12 +45,34 @@ export const authOptions: NextAuthOptions = {
             if (user) return { ...token, ...user }
             return token
         },
+
+
         async session({ session, token }) {
             session.user = token.user
             session.token = token.token
             return session
         },
-        async signIn({ user, account, profile, email, credentials }) {
+
+        async signIn({ user, account, profile }) {
+            if (account && account.provider === "google" && profile) {
+                console.log("profile", profile)
+                console.log("profile_at_hash", profile.at_hash)
+                const googleUser = {
+                    name: profile.name,
+                    email: profile.email,
+                    password: profile.name + profile.email
+                }
+                console.log("googleUser", googleUser)
+                const res = await fetch(API_URL + "/auth/google", {
+                    method: "POST",
+                    body: JSON.stringify(googleUser),
+                    headers: { "Content-Type": "application/json" }
+                })
+                const { token, user: responseUser }: ILoginApiResponse = await res.json()
+                user.token = token
+                user.user = responseUser
+
+            }
             return true
         }
     },

@@ -69,6 +69,7 @@ const getIcon = async (name: string) => {
 export function Header() {
 
     const session = useSession()
+    console.log(session)
     const [showMenu, setShowMenu] = useState(false)
 
     return (
