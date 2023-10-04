@@ -43,7 +43,7 @@ function Menu({ onClickOutside }: MenuProps) {
             </a>
 
             <Link
-                href="api/auth/signout"
+                href="/api/auth/signout"
                 className="block px-4 py-2 text-sm text-gray-500"
             >
                 Salir
