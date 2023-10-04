@@ -12,6 +12,7 @@ import EmailList from "./addEmail";
 import { createGroup } from "@/app/lib/actions";
 import CustomModal from "@/app/components/common/Modals/Modal";
 import { CloseBtn } from "@/app/components/common/Modals/closeBtn";
+import Spinner from "@/app/components/common/Spinner/Spinner";
 
 
 interface ModalProps {
@@ -31,6 +32,7 @@ function CreateGroupForm({ authSession, router, closeModal }: {
         description: "",
         emails: [] as string[],
     });
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -51,12 +53,15 @@ function CreateGroupForm({ authSession, router, closeModal }: {
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault();
+        setIsLoading(true);
         if (!authSession) return
 
         const { name, description, emails } = group;
         const token = authSession?.token;
         await createGroup({ group, token, closeModal });
         router.refresh();
+        setIsLoading(false);
+
     }
 
     return (
@@ -86,7 +91,7 @@ function CreateGroupForm({ authSession, router, closeModal }: {
                 <EmailList emails={group.emails} setGroup={setGroup} />
             </div>
             <button type="submit" className="mt-8 w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Crear
+                {isLoading ? <Spinner /> : "Crear grupo"}
             </button>
         </form>
     )
