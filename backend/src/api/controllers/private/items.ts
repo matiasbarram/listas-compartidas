@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { payloadData } from "../../../utils/jwt/payloadData";
 import { PrismaClient } from "@prisma/client";
+import Logger from "../../../utils/logger";
 
 interface IItem {
     id: number;
@@ -164,4 +165,68 @@ export const changeStatus = async (req: Request, res: Response) => {
         item,
     });
 
+}
+
+
+export const deleteItem = async (req: Request, res: Response) => {
+    const listId = Number(req.params.listId);
+    const groupId = Number(req.params.groupId);
+    const itemId = Number(req.params.itemId);
+
+    const prisma = new PrismaClient();
+    try {
+
+        const item = await prisma.items.delete({
+            where: {
+                id: itemId,
+            }
+        }).finally(() => {
+            prisma.$disconnect()
+        })
+        return res.status(200).json({
+            groupId,
+            listId,
+            item,
+        });
+
+    }
+    catch (error) {
+        return res.status(400).json({
+            error: "Item not found"
+        })
+    }
+}
+
+
+export const editItem = async (req: Request, res: Response) => {
+    const listId = Number(req.params.listId);
+    const groupId = Number(req.params.groupId);
+    const itemId = Number(req.params.itemId);
+
+    const prisma = new PrismaClient();
+    try {
+        const item = await prisma.items.update({
+            where: {
+                id: itemId,
+            },
+            data: {
+                ...req.body,
+                modified_date: new Date(),
+            }
+        }).finally(() => {
+            prisma.$disconnect()
+        })
+        return res.status(200).json({
+            groupId,
+            listId,
+            item,
+        });
+
+    }
+    catch (error) {
+        Logger.error(error)
+        return res.status(400).json({
+            error: "Item not found"
+        })
+    }
 }

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { IListItem, IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "../../common/Spinner/Spinner";
-import { createProduct } from "@/app/lib/actions";
+import { createItem } from "@/app/lib/actions";
 
 interface IAddItemForm {
     closeModal: () => void;
@@ -37,7 +37,7 @@ export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
         }
         try {
             schemaItem.parse(data);
-            const newItem = await createProduct({
+            const newItem = await createItem({
                 data,
                 params: paramsData,
                 token: session?.token

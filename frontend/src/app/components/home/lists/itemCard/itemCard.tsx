@@ -1,7 +1,10 @@
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { IListItem } from "../../../../../../types";
 import { Checkbox } from "./checkbox";
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useRef } from "react";
+import DropdownMenu from "./dropdownMenu";
+import EditItemModal from "@/app/components/common/Modals/editItemModal";
+import DeleteItemModal from "@/app/components/common/Modals/deleteItemModal";
 
 interface IItemCardProps {
     item: IListItem;
@@ -10,12 +13,13 @@ interface IItemCardProps {
 
 export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
     const [showDropdown, setShowDropdown] = useState(false)
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     const handleDropdown = (e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         e.preventDefault()
         setShowDropdown(!showDropdown)
-        console.log("show", showDropdown)
     }
 
     return (
@@ -43,11 +47,21 @@ export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
                         <button
                             className="rounded-fullhover:bg-zinc-600 cursor-pointer block"
                             type="button"
+                            // ref={menuRef}
                             onClick={handleDropdown}
                         >
                             <EllipsisHorizontalIcon className="h-5 w-5 text-gray-400" />
                         </button>
                     </div>
+                    <DropdownMenu
+                        open={showDropdown}
+                        setOpen={setShowDropdown}
+                        setShowEditModal={setShowEditModal}
+                        setShowDeleteModal={setShowDeleteModal}
+                        item={item}
+                    />
+                    <EditItemModal item={item} setShowModal={setShowEditModal} showModal={showEditModal} />
+                    <DeleteItemModal item={item} setShowModal={setShowDeleteModal} showModal={showDeleteModal} />
                 </div >
             </div >
         </>

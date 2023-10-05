@@ -9,7 +9,7 @@ import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISignUpFormValues, signUpSchema } from "../../../../types";
 import Spinner from "@/app/components/common/Spinner/Spinner";
-import SocialLogin from "./socialProviders";
+import SocialLogin from "./socialLogin";
 
 
 const ForgotPassword = () => {

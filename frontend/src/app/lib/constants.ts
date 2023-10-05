@@ -25,3 +25,4 @@ export const defaultDataList: INewList = {
 
 export const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || throwEnvError("NEXT_PUBLIC_GOOGLE_CLIENT_ID")
 export const clientSecret = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET || throwEnvError("NEXT_PUBLIC_GOOGLE_CLIENT_SECRET")
+export const DEBOUNCE_DELAY = 1000
