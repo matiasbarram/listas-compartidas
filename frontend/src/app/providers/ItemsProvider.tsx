@@ -5,7 +5,7 @@ import { IListItem, ProviderProps } from "../../../types"
 
 
 interface ItemsContextProps {
-    listItems: any[]
+    listItems: IListItem[]
     setListItems: Dispatch<SetStateAction<IListItem[]>>
 }
 
