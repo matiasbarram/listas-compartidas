@@ -1,16 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { IListItem } from "../../../../../../types";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { useOutsideClick } from "@/app/hooks/clickOutside";
-import CustomModal from "@/app/components/common/Modals/Modal";
-import EditItemModal from "@/app/components/common/Modals/editItemModal";
-import DeleteItemModal from "@/app/components/common/Modals/deleteItemModal";
-
-interface IDropdownMenu {
-    open: boolean;
-    setOpen: Dispatch<SetStateAction<boolean>>
-    item: IListItem;
-}
 
 const menu = {
     closed: {
@@ -27,20 +17,15 @@ const menu = {
     },
 } satisfies Variants;
 
-export default function DropdownMenu({ open, setOpen, item }: IDropdownMenu) {
-    const [shoEditModal, setShowEditModal] = useState(false)
-    const [shoDeleteModal, setShowDeleteModal] = useState(false)
+interface IDropdownMenu {
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>
+    setShowEditModal: Dispatch<SetStateAction<boolean>>
+    setShowDeleteModal: Dispatch<SetStateAction<boolean>>
+    item: IListItem;
+}
 
-    const handleEditItemModal = () => {
-        setOpen(!open)
-        setShowEditModal(true)
-    }
-    const handleDeleteItemModal = () => {
-        setOpen(!open)
-        setShowDeleteModal(true)
-    }
-
-
+export default function DropdownMenu({ open, setOpen, setShowEditModal, setShowDeleteModal, item }: IDropdownMenu) {
     return (
         <>
             <AnimatePresence initial={false}>
@@ -54,21 +39,24 @@ export default function DropdownMenu({ open, setOpen, item }: IDropdownMenu) {
                     <ul className="flex flex-col space-y-2">
                         <li
                             className="p-1 rounded-md hover:bg-gray-600"
-                            onClick={handleEditItemModal}
+                            onClick={() => {
+                                setOpen(false)
+                                setShowEditModal(true)
+                            }}
                         >Editar
                         </li>
                         <li
                             className="p-1 rounded-md hover:bg-gray-600"
-                            onClick={handleDeleteItemModal}
+                            onClick={() => {
+                                setOpen(false)
+                                setShowDeleteModal(true)
+                            }}
                         >
                             Eliminar
                         </li>
                     </ul>
                 </motion.div>
             </AnimatePresence >
-            <EditItemModal item={item} setShowModal={setShowEditModal} shoModal={shoEditModal} />
-            <DeleteItemModal item={item} setShowModal={setShowDeleteModal} shoModal={shoDeleteModal} />
-
         </>
     )
 }

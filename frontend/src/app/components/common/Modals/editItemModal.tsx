@@ -1,29 +1,66 @@
-import { FormEvent } from "react";
-import { IListItem } from "../../../../../types";
+import { FormEvent, useContext, useState } from "react";
+import { IListItem, IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
 import CustomModal from "./Modal";
+import { ItemsContext } from "@/app/providers/ItemsProvider";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Spinner from "../Spinner/Spinner";
+import { createItem, editItem } from "@/app/lib/actions";
+import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-export default function EditItemModal({ item, setShowModal, shoModal }: { item: IListItem, setShowModal: any, shoModal: boolean }) {
+export default function EditItemModal({ item, setShowModal, showModal }: { item: IListItem, setShowModal: any, showModal: boolean }) {
+    const params = useParams()
+    const { listItems, setListItems } = useContext(ItemsContext)
 
-    const modifyItem = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        console.log(e.target)
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<INewItemValues>({
+        resolver: zodResolver(schemaItem),
+    });
+
+    const { data: session } = useSession()
+    if (!session) return null
+
+
+    const handleEditItem = async (data: INewItemValues) => {
+        const editedItem = await editItem({
+            itemId: item.id,
+            data,
+            params: params as unknown as IListKeysProps,
+            token: session.token
+        })
+        if (editedItem) {
+            const newListItems = listItems.map((listItem) => {
+                if (listItem.id === item.id) {
+                    return editedItem
+                } else {
+                    return listItem
+                }
+            })
+            setListItems(newListItems)
+            setShowModal(false)
+        }
     }
 
     return (
-        <CustomModal isOpen={shoModal} onClose={() => setShowModal(false)}>
+        <CustomModal isOpen={showModal} onClose={() => setShowModal(false)}>
             <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
                 <h2 className="text-2xl font-bold text-center mb-8">
                     Editar {item.description}
                 </h2>
-                <form className="space-y-4" onSubmit={modifyItem}>
+                <form className="space-y-4" onSubmit={handleSubmit(handleEditItem)}>
                     <div className="flex flex-col">
                         <label className="text-lg font-semibold text-gray-100" htmlFor="description">Descripción</label>
                         <input
                             className="input-field"
                             type="text"
-                            name="description"
                             id="description"
                             defaultValue={item.description}
+                            {...register("description")}
+
                         />
                     </div>
                     <div className="flex flex-col">
@@ -31,18 +68,22 @@ export default function EditItemModal({ item, setShowModal, shoModal }: { item: 
                         <input
                             className="input-field"
                             type="number"
-                            name="quantity"
+                            inputMode="decimal"
                             id="quantity"
                             defaultValue={item.quantity}
+                            {...register("quantity", { valueAsNumber: true })}
                         />
+                        {errors.quantity && (
+                            <span className="text-red-500 text-sm">{errors.quantity.message}</span>
+                        )}
                     </div>
                     <div>
                         <label className="text-lg font-semibold text-gray-100" htmlFor="is_completed">Notas</label>
                         <textarea
                             className="input-field"
-                            name="notes"
                             id="notes"
                             defaultValue={item.notes}
+                            {...register("comments")}
                         />
                     </div>
                     <div className="flex justify-center">
@@ -50,7 +91,7 @@ export default function EditItemModal({ item, setShowModal, shoModal }: { item: 
                             className="rounded-md bg-green-500 text-gray-100 font-semibold px-4 py-2"
                             type="submit"
                         >
-                            Guardar
+                            {isSubmitting ? <Spinner /> : "Guardar"}
                         </button>
                     </div>
                 </form>

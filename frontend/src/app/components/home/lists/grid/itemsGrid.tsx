@@ -10,6 +10,8 @@ import { DebouncedFunc, debounce } from "lodash";
 import SavingStatus from "../../../common/Toast/savingStatusToast";
 import { ItemsContext } from "@/app/providers/ItemsProvider";
 import RenderItems from "./renderItems";
+import { DEBOUNCE_DELAY } from "@/app/lib/constants";
+
 
 
 export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse, params: IListKeysProps }) => {
@@ -52,7 +54,7 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
                 if (session === null) return null;
                 await markAsCompleted({ isCompleted: newIsCompleted, item, params, session: session })
                 setSaving(false);
-            }, 2000);
+            }, DEBOUNCE_DELAY)
             debouncedMarkAsCompletedMap.current.set(itemId, debouncedFn);
         }
         debouncedFn();

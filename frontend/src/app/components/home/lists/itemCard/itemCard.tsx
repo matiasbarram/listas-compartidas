@@ -3,6 +3,8 @@ import { IListItem } from "../../../../../../types";
 import { Checkbox } from "./checkbox";
 import { useState, MouseEvent, useRef } from "react";
 import DropdownMenu from "./dropdownMenu";
+import EditItemModal from "@/app/components/common/Modals/editItemModal";
+import DeleteItemModal from "@/app/components/common/Modals/deleteItemModal";
 
 interface IItemCardProps {
     item: IListItem;
@@ -11,11 +13,8 @@ interface IItemCardProps {
 
 export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
     const [showDropdown, setShowDropdown] = useState(false)
-
-    // const menuRef = useRef<HTMLButtonElement>(null);
-    // useOutsideClick(menuRef.current, () => {
-    //     setShowDropdown(!showDropdown)
-    // })
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     const handleDropdown = (e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
@@ -57,8 +56,12 @@ export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
                     <DropdownMenu
                         open={showDropdown}
                         setOpen={setShowDropdown}
+                        setShowEditModal={setShowEditModal}
+                        setShowDeleteModal={setShowDeleteModal}
                         item={item}
                     />
+                    <EditItemModal item={item} setShowModal={setShowEditModal} showModal={showEditModal} />
+                    <DeleteItemModal item={item} setShowModal={setShowDeleteModal} showModal={showDeleteModal} />
                 </div >
             </div >
         </>

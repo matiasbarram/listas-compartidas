@@ -174,7 +174,7 @@ export const createList = async ({ data, token, groupId }: { data: INewListValue
     }
 }
 
-export const createProduct = async ({ data, params, token }: { data: INewItemValues, params: IListKeysProps, token: string }): Promise<IListItem | undefined> => {
+export const createItem = async ({ data, params, token }: { data: INewItemValues, params: IListKeysProps, token: string }): Promise<IListItem | undefined> => {
     try {
         const res = await callApi({
             url: `/private/groups/${params.slug}/lists/${params.listId}/items/create`,
@@ -195,6 +195,34 @@ export const createProduct = async ({ data, params, token }: { data: INewItemVal
     } catch (error) {
         createToast({
             message: "Error al crear el producto",
+            toastType: "error",
+        })
+    }
+}
+
+export const editItem = async ({ itemId, data, params, token }: { itemId: number, data: INewItemValues, params: IListKeysProps, token: string }) => {
+    const { comments, ...rest } = data;
+    const body = { ...rest, notes: comments }
+    try {
+        const res = await callApi({
+            url: `/private/groups/${params.slug}/lists/${params.listId}/items/${itemId}/edit`,
+            method: "PUT",
+            token,
+            body: { ...body }
+        })
+
+        if (!res.ok) throw new Error("Error al editar el producto");
+
+        createToast({
+            message: "Producto editado correctamente",
+            toastType: "success",
+        })
+        const newItem = res.data as ICreateItemResponse;
+        return newItem.item
+
+    } catch (error) {
+        createToast({
+            message: "Error al editar el producto",
             toastType: "error",
         })
     }

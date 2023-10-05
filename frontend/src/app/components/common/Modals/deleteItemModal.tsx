@@ -1,17 +1,20 @@
 import { deleteItem } from "@/app/lib/actions";
 import { IListItem, IListKeysProps } from "../../../../../types";
 import CustomModal from "./Modal";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useContext } from "react";
+import { ItemsContext } from "@/app/providers/ItemsProvider";
 
-export default function DeleteItemModal({ item, setShowModal, shoModal }: { item: IListItem, setShowModal: any, shoModal: boolean }) {
+export default function DeleteItemModal({ item, setShowModal, showModal }: { item: IListItem, setShowModal: any, showModal: boolean }) {
     const params = useParams()
-    const router = useRouter()
+
+    const { listItems, setListItems } = useContext(ItemsContext)
+
     const { data: session } = useSession()
     if (!session) return null
 
     const handleDeleteItem = async (e: React.FormEvent<HTMLFormElement>) => {
-        console.log("delete item")
         e.preventDefault()
         await deleteItem({
             params: params as unknown as IListKeysProps,
@@ -19,11 +22,10 @@ export default function DeleteItemModal({ item, setShowModal, shoModal }: { item
             item,
         })
         setShowModal(false)
+        setListItems(listItems.filter((listItem) => listItem.id !== item.id))
     }
-
-
     return (
-        <CustomModal isOpen={shoModal} onClose={() => setShowModal(false)}>
+        <CustomModal isOpen={showModal} onClose={() => setShowModal(false)}>
             <form
                 className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative"
                 onSubmit={handleDeleteItem}
