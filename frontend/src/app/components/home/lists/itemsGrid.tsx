@@ -1,25 +1,29 @@
 "use client"
 
-import { useCallback, useEffect, useState, useRef } from "react";
-import { IApiResponse, IListItem, IListItemsResponse, IListKeysProps } from "../../../../../types";
+import { useEffect, useState, useRef, useContext } from "react";
+import { IListItem, IListItemsResponse, IListKeysProps } from "../../../../../types";
 import { ItemCard } from "./itemCard/itemCard";
 import { markAsCompleted } from "@/app/lib/actions";
 import { useSession } from "next-auth/react";
 import AddItemBtn from "../addItemBtn";
 import { DebouncedFunc, debounce } from "lodash";
 import SavingStatus from "../../common/Toast/savingStatusToast";
-import { useRouter } from "next/navigation";
-import { usePathname, useSearchParams } from 'next/navigation'
+import ItemsProvider, { ItemsContext } from "@/app/providers/ItemsProvider";
 
 
 export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse, params: IListKeysProps }) => {
 
-    const [listItems, setListItems] = useState<IListItem[]>(itemsData.items);
+    const { listItems, setListItems } = useContext(ItemsContext)
+
+    const updateListItems = (newItems: IListItem[]) => setListItems(newItems);
+    useEffect(() => {
+        updateListItems(itemsData.items);
+    }, [itemsData.items]);
+
+
     const [saving, setSaving] = useState<boolean>(false);
     const listItemsRef = useRef(listItems);
     const { data: session } = useSession();
-    const pathname = usePathname()
-    const searchParams = useSearchParams()
 
     const updateItemCompletion = (itemId: number, isCompleted: boolean) => {
         setSaving(true);
@@ -33,7 +37,6 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
     };
 
     const debouncedMarkAsCompletedMap = useRef(new Map<number, () => void>());
-
     const toggleItemCompletion = (itemId: number) => {
         const item = listItemsRef.current.find((item: IListItem) => item.id === itemId);
         if (!item) return;
@@ -71,6 +74,7 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
     }, []);
 
     return (
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {<SavingStatus saving={saving} />}
             <h2 className="text-2xl font-bold text-gray-100 pb-4">Pendientes</h2>

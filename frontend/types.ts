@@ -1,9 +1,13 @@
 import { Session } from "next-auth";
 import { SessionContextValue } from "next-auth/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { ComponentType, Dispatch, SetStateAction } from "react";
+import { ComponentType, Dispatch, ReactNode, SetStateAction } from "react";
 import { z } from "zod";
 
+
+export interface ProviderProps {
+    children: ReactNode
+}
 
 export interface PageProps {
     slug: string;
@@ -133,6 +137,12 @@ export interface INewList {
 export interface ICompleted {
     status: "completed" | "uncompleted" | "deleted"
 }
+export interface IDeleteItemProps {
+    params: IListKeysProps;
+    session: Session;
+    item: IListItem;
+}
+
 
 export interface IMarkAsCompletedProps {
     isCompleted: boolean;

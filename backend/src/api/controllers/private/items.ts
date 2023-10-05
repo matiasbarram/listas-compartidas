@@ -165,3 +165,37 @@ export const changeStatus = async (req: Request, res: Response) => {
     });
 
 }
+
+
+export const deleteItem = async (req: Request, res: Response) => {
+    const listId = Number(req.params.listId);
+    const groupId = Number(req.params.groupId);
+    const itemId = Number(req.params.itemId);
+
+    const prisma = new PrismaClient();
+    try {
+
+        const item = await prisma.items.delete({
+            where: {
+                id: itemId,
+            }
+        }).finally(() => {
+            prisma.$disconnect()
+        })
+        return res.status(200).json({
+            groupId,
+            listId,
+            item,
+        });
+
+    }
+    catch (error) {
+        return res.status(400).json({
+            error: "Item not found"
+        })
+    }
+
+
+
+
+}

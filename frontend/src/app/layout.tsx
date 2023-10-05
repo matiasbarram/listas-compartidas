@@ -1,7 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Providers from './components/auth/AuthProviders'
+import AuthProviders from './providers/AuthProvider'
 import { ReactNode } from 'react'
 import ToastProvider from './components/common/ToastContainer'
 import NextTopLoader from 'nextjs-toploader';
@@ -25,11 +25,11 @@ export default function RootLayout({
         <NextTopLoader
           color='#6366f1'
         />
-        <Providers>
+        <AuthProviders>
           <ToastProvider>
             {children}
           </ToastProvider>
-        </Providers>
+        </AuthProviders>
       </body>
     </html >
   )

@@ -1,4 +1,4 @@
-import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues, IListKeysProps, INewItemValues, IListItem, ICreateItemResponse, IUserGroupsData } from "../../../types";
+import { INewItem, IApiConfig, IApiResponse, ICompleted, IMarkAsCompletedProps, ICreateProduct as ICreateItem, INewList, KeysWithSession, IListItemsResponse, INewListValues, IListKeysProps, INewItemValues, IListItem, ICreateItemResponse, IUserGroupsData, IDeleteItemProps } from "../../../types";
 import { API_URL, defaultDataItem, defaultDataList } from "./constants";
 import { createToast } from "./common";
 import { Error409 } from "./erros";
@@ -56,6 +56,16 @@ export const markAsCompleted = async ({ isCompleted, params, session, item }: IM
         body: { status: status }
     })
     console.log({ isCompleted, params, session, item })
+}
+
+
+export const deleteItem = async ({ params, session, item }: IDeleteItemProps) => {
+    callApi({
+        url: `/private/groups/${params.slug}/lists/${params.listId}/items/${item.id}/delete`,
+        method: "DELETE",
+        token: session.token,
+    })
+    console.log({ params, session, item })
 }
 
 export const signUp = async ({ email, password, name }: { email: string, password: string, name: string }) => {
