@@ -1,4 +1,4 @@
-import { IActionBtn, INewItem, INewList } from "../../../types";
+import { INewItem, INewList } from "../../../types";
 import { throwEnvError } from "./erros";
 
 

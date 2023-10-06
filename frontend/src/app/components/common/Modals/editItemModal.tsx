@@ -5,9 +5,9 @@ import { ItemsContext } from "@/app/providers/ItemsProvider";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "../Spinner/Spinner";
-import { createItem, editItem } from "@/app/lib/actions";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { createItem, editItem } from "@/app/lib/actions/item/items";
 
 export default function EditItemModal({ item, setShowModal, showModal }: { item: IListItem, setShowModal: any, showModal: boolean }) {
     const params = useParams()

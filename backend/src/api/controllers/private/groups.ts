@@ -137,3 +137,33 @@ export const usersGroup = async (req: Request, res: Response) => {
     });
 
 }
+
+export const groupsInfo = async (req: Request, res: Response) => {
+    const groupId = Number(req.params.groupId);
+    const prisma = new PrismaClient();
+    const group = await prisma.groups.findUnique({
+        where: {
+            id: groupId,
+        },
+        include: {
+            user_group: {
+                include: {
+                    users: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                        }
+                    }
+                }
+            }
+        }
+    }).finally(() => {
+        prisma.$disconnect()
+    })
+
+
+    return res.status(200).json({
+        group,
+    });
+}

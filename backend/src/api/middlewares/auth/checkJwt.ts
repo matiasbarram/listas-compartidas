@@ -19,24 +19,31 @@ export function checkJwt(req: Request, res: Response, next: NextFunction) {
         });
     }
     const token = authHeaderData[1];
-    const payload = validateJwt(token);
-    if (typeof payload === 'string') {
-        return res.status(401).json({
-            message: 'Not authenticated',
-        });
-    }
-    payload as JwtToken;
-    ['iat', 'exp'].forEach((keyToRemove) => delete payload[keyToRemove as keyof JwtToken]);
-    Logger.debug(payload);
-
     try {
-        // Refresh and send a new token on every request
-        const newToken = createJwt(payload as JwtPayload);
-        res.setHeader('token', `Bearer ${newToken}`);
-        return next();
+        const payload = validateJwt(token);
+        if (typeof payload === 'string') {
+            return res.status(401).json({
+                message: 'Not authenticated',
+            });
+        }
+        payload as JwtToken;
+        ['iat', 'exp'].forEach((keyToRemove) => delete payload[keyToRemove as keyof JwtToken]);
+        Logger.debug(payload);
 
-    } catch (err) {
-        // const customError = new CustomError(400, 'Raw', "Token can't be created", null, err);
-        return next(err);
+        try {
+            // Refresh and send a new token on every request
+            const newToken = createJwt(payload as JwtPayload);
+            res.setHeader('token', `Bearer ${newToken}`);
+            return next();
+
+        } catch (err) {
+            // const customError = new CustomError(400, 'Raw', "Token can't be created", null, err);
+            return next(err);
+        }
+    }
+    catch {
+        return res.status(401).json({
+            message: "Not auth"
+        })
     }
 }

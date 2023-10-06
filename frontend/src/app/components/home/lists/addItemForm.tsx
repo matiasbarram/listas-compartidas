@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { IListItem, IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "../../common/Spinner/Spinner";
-import { createItem } from "@/app/lib/actions";
+import { createItem } from "@/app/lib/actions/item/items";
 
 interface IAddItemForm {
     closeModal: () => void;

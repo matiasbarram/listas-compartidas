@@ -1,3 +1,4 @@
+import React from 'react';
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -5,7 +6,6 @@ import AuthProviders from './providers/AuthProvider'
 import { ReactNode } from 'react'
 import ToastProvider from './components/common/ToastContainer'
 import NextTopLoader from 'nextjs-toploader';
-
 
 const inter = Inter({ subsets: ['latin'] })
 

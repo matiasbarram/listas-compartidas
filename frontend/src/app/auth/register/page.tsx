@@ -3,13 +3,13 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import { signUp } from "@/app/lib/actions";
 import { createToast } from "@/app/lib/common";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ILoginFormValues, registerSchema } from "../../../../types";
 import Spinner from "@/app/components/common/Spinner/Spinner";
+import { signUp } from "@/app/lib/actions/auth/auth";
 
 export default function RegisterPage() {
     const router = useRouter();

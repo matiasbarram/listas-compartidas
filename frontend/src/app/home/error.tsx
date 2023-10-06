@@ -8,6 +8,8 @@ interface IError {
 }
 
 
+import React from 'react'
+
 export default function Error({ error, reset }: IError) {
 
     useEffect(() => {

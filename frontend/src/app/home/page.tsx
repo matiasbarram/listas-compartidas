@@ -1,10 +1,9 @@
-import { HomeCard } from "../components/home/homeCard"
+import React from "react"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../api/auth/[...nextauth]/route"
 import { GroupCard } from "../components/home/groupCard"
 import CreateGroupModal from "../components/home/group/createGroup/createGroupModal"
-import { getGroups } from "../lib/actions"
-
+import { getGroups } from "../lib/actions/group/groups"
 
 export default async function HomePage() {
     const session = await getServerSession(authOptions)

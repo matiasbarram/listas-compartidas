@@ -9,10 +9,10 @@ import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import EmailList from "./addEmail";
-import { createGroup } from "@/app/lib/actions";
 import CustomModal from "@/app/components/common/Modals/Modal";
 import { CloseBtn } from "@/app/components/common/Modals/closeBtn";
 import Spinner from "@/app/components/common/Spinner/Spinner";
+import { createGroup } from "@/app/lib/actions/group/groups";
 
 
 interface ModalProps {
