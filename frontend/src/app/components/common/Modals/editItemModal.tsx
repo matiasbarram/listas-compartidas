@@ -1,13 +1,13 @@
 import { FormEvent, useContext, useState } from "react";
 import { IListItem, IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
 import CustomModal from "./Modal";
-import { ItemsContext } from "@/app/providers/ItemsProvider";
+import { ItemsContext } from "@/providers/ItemsProvider";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "../Spinner/Spinner";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { createItem, editItem } from "@/app/lib/actions/item/items";
+import { createItem, editItem } from "@/lib/actions/item/items";
 
 export default function EditItemModal({ item, setShowModal, showModal }: { item: IListItem, setShowModal: any, showModal: boolean }) {
     const params = useParams()

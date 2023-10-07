@@ -145,25 +145,34 @@ export const groupsInfo = async (req: Request, res: Response) => {
         where: {
             id: groupId,
         },
-        include: {
-            user_group: {
-                include: {
-                    users: {
-                        select: {
-                            id: true,
-                            name: true,
-                            email: true,
+    }).then(async (group) => {
+        const users =
+            await prisma.users.findMany({
+                where: {
+                    user_group: {
+                        some: {
+                            group_id: groupId,
                         }
                     }
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true
                 }
-            }
-        }
+            });
+        return {
+            ...group,
+            users,
+        };
     }).finally(() => {
         prisma.$disconnect()
     })
 
 
+
+
     return res.status(200).json({
-        group,
+        group
     });
 }

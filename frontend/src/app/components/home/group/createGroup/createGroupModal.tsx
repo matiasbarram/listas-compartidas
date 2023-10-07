@@ -12,7 +12,7 @@ import EmailList from "./addEmail";
 import CustomModal from "@/app/components/common/Modals/Modal";
 import { CloseBtn } from "@/app/components/common/Modals/closeBtn";
 import Spinner from "@/app/components/common/Spinner/Spinner";
-import { createGroup } from "@/app/lib/actions/group/groups";
+import { createGroup } from "@/lib/actions/group/groups";
 
 
 interface ModalProps {

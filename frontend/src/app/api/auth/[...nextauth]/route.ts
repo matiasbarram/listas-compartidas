@@ -1,10 +1,11 @@
-import { API_URL, clientId, clientSecret } from "@/app/lib/constants";
+import { API_URL, clientId, clientSecret } from "@/lib/constants";
 import { NextAuthOptions, User } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { ILoginApiResponse } from "../../../../../types";
 import type { GoogleProfile } from "next-auth/providers/google";
+import { UserData } from "@/lib/next-auth";
 
 export const authOptions: NextAuthOptions = {
     pages: {
@@ -77,7 +78,7 @@ export const authOptions: NextAuthOptions = {
                 })
                 const { token, user: responseUser }: ILoginApiResponse = await res.json()
                 user.token = token
-                user.user = responseUser
+                user.user = responseUser as UserData
             }
             return true
         }

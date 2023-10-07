@@ -3,8 +3,8 @@ import CustomModal from "./Modal";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useContext } from "react";
-import { ItemsContext } from "@/app/providers/ItemsProvider";
-import { deleteItem } from "@/app/lib/actions/item/items";
+import { ItemsContext } from "@/providers/ItemsProvider";
+import { deleteItem } from "@/lib/actions/item/items";
 
 
 export default function DeleteItemModal({ item, setShowModal, showModal }: { item: IListItem, setShowModal: any, showModal: boolean }) {

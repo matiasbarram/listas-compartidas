@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Spinner from '@/app/components/common/Spinner/Spinner';
-import { createList } from '@/app/lib/actions/lists/lists';
+import { createList } from '@/lib/actions/lists/lists';
 
 interface IAddListFormProps {
     closeModal: () => void;

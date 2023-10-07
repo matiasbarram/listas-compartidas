@@ -1,6 +1,6 @@
 "use client"
 
-import { API_URL } from '@/app/lib/constants';
+import { API_URL } from '@/lib/constants';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { EmailItem } from './emailSearchItem';

@@ -6,10 +6,10 @@ import { useSession } from "next-auth/react";
 import AddItemBtn from "../../addItemBtn";
 import { DebouncedFunc, debounce } from "lodash";
 import SavingStatus from "../../../common/Toast/savingStatusToast";
-import { ItemsContext } from "@/app/providers/ItemsProvider";
+import { ItemsContext } from "@/providers/ItemsProvider";
 import RenderItems from "./renderItems";
-import { DEBOUNCE_DELAY } from "@/app/lib/constants";
-import { markAsCompleted } from "@/app/lib/actions/item/items";
+import { DEBOUNCE_DELAY } from "@/lib/constants";
+import { markAsCompleted } from "@/lib/actions/item/items";
 
 
 
