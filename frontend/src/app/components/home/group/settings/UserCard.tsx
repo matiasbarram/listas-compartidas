@@ -9,8 +9,8 @@ import { Dialog } from "@headlessui/react";
 import { DeleteUserModal } from "@/app/components/common/Modals/deleteUserFromGroupModal";
 
 export function UserCard({ user }: { user: IUserData }) {
-    const [deleteModal, setDeleteModal] = useState(false)
 
+    const [deleteModal, setDeleteModal] = useState(false)
     const closeModal = () => setDeleteModal(false)
 
     return (
@@ -22,7 +22,10 @@ export function UserCard({ user }: { user: IUserData }) {
                         src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
                         className="h-8 w-8 rounded-full object-cover"
                     />
-                    <span className="text-sm">{user.name}</span>
+                    <div>
+                        <p className="text-sm">{user.email}</p>
+                        <p className="text-xs">{user.name}</p>
+                    </div>
                 </div>
                 <button className="bg-red-900 hover:bg-red-800 text-white p-2 rounded-md">
                     <TrashIcon

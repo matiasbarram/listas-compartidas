@@ -70,7 +70,55 @@ export const groupInfo = async ({ token, slug }: { token: string, slug: string }
         method: "GET",
         token,
     })
-    console.log(res)
     return (res.data as { group: GroupInfoResponse }).group;
 
+}
+
+
+interface IEditGroupData {
+    message: string,
+    data: {
+        id: string,
+        name: string,
+        description: string
+    }
+}
+
+export const editGroupInfo = async ({ token, slug, data }: {
+    token: string, slug: string, data: {
+        name: string,
+        description: string
+    }
+}) => {
+    const res = await callApi({
+        url: `/private/groups/${slug}/info/edit`,
+        method: "PUT",
+        token,
+        body: data
+    })
+    return res.data as { group: IEditGroupData };
+}
+
+export const addMember = async ({ token, slug, email }: {
+    token: string, slug: string, email: string
+}) => {
+    const res = await callApi({
+        url: `/private/groups/${slug}/members/add`,
+        method: "PUT",
+        token,
+        body: { email }
+    })
+    return res.data as { message: string };
+}
+
+export const removeMember = async ({ token, slug, userId }: {
+    token: string, slug: string, userId: number
+}) => {
+    const res = await callApi({
+        url: `/private/groups/${slug}/members/delete`,
+        method: "DELETE",
+        token,
+        body: { userId }
+    })
+    return res.data as { message: string };
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { checkJwt } from "../../middlewares/auth/checkJwt";
-import { getGroups, groupsInfo, inviteUserToGroup, usersGroup } from "../../controllers/private/groups";
+import { deleteMemberFromGroup, editGroupInfo, getGroups, groupsInfo, inviteUserToGroup, usersGroup } from "../../controllers/private/groups";
 import { createList, lists } from "../../controllers/private/lists";
 import { changeStatus, createItem, deleteItem, getItems, editItem } from "../../controllers/private/items";
 import { createGroup } from "../../controllers/private/group/create";
@@ -16,7 +16,12 @@ privateRouter.route('/groups/create').post([checkJwt], createGroup)
 privateRouter.route('/groups/:id/invite').post([checkJwt], inviteUserToGroup)
 privateRouter.route('/groups/:id/users').get([checkJwt], usersGroup)
 privateRouter.route('/groups/:id/lists').get([checkJwt], lists)
+
 privateRouter.route('/groups/:groupId/info').get([checkJwt], groupsInfo)
+privateRouter.route('/groups/:groupId/info/edit').put([checkJwt], editGroupInfo)
+
+privateRouter.route('/groups/:groupId/members/add').post([checkJwt], inviteUserToGroup)
+privateRouter.route('/groups/:groupId/members/delete').delete([checkJwt], deleteMemberFromGroup)
 
 privateRouter.route('/groups/:groupId/lists/create').post([checkJwt], createList)
 privateRouter.route('/groups/:groupId/lists/:listId/items').get([checkJwt], getItems)
