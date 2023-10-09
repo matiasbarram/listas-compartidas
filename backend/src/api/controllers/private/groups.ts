@@ -54,7 +54,7 @@ export const getGroups = async (req: Request, res: Response) => {
 
 
 
-export const inviteUserToGroup = async (req: Request, res: Response) => {
+export const inviteUsersToGroup = async (req: Request, res: Response) => {
     const payload = payloadData(req, res);
     if (typeof payload === 'string') {
         return res.status(401).json({
@@ -62,51 +62,40 @@ export const inviteUserToGroup = async (req: Request, res: Response) => {
         });
     }
     const prisma = new PrismaClient();
-    const groupId = Number(req.params.id);
-    const { email } = req.body;
-    if (!email) {
+    const groupId = Number(req.params.groupId);
+    const { emails } = req.body;
+    if (!emails) {
         return res.status(400).json({
-            error: "Email is required"
+            error: "Emails is required"
         })
     }
-    const user = await prisma.users.findUnique({
+    const users = await prisma.users.findMany({
         where: {
-            email,
+            email: {
+                in: emails,
+            }
         }
     }).finally(() => {
         prisma.$disconnect()
     })
-
-    if (!user) {
+    if (!users.length) {
         return res.status(400).json({
-            error: "User not found"
+            error: "Users not found"
         })
     }
-    const userGroup = await prisma.user_group.findFirst({
-        where: {
+    const user_group = users.map((user) => {
+        return {
             user_id: user.id,
             group_id: groupId,
         }
+    })
+    await prisma.user_group.createMany({
+        data: user_group,
     }).finally(() => {
         prisma.$disconnect()
     })
-
-    if (userGroup) {
-        return res.status(400).json({
-            error: "User already in group"
-        })
-    }
-    await prisma.user_group.create({
-        data: {
-            user_id: user.id,
-            group_id: groupId
-        }
-    }).finally(() => {
-        prisma.$disconnect()
-    })
-
     return res.status(200).json({
-        message: "User added to group"
+        message: "Users invited to group"
     });
 
 }

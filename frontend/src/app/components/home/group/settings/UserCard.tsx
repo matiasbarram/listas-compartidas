@@ -1,11 +1,8 @@
 "use client"
 
-import { PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { GroupInfoResponse, IUserData } from "../../../../../../types";
-import { Fragment, useState } from "react";
-import CustomModal from "@/app/components/common/Modals/Modal";
-import { CloseBtn } from "@/app/components/common/Modals/closeBtn";
-import { Dialog } from "@headlessui/react";
+import { TrashIcon } from "@heroicons/react/24/solid";
+import { IUserData } from "../../../../../../types";
+import { useState } from "react";
 import { DeleteUserModal } from "@/app/components/common/Modals/deleteUserFromGroupModal";
 
 export function UserCard({ user }: { user: IUserData }) {

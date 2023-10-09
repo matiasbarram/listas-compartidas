@@ -99,14 +99,14 @@ export const editGroupInfo = async ({ token, slug, data }: {
     return res.data as { group: IEditGroupData };
 }
 
-export const addMember = async ({ token, slug, email }: {
-    token: string, slug: string, email: string
+export const inviteMember = async ({ token, slug, emails }: {
+    token: string, slug: string, emails: string[]
 }) => {
     const res = await callApi({
         url: `/private/groups/${slug}/members/add`,
         method: "PUT",
         token,
-        body: { email }
+        body: { emails }
     })
     return res.data as { message: string };
 }
