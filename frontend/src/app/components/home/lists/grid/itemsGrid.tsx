@@ -1,16 +1,15 @@
 "use client"
 
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useRef, useContext, useCallback } from "react";
 import { IListItem, IListItemsResponse, IListKeysProps } from "../../../../../../types";
-import { ItemCard } from "../itemCard/itemCard";
-import { markAsCompleted } from "@/app/lib/actions";
 import { useSession } from "next-auth/react";
 import AddItemBtn from "../../addItemBtn";
 import { DebouncedFunc, debounce } from "lodash";
 import SavingStatus from "../../../common/Toast/savingStatusToast";
-import { ItemsContext } from "@/app/providers/ItemsProvider";
+import { ItemsContext } from "@/providers/ItemsProvider";
 import RenderItems from "./renderItems";
-import { DEBOUNCE_DELAY } from "@/app/lib/constants";
+import { DEBOUNCE_DELAY } from "@/lib/constants";
+import { markAsCompleted } from "@/lib/actions/item/items";
 
 
 
@@ -18,10 +17,16 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
 
     const { listItems, setListItems } = useContext(ItemsContext)
 
-    const updateListItems = (newItems: IListItem[]) => setListItems(newItems);
+    const updateListItems = useCallback((newItems: IListItem[]) => setListItems(newItems), [setListItems]);
+
+    useEffect(() => {
+        // Move 'updateListItems' inside the useEffect callback
+        updateListItems(itemsData.items);
+    }, [itemsData.items, updateListItems]);
+
     useEffect(() => {
         updateListItems(itemsData.items);
-    }, [itemsData.items]);
+    }, [itemsData.items, updateListItems]);
 
 
     const [saving, setSaving] = useState<boolean>(false);

@@ -5,8 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { IListItem, IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createItem } from "@/lib/actions/item/items";
 import Spinner from "../../common/Spinner/Spinner";
-import { createItem } from "@/app/lib/actions";
 
 interface IAddItemForm {
     closeModal: () => void;

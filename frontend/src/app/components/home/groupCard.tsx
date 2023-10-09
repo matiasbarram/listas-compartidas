@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { IGroup } from "../../../../types";
+import { YouAndMore } from "../common/YouAndMore";
 
 export const GroupCard = ({ props, index }: { props: IGroup, index: number }) => {
     return (
@@ -32,16 +33,7 @@ export const GroupCard = ({ props, index }: { props: IGroup, index: number }) =>
                                     <div className="text-md font-medium text-indigo-400 opacity-90 line-clamp-2">
                                         {props.description}
                                     </div>
-
-                                    <div className="flex-shrink-0 text-sm font-medium text-gray-500">
-                                        {
-                                            props.users.length === 1 ?
-                                                "Solo tú" :
-                                                props.users.length === 2 ?
-                                                    `Tu y 1 más` :
-                                                    `Tu y ${props.users.length - 1} más`
-                                        }
-                                    </div>
+                                    <YouAndMore users={props.users} />
                                 </dd>
                             </dl>
                         </div>

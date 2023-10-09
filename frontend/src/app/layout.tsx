@@ -1,10 +1,13 @@
+import React from 'react';
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import AuthProviders from './providers/AuthProvider'
 import { ReactNode } from 'react'
 import ToastProvider from './components/common/ToastContainer'
 import NextTopLoader from 'nextjs-toploader';
+import AuthProviders from '@/providers/AuthProvider';
+import ReactQueryProvider from '@/providers/ReactQueryProvider';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -27,7 +30,10 @@ export default function RootLayout({
         />
         <AuthProviders>
           <ToastProvider>
-            {children}
+            <ReactQueryProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+              {children}
+            </ReactQueryProvider>
           </ToastProvider>
         </AuthProviders>
       </body>

@@ -2,7 +2,7 @@
 
 import { ChevronLeftIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/navigation"
-import { homePath } from "../../lib/constants"
+import { homePath } from "@/lib/constants"
 
 export const BackBtn = () => {
     const router = useRouter()
