@@ -10,47 +10,47 @@ interface MenuProps {
     onClickOutside: () => void;
 }
 
-// function Menu({ onClickOutside }: MenuProps) {
-//     const ref = useRef<HTMLDivElement>(null);
+function Menu({ onClickOutside }: MenuProps) {
+    const ref = useRef<HTMLDivElement>(null);
 
-//     useEffect(() => {
-//         const handleClickOutside = (event: MouseEvent) => {
-//             if (ref.current && !ref.current.contains(event.target as Node)) {
-//                 onClickOutside && onClickOutside();
-//             }
-//         };
-//         document.addEventListener('click', handleClickOutside, true);
-//         return () => {
-//             document.removeEventListener('click', handleClickOutside, true);
-//         };
-//     }, [onClickOutside]);
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
+                onClickOutside && onClickOutside();
+            }
+        };
+        document.addEventListener('click', handleClickOutside, true);
+        return () => {
+            document.removeEventListener('click', handleClickOutside, true);
+        };
+    }, [onClickOutside]);
 
-//     return (
-//         <div ref={ref}
-//             className="absolute right-0 w-48 py-2 mt-2 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 bg-zinc-900">
-//             <a
-//                 href="#"
-//                 className="block px-4 py-2 text-sm text-gray-500"
-//             >
-//                 Your Profile
-//             </a>
+    return (
+        <div ref={ref}
+            className="absolute right-0 w-48 py-2 mt-2 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 bg-zinc-900">
+            {/* <a
+                href="#"
+                className="block px-4 py-2 text-sm text-gray-500"
+            >
+                Your Profile
+            </a>
 
-//             <a
-//                 href="#"
-//                 className="block px-4 py-2 text-sm text-gray-500"
-//             >
-//                 Settings
-//             </a>
+            <a
+                href="#"
+                className="block px-4 py-2 text-sm text-gray-500"
+            >
+                Settings
+            </a> */}
 
-//             <Link
-//                 href="/api/auth/signout"
-//                 className="block px-4 py-2 text-sm text-gray-500"
-//             >
-//                 Salir
-//             </Link>
-//         </div>
-//     )
-// }
+            <Link
+                href="/api/auth/signout"
+                className="block px-4 py-2 text-sm text-gray-500"
+            >
+                Salir
+            </Link>
+        </div>
+    )
+}
 
 export function Header() {
 
@@ -126,7 +126,7 @@ export function Header() {
                         </div>
                     </div>
                 </div>
-                {/* {showMenu && <Menu onClickOutside={() => setShowMenu(false)} />} */}
+                {showMenu && <Menu onClickOutside={() => setShowMenu(false)} />}
             </div>
         </header>
     )

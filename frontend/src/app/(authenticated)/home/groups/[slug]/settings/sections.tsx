@@ -13,7 +13,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import CustomModal from "@/app/components/common/Modals/Modal";
 import EmailList from "@/app/components/home/group/createGroup/addEmail";
 import Spinner from "@/app/components/common/Spinner/Spinner";
-import { set } from "lodash";
 
 export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element {
     const [newData, setNewData] = useState({
@@ -25,6 +24,7 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
     const { data: session } = useSession()
 
     const queryClient = useQueryClient()
+
     const { mutate: submitChange, isLoading, isError } = useMutation({
         mutationFn: () => editGroupInfo({
             token: session?.token as string,
@@ -32,7 +32,12 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
             data: newData
         }),
         onSuccess: () => {
-            queryClient.invalidateQueries(['groupInfo'])
+            queryClient.invalidateQueries(['groupInfo', params.slug])
+            createToast({
+                message: "Grupo editado correctamente",
+                toastType: "success"
+            })
+            setShowSaveBtn(false)
         },
         onError: () => {
             console.log("Error al editar el grupo")
@@ -49,9 +54,10 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
         const { name, value } = e.target;
         setNewData((prevState) => ({
             ...prevState,
-            [name]: value,
-        }));
+            [name]: value
+        }))
         setShowSaveBtn(true)
+
     }
 
     return (
@@ -66,6 +72,7 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
                             id="name"
                             className="rounded-md text-gray-500 bg-zinc-800 col-span-3 indent-2"
                             placeholder="Nombre del grupo"
+                            name="name"
                             defaultValue={newData.name}
                             onChange={(e) => handleInputChange(e)}
                         />
@@ -75,6 +82,7 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
                         <input
                             type="text"
                             id="description"
+                            name="description"
                             className="rounded-md w-full text-gray-500 bg-zinc-800 col-span-3 indent-2"
                             placeholder="Descripción del grupo"
                             defaultValue={newData.description}
