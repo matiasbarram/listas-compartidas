@@ -58,7 +58,7 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
         <>
             <div className="flex flex-col gap-4 mt-8">
                 <h2 className="text-xl font-bold">Información</h2>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div className="grid grid-cols-4 gap-2">
                         <label htmlFor="name" className="text-sm text-gray-500 col-span-1 py-2">Nombre</label>
                         <input

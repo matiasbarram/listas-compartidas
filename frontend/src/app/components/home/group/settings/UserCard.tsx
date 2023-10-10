@@ -4,11 +4,14 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { IUserData } from "../../../../../../types";
 import { useState } from "react";
 import { DeleteUserModal } from "@/app/components/common/Modals/deleteUserFromGroupModal";
+import { useSession } from "next-auth/react";
 
 export function UserCard({ user }: { user: IUserData }) {
-
     const [deleteModal, setDeleteModal] = useState(false)
     const closeModal = () => setDeleteModal(false)
+
+    const { data: session } = useSession()
+    if (!session) return null
 
     return (
         <>
@@ -24,12 +27,15 @@ export function UserCard({ user }: { user: IUserData }) {
                         <p className="text-xs">{user.name}</p>
                     </div>
                 </div>
-                <button className="bg-red-900 hover:bg-red-800 text-white p-2 rounded-md">
-                    <TrashIcon
-                        className="h-4 w-4"
-                        onClick={() => setDeleteModal(true)}
-                    />
-                </button>
+                {session.user.email !== user.email && (
+                    <button className="bg-red-900 hover:bg-red-800 text-white p-2 rounded-md">
+                        <TrashIcon
+                            className="h-4 w-4"
+                            onClick={() => setDeleteModal(true)}
+                        />
+                    </button>
+                )
+                }
             </div>
             <DeleteUserModal isOpen={deleteModal} closeModal={closeModal} setDeleteModal={setDeleteModal} user={user} />
 
