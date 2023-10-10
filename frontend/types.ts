@@ -1,6 +1,7 @@
 import { Session } from "next-auth";
 import { SessionContextValue } from "next-auth/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { type } from "os";
 import { ComponentType, Dispatch, ReactNode, SetStateAction } from "react";
 import { z } from "zod";
 
@@ -48,6 +49,7 @@ export interface GroupInfoResponse {
     id: number,
     name: string,
     description: string,
+    type: string,
     created_at: string,
     updated_at: string,
     users: IUserData[]

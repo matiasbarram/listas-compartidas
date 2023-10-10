@@ -33,12 +33,14 @@ export default async function GroupListsPage({ params }: IGroupParams) {
             <div className="grid grid-cols-4 gap-2 items-center mb-8">
                 <GroupData groupData={group} params={params} />
                 <div className="col-span-1 flex justify-end">
-                    <Link
-                        href={`/home/groups/${params.slug}/settings`}
-                        className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold p-2 rounded-md w-10 h-10 flex items-center justify-center"
-                    >
-                        <Cog8ToothIcon className="h-6 w-6" />
-                    </Link>
+                    {group.type === "personal" ? null :
+                        <Link
+                            href={`/home/groups/${params.slug}/settings`}
+                            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold p-2 rounded-md w-10 h-10 flex items-center justify-center"
+                        >
+                            <Cog8ToothIcon className="h-6 w-6" />
+                        </Link>
+                    }
                 </div>
             </div >
             {lists.length === 0 ? emptyListComponent(params) : showLists(lists, params.slug)}

@@ -23,6 +23,7 @@ model groups {
   description String       @db.VarChar(255)
   created_at  DateTime?    @default(now()) @db.Timestamp(6)
   updated_at  DateTime?    @updatedAt @db.Timestamp(6)
+  type        String?      @default("shared") @db.VarChar(50)
   lists       lists[]
   user_group  user_group[]
 }
