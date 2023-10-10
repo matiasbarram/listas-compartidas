@@ -83,13 +83,13 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
                     </div>
                     <AnimatePresence initial={false}>
                         <motion.div
-                            className="absolute bottom-3 right-0 w-full flex justify-center"
+                            className="fixed bottom-4 left-0 w-full my-auto flex justify-center"
                             initial={{ opacity: 0 }}
                             animate={showSaveBtn ? { opacity: 1 } : { opacity: 0 }}
                             transition={{ delay: 0.2 }}
 
                         >
-                            <button className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-11/12"
+                            <button className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-10/12"
                                 disabled={isLoading}>
                                 <small>Guardar cambios</small>
                             </button>
