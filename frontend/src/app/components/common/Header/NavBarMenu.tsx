@@ -14,7 +14,6 @@ const links: IHeaderLink[] = [
         route: "/",
         Icon: HomeIcon,
     },
-    /* Agrega más objetos de enlace aquí según tus necesidades */
 ];
 
 export function NavBarMenu() {
