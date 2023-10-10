@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 export default function GroupData({ groupData: group, params }: { groupData: GroupInfoResponse, params: PageProps }) {
     const { data: session } = useSession()
     const { data, isLoading, isError } = useQuery({
-        queryKey: ['groupInfo'],
+        queryKey: ['groupInfo', params.slug],
         queryFn: () => groupInfo({
             token: session?.token as string,
             slug: params.slug as string
