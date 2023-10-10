@@ -190,22 +190,42 @@ export function GroupUsers({ group }: { group: GroupInfoResponse }) {
 }
 
 export function DangerZone() {
+    const secciones = [
+        {
+            titulo: "Salir del grupo",
+            mensaje: "Una vez salgas del grupo no podrás volver a entrar",
+            botonTexto: "Salir",
+        },
+        {
+            titulo: "Eliminar grupo",
+            mensaje: "Una vez eliminado el grupo no se podrá recuperar",
+            botonTexto: "Eliminar",
+        },
+    ];
+
     return (
         <>
             <div className="flex flex-col gap-4 mt-8">
                 <h2 className="text-xl font-bold">Zona de peligro</h2>
-                <div className="flex justify-between items-center text-white px-4 py-2 gap-2 border border-red-900 rounded-md">
-                    <div className="flex flex-col gap-2">
-                        <h3 className="font-bold">Eliminar grupo</h3>
-                        <p className="text-sm">Una vez eliminado el grupo no se podrá recuperar</p>
-                    </div>
-                    <button className="bg-zinc-800 text-red-800 font-bold px-2 py-1 rounded-md">
-                        <small>Eliminar</small>
-                    </button>
-
-
+                <div className="flex flex-col justify-between items-center text-white px-4 py-2 gap-2 border border-red-900 rounded-md">
+                    {secciones.map((seccion, index) => (
+                        <div key={index}>
+                            <section className="flex gap-2">
+                                <div>
+                                    <h3 className="font-bold">{seccion.titulo}</h3>
+                                    <p className="text-sm">{seccion.mensaje}</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button className="bg-zinc-800 text-red-800 font-bold px-2 py-1 rounded-md w-20">
+                                        <small>{seccion.botonTexto}</small>
+                                    </button>
+                                </div>
+                            </section>
+                            {index !== secciones.length - 1 && <br className="mt-4" />}
+                        </div>
+                    ))}
                 </div>
-            </div>
+            </div >
         </>
     )
 }

@@ -10,6 +10,7 @@ export const createGroup = async ({ user_id, prisma }: ICreateGroup) => {
         data: {
             name: `Mi grupo`,
             description: `Listas personales`,
+            type: `personal`,
         }
 
     }).finally(() => {

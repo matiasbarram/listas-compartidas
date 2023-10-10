@@ -16,18 +16,32 @@ export default async function GroupListsPage({ params, searchParams }: { params:
         slug: params.slug
     })
 
-    return (
-        <>
-            <BackBtn />
-            <div className="mb-8">
-                <div className="">
-                    <h1 className="text-2xl font-bold mt-4 flex items-center">Configuración de grupo</h1>
-                    <p className="text-gray-500 text-sm">Aquí puedes cambiar la información del grupo</p>
-                </div>
-                <Configs group={group} token={session.token} />
+    switch (group.type) {
+        case "personal":
+            return (
+                <>
+                    <BackBtn />
+                    <div className="mb-8">
+                        <h1 className="text-2xl font-bold mt-4 flex items-center">!Lo sentimos!</h1>
+                        <p className="text-gray-500 text-sm">Los grupos personales no tienen configuración</p>
 
-            </div >
+                    </div>
+                </>
+            )
+        default:
+            return (
+                <>
+                    <BackBtn />
+                    <div className="mb-8">
+                        <div className="">
+                            <h1 className="text-2xl font-bold mt-4 flex items-center">Configuración de grupo</h1>
+                            <p className="text-gray-500 text-sm">Aquí puedes cambiar la información del grupo</p>
+                        </div>
+                        <Configs group={group} token={session.token} />
+                    </div >
+                </>
+            )
+    }
 
-        </>
-    )
+
 }
