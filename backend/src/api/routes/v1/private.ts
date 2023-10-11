@@ -5,6 +5,7 @@ import { createList, lists } from "../../controllers/private/lists";
 import { changeStatus, createItem, deleteItem, getItems, editItem } from "../../controllers/private/items";
 import { createGroup } from "../../controllers/private/group/create";
 import searchUsers from "../../controllers/private/searchUsers";
+import { getLastModifiedLists } from "../../controllers/private/list/lastModified";
 
 
 const privateRouter: Router = Router();
@@ -12,7 +13,9 @@ const privateRouter: Router = Router();
 privateRouter.route('/users/search').get([checkJwt], searchUsers)
 
 privateRouter.route('/groups').get([checkJwt], getGroups)
+privateRouter.route('/lists/last').get([checkJwt], getLastModifiedLists)
 privateRouter.route('/groups/create').post([checkJwt], createGroup)
+
 privateRouter.route('/groups/:id/users').get([checkJwt], usersGroup)
 privateRouter.route('/groups/:id/lists').get([checkJwt], lists)
 

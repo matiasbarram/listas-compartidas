@@ -183,11 +183,12 @@ export function GroupUsers({ group }: { group: GroupInfoResponse }) {
             <CustomModal isOpen={showAddUser} onClose={() => setShowAddUser(false)}>
                 <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
                     <h2 className="text-xl font-bold">Agregar miembro</h2>
-                    <form onSubmit={handleSubmit}>
+                    <p className="text-sm text-gray-500">Agrega los emails de los usuarios que desees agregar a tu grupo</p>
+                    <form onSubmit={handleSubmit} className="my-4">
                         <EmailList emails={newUsers.emails} setGroup={setNewUsers} />
                         <div className="mt-4">
                             <button className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-full" disabled={isLoading}>
-                                <small>{isLoading ? <span><Spinner /></span> : "Agregar miembros"}</small>
+                                {isLoading ? <span><Spinner /></span> : "Agregar miembros"}
                             </button>
                         </div>
                     </form>

@@ -59,12 +59,14 @@ model items {
 }
 
 model lists {
-  id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(255)
-  description String  @db.VarChar(255)
-  group_id    Int
-  items       items[]
-  groups      groups  @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(255)
+  description   String    @db.VarChar(255)
+  created_date  DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  modified_date DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  group_id      Int
+  items         items[]
+  groups        groups    @relation(fields: [group_id], references: [id], onDelete: Cascade)
 }
 
 model tags {
