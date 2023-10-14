@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: {
     const { data: session, status } = useSession()
     useEffect(() => {
         const checkJwt = async () => {
-            fetch(API_URL + "   ", {
+            fetch(API_URL + "/auth/verify", {
                 headers: {
                     Authorization: `Bearer ${session?.token}`,
                 },
