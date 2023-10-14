@@ -17,7 +17,7 @@ export default function LastUpdatedLists({ lists: initialList, token }: { lists:
     })
 
     return (
-        <>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             {
                 lists.lists.map((list, index) => (
                     <Fragment key={index}>
@@ -25,6 +25,6 @@ export default function LastUpdatedLists({ lists: initialList, token }: { lists:
                     </Fragment>
                 ))
             }
-        </>
+        </div>
     )
 }

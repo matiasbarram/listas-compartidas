@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { getServerSession } from "next-auth"
 import CreateGroupModal from "@/app/components/home/group/createGroup/createGroupModal"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
@@ -33,12 +33,12 @@ export default async function HomePage() {
 
             </div >
             <h2 className="text-xl my-6">Últimas listas modificadas</h2>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <Fragment>
                 <div className="text-center text-gray-500">
                     <LastUpdatedLists lists={lists} token={session?.token as string} />
                 </div>
                 < div />
-            </div>
+            </Fragment>
         </>
     )
 }
