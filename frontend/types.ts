@@ -32,6 +32,15 @@ export interface IList {
     description: string,
 }
 
+export interface IListWithGroup extends IList {
+    groupId: number,
+    groupName: string
+}
+
+export interface IGetLists {
+    lists: IListWithGroup[]
+}
+
 export interface IFormData {
     email: string;
     password: string;

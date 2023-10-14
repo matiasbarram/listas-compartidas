@@ -13,7 +13,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import CustomModal from "@/app/components/common/Modals/Modal";
 import EmailList from "@/app/components/home/group/createGroup/addEmail";
 import Spinner from "@/app/components/common/Spinner/Spinner";
-import { set } from "lodash";
 
 export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element {
     const [newData, setNewData] = useState({
@@ -25,6 +24,7 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
     const { data: session } = useSession()
 
     const queryClient = useQueryClient()
+
     const { mutate: submitChange, isLoading, isError } = useMutation({
         mutationFn: () => editGroupInfo({
             token: session?.token as string,
@@ -32,7 +32,12 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
             data: newData
         }),
         onSuccess: () => {
-            queryClient.invalidateQueries(['groupInfo'])
+            queryClient.invalidateQueries(['groupInfo', params.slug])
+            createToast({
+                message: "Grupo editado correctamente",
+                toastType: "success"
+            })
+            setShowSaveBtn(false)
         },
         onError: () => {
             console.log("Error al editar el grupo")
@@ -49,9 +54,10 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
         const { name, value } = e.target;
         setNewData((prevState) => ({
             ...prevState,
-            [name]: value,
-        }));
+            [name]: value
+        }))
         setShowSaveBtn(true)
+
     }
 
     return (
@@ -66,6 +72,7 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
                             id="name"
                             className="rounded-md text-gray-500 bg-zinc-800 col-span-3 indent-2"
                             placeholder="Nombre del grupo"
+                            name="name"
                             defaultValue={newData.name}
                             onChange={(e) => handleInputChange(e)}
                         />
@@ -75,6 +82,7 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
                         <input
                             type="text"
                             id="description"
+                            name="description"
                             className="rounded-md w-full text-gray-500 bg-zinc-800 col-span-3 indent-2"
                             placeholder="Descripción del grupo"
                             defaultValue={newData.description}
@@ -83,13 +91,13 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
                     </div>
                     <AnimatePresence initial={false}>
                         <motion.div
-                            className="absolute bottom-3 right-0 w-full flex justify-center"
+                            className="fixed bottom-4 left-0 w-full my-auto flex justify-center"
                             initial={{ opacity: 0 }}
                             animate={showSaveBtn ? { opacity: 1 } : { opacity: 0 }}
                             transition={{ delay: 0.2 }}
 
                         >
-                            <button className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-11/12"
+                            <button className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-10/12"
                                 disabled={isLoading}>
                                 <small>Guardar cambios</small>
                             </button>
@@ -175,11 +183,12 @@ export function GroupUsers({ group }: { group: GroupInfoResponse }) {
             <CustomModal isOpen={showAddUser} onClose={() => setShowAddUser(false)}>
                 <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
                     <h2 className="text-xl font-bold">Agregar miembro</h2>
-                    <form onSubmit={handleSubmit}>
+                    <p className="text-sm text-gray-500">Agrega los emails de los usuarios que desees agregar a tu grupo</p>
+                    <form onSubmit={handleSubmit} className="my-4">
                         <EmailList emails={newUsers.emails} setGroup={setNewUsers} />
                         <div className="mt-4">
                             <button className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-full" disabled={isLoading}>
-                                <small>{isLoading ? <span><Spinner /></span> : "Agregar miembros"}</small>
+                                {isLoading ? <span><Spinner /></span> : "Agregar miembros"}
                             </button>
                         </div>
                     </form>

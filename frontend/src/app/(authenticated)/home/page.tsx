@@ -1,14 +1,20 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { getServerSession } from "next-auth"
 import CreateGroupModal from "@/app/components/home/group/createGroup/createGroupModal"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { getGroups } from "@/lib/actions/group/groups"
 import { GroupCard } from "@/app/components/home/groupCard"
+import { getLastUpdatedLists } from "@/lib/actions/lists/lists"
+import LastUpdatedLists from "./lastUpdated"
 
 
 export default async function HomePage() {
     const session = await getServerSession(authOptions)
     const { groups } = await getGroups(session?.token)
+    const lists = await getLastUpdatedLists({
+        token: session?.token as string,
+    })
+    if (!lists) return <div>error</div>
 
     return (
         <>
@@ -27,12 +33,12 @@ export default async function HomePage() {
 
             </div >
             <h2 className="text-xl my-6">Últimas listas modificadas</h2>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                <p className="text-center text-gray-500">
-                    Próximamente...
-                </p>
+            <Fragment>
+                <div className="text-center text-gray-500">
+                    <LastUpdatedLists lists={lists} token={session?.token as string} />
+                </div>
                 < div />
-            </div>
+            </Fragment>
         </>
     )
 }

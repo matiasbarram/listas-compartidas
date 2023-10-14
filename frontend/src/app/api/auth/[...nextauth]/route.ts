@@ -1,4 +1,4 @@
-import { API_URL, clientId, clientSecret } from "@/lib/constants";
+import { API_URL, JWT_EXPIRATION_TIME, clientId, clientSecret } from "@/lib/constants";
 import { NextAuthOptions, User } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -6,13 +6,20 @@ import GoogleProvider from "next-auth/providers/google";
 import { ILoginApiResponse } from "../../../../../types";
 import type { GoogleProfile } from "next-auth/providers/google";
 import { UserData } from "@/lib/next-auth";
+import { env } from "process";
 
 export const authOptions: NextAuthOptions = {
     pages: {
         signIn: "/auth/login",
         error: "/auth/login",
     },
-
+    jwt: {
+        maxAge: JWT_EXPIRATION_TIME,
+    },
+    session: {
+        strategy: "jwt",
+        maxAge: JWT_EXPIRATION_TIME,
+    },
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -50,6 +57,11 @@ export const authOptions: NextAuthOptions = {
 
     callbacks: {
         async jwt({ token, user }) {
+            if (token.iat) {
+                const expDate = new Date(token.iat * 1000)
+                const now = new Date()
+                if (now < expDate) { return token }
+            }
             if (user) return { ...token, ...user }
             return token
         },

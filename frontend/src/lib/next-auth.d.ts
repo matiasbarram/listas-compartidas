@@ -24,6 +24,8 @@ import Google from "next-auth/providers/google";
 declare module "next-auth/jwt" {
     interface JWT {
         user: UserData,
-        token: string
+        token: string,
+        iat: number,
+        exp: number
     }
 }

@@ -1,4 +1,4 @@
-import { INewListValues } from "../../../../types";
+import { IGetLists, IList, INewListValues } from "../../../../types";
 import { callApi, createToast } from "@/lib/common";
 
 export const createList = async ({ data, token, groupId }: { data: INewListValues, token: string, groupId: string }) => {
@@ -23,4 +23,15 @@ export const createList = async ({ data, token, groupId }: { data: INewListValue
             toastType: "error",
         })
     }
+}
+
+
+
+export const getLastUpdatedLists = async ({ token }: { token: string }) => {
+    const res = await callApi({
+        url: `/private/lists/last`,
+        method: "GET",
+        token
+    })
+    return res.data as IGetLists;
 }

@@ -17,5 +17,11 @@ authRouter.route('/google').post(loginGoogle)
 authRouter.route('/login').post([validateLogin], login);
 authRouter.route('/register').post([validateLogin], register)
 
+authRouter.route('/verify').get([checkJwt], (req: Request, res: Response) => {
+    return res.status(200).json({
+        message: 'Verified'
+    })
+})
+
 
 export default authRouter;
