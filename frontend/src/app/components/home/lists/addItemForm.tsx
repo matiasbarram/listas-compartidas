@@ -7,6 +7,7 @@ import { IListItem, IListKeysProps, INewItemValues, schemaItem } from "../../../
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createItem } from "@/lib/actions/item/items";
 import Spinner from "../../common/Spinner/Spinner";
+import { values } from "lodash";
 
 interface IAddItemForm {
     closeModal: () => void;
@@ -55,7 +56,7 @@ export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
         <>
             <form onSubmit={handleSubmit(handleCreateProduct)}>
                 <div className="flex flex-col mb-4">
-                    <label className="mb-2 text-lg" htmlFor="description">Nombre</label>
+                    <label className="mb-2 text-lg" htmlFor="description">Producto</label>
                     <input
                         className={`input-field ${errors.description ? "input-error" : ""}`}
                         type="text"
@@ -71,7 +72,13 @@ export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
                         type="number"
                         inputMode="decimal"
                         placeholder="Cantidad"
-                        {...register("quantity", { valueAsNumber: true })}
+                        {...register("quantity", {
+                            setValueAs: (value: any) => {
+                                if (value === "") return 1
+                                return Number(value)
+                            }
+                        }
+                        )}
                     />
                     {errors.quantity && (
                         <span className="text-red-500 text-sm">{errors.quantity.message}</span>
@@ -89,7 +96,7 @@ export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
                     type="submit"
                     disabled={isSubmitting}
                 >
-                    {isSubmitting ? <Spinner /> : "Crear lista"}
+                    {isSubmitting ? <Spinner /> : "Agregar"}
                 </button>
 
             </form>
