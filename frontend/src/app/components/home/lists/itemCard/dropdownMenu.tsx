@@ -30,7 +30,7 @@ export default function DropdownMenu({ open, setOpen, setShowEditModal, setShowD
         <>
             <AnimatePresence initial={false}>
                 <motion.div
-                    className="absolute top-10 right-2 shadow-md rounded-md w-2/4 z-2 bg-gray-700 p-2 dropdown-menu"
+                    className="absolute top-10 right-2 shadow-md rounded-md w-2/4 z-10 bg-gray-700 p-2 dropdown-menu"
                     variants={menu}
                     animate={open ? "open" : "closed"}
                     initial="closed"

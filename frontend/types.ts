@@ -229,7 +229,7 @@ export type ILoginFormValues = z.infer<typeof registerSchema>;
 
 export const schemaItem = z.object({
     description: z.string().nonempty("Nombre es obligatorio"),
-    quantity: z.number().int("Cantidad debe ser un número entero").min(1, "Cantidad mínima es 1").max(100, "Cantidad máxima es 100"),
+    quantity: z.number().int("Cantidad debe ser un número entero").min(1, "Cantidad mínima es 1").max(100, "Cantidad máxima es 100").default(1).optional(),
     comments: z.string().optional(),
 });
 
