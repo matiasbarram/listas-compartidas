@@ -44,15 +44,11 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
 
         if (finalTranscript.length > 0) {
             setLoading(true)
-            // callOpenAIApi().then(data => {
-            //     setGptResponse(data)
-            //     setLoading(false)
-            //     setShowModal(true)
-            // })
-            const items = { "items": [{ "name": "palta", "list": "Supermercado", "quantity": 1 }, { "name": "tomate", "list": "Supermercado", "quantity": 1 }, { "name": "lechuga", "list": "Supermercado", "quantity": 1 }] }
-            setGptResponse(items)
-            setLoading(false)
-            setShowModal(true)
+            callOpenAIApi().then(data => {
+                setGptResponse(data)
+                setLoading(false)
+                setShowModal(true)
+            })
         }
     }, [finalTranscript, lists])
 
