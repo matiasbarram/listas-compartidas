@@ -98,3 +98,34 @@ input[type='number']::-webkit-outer-spin-button {
     @apply block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md bg-zinc-700 py-2 indent-4;
   }
 }
+
+
+.react-select__control {
+  background-color: #3f3f45 !important;
+  color: #fff !important;
+  border: unset !important;
+}
+
+.react-select__control:active {
+  border: unset !important;
+}
+
+.react-select__control__is-focused {
+  border: unset !important;
+  box-shadow: unset !important;
+}
+
+.react-select__menu {
+  border: unset !important;
+  box-shadow: unset !important;
+  background-color: #3f3f45 !important;
+}
+
+.react-select__option {
+  background-color: #3f3f45 !important;
+  color: #fff !important;
+}
+
+.react-select__single-value {
+  color: #fff !important;
+}

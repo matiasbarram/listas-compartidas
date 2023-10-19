@@ -52,6 +52,7 @@ export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
             console.log(error);
         }
     }
+
     return (
         <>
             <form onSubmit={handleSubmit(handleCreateProduct)}>
@@ -66,6 +67,7 @@ export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
                     {errors.description && (
                         <span className="text-red-500 text-sm">{errors.description.message}</span>
                     )}
+
                     <label className="mb-2 text-lg" htmlFor="quantity">Cantidad</label>
                     <input
                         className={`input-field ${errors.quantity ? "input-error" : ""}`}

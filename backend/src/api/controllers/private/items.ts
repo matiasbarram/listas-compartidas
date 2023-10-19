@@ -65,7 +65,7 @@ export const getItems = async (req: Request, res: Response) => {
 
     return res.status(200).json({
         list: listData,
-        items: list_items.items
+        items: [...list_items.items],
     })
 }
 
@@ -229,4 +229,93 @@ export const editItem = async (req: Request, res: Response) => {
             error: "Item not found"
         })
     }
+}
+
+
+interface ICreateItem {
+    name: string;
+    quantity: number;
+    list: {
+        name: string;
+        id: number;
+    }
+}
+
+type ICreateItems = ICreateItem[]
+
+export const createItems = async (req: Request, res: Response) => {
+    const groupId = Number(req.params.groupId)
+    const items: ICreateItems = req.body.items;
+    const prisma = new PrismaClient();
+
+    const validations = []
+    if (!items) {
+        validations.push({
+            error: "Items are required"
+        })
+    }
+    if (validations.length > 0) {
+        return res.status(400).json({
+            validations
+        })
+    }
+
+    /*
+    items = [
+    {
+        "name": "palta",
+        "list": {
+            "name": "Supermercado",
+            "id": 1
+        },
+        "quantity": 1
+    },
+    {
+        "name": "tomate",
+        "list": {
+            "name": "Supermercado",
+            "id": 1
+        },
+        "quantity": 1
+    },
+    {
+        "name": "lechuga",
+        "list": {
+            "name": "Supermercado",
+            "id": 1
+        },
+        "quantity": 1
+    }
+]
+
+    */
+    const [totalCreated, itemsCreated] = await prisma.$transaction([
+        prisma.items.createMany({
+            data: items.map(item => {
+                return {
+                    description: item.name,
+                    quantity: item.quantity,
+                    list_id: item.list.id,
+                }
+            })
+        }),
+        prisma.items.findMany({
+            where: {
+                description: {
+                    in: items.map(item => item.name)
+                },
+                list_id: {
+                    in: items.map(item => Number(item.list.id))
+                }
+            }
+        })
+    ]).finally(() => {
+        prisma.$disconnect()
+    })
+    return res.status(200).json({
+        items: itemsCreated,
+    });
+
+
+
 }
