@@ -4,13 +4,11 @@ import { MicrophoneIcon } from "@heroicons/react/24/solid";
 import Button from "../../common/Button/Button";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { useEffect, useState } from "react";
-import { GptItem, GptResponse, IList } from "../../../../../types";
+import { GptResponse, IList } from "../../../../../types";
 import Spinner from "../../common/Spinner/Spinner";
 import CustomModal from "../../common/Modals/Modal";
 import ItemsForm from "./ItemsForm";
 import VoiceAnimation from "../../common/VoiceAnimation/voice";
-import { set } from "lodash";
-
 
 interface ISpeakToTextProps {
     lists: IList[]
