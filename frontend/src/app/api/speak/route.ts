@@ -7,13 +7,20 @@ export async function POST(request: Request) {
     const lists = body.lists as IList[]
     const message = body.message as string
 
+    const dev = process.env.NODE_ENV === "development" ? true : false;
+
+    if (dev) {
+        return Response.json(
+            { "items": [{ "name": "palta", "list": "Supermercado", "quantity": 1 }, { "name": "tomate", "list": "Supermercado", "quantity": 1 }, { "name": "lechuga", "list": "Supermercado", "quantity": 1 }] }
+        );
+    }
+
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
     });
 
     const listsNames = lists.map(list => list.name)
     const listsAlternatives = listsNames.join(", ")
-
     const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
