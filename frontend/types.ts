@@ -240,3 +240,13 @@ export const schemaList = z.object({
 
 export type INewItemValues = z.infer<typeof schemaItem>;
 export type INewListValues = z.infer<typeof schemaList>;
+
+export interface GptItem {
+    name: string;
+    list: string;
+    quantity: number;
+}
+
+export interface GptResponse {
+    items: GptItem[];
+}

@@ -40,7 +40,7 @@ export default function DashboardLayout({ children }: {
                 </div>
             )}
             {mounted && (
-                <section className="mx-auto px-4 sm:px-6 lg:px-8 container">
+                <section className="mx-auto px-4 sm:px-6 lg:px-8 container mb-6">
                     {children}
                 </section>
             )}

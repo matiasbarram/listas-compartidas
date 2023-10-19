@@ -11,6 +11,7 @@ import Link from "next/link";
 import GroupProvider, { GroupContext } from "@/providers/GroupProvider";
 import GroupData from "@/app/components/home/group/page/GroupData";
 import { IGroupParams, IList } from "../../../../../../types";
+import SpeakToText from "@/app/components/home/group/SpeakToText";
 
 interface IGroupResponse {
     groupId: number;
@@ -30,7 +31,8 @@ export default async function GroupListsPage({ params }: IGroupParams) {
     return (
         <>
             <BackBtn />
-            <div className="grid grid-cols-4 gap-2 items-center mb-8">
+            <div className="flex flex-col gap-2 items-start mb-8">
+                <SpeakToText lists={lists} />
                 <GroupData groupData={group} params={params} />
                 <div className="col-span-1 flex justify-end">
                     {group.type === "personal" ? null :
