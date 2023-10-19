@@ -8,6 +8,8 @@ import { GptItem, GptResponse, IList } from "../../../../../types";
 import Spinner from "../../common/Spinner/Spinner";
 import CustomModal from "../../common/Modals/Modal";
 import ItemsForm from "./ItemsForm";
+import VoiceAnimation from "../../common/VoiceAnimation/voice";
+import { set } from "lodash";
 
 
 interface ISpeakToTextProps {
@@ -18,7 +20,8 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
     const [microphone, setMicrophone] = useState(false);
     const [loading, setLoading] = useState(false);
     const [gptResponse, setGptResponse] = useState<GptResponse>();
-    const [showModal, setShowModal] = useState(false);
+    const [showItemsModal, setShowItemsModal] = useState(false);
+    const [showTalkModal, setShowTalkModal] = useState(false);
     const {
         transcript,
         finalTranscript,
@@ -47,7 +50,8 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
             callOpenAIApi().then(data => {
                 setGptResponse(data)
                 setLoading(false)
-                setShowModal(true)
+                setShowTalkModal(false)
+                setShowItemsModal(true)
             })
         }
     }, [finalTranscript, lists])
@@ -72,30 +76,40 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
     return (
         <>
             <Button type="submit">
-                {
-                    loading ? <Spinner /> : (
-                        <div
-                            className="flex items-center justify-center gap-2"
-                            onClick={handleListen}
-                        >
-                            <MicrophoneIcon className="h-5 w-5" />
-                            <span>{listening ? "Parar" : "Comandos rápidos"}</span>
-                        </div>
-                    )
-                }
+                <div className="flex items-center justify-center" onClick={() => setShowTalkModal(true)}>
+                    <MicrophoneIcon className="h-5 w-5 mr-2" />
+                    <span className="text-sm">Comandos de voz</span>
+                </div>
             </Button >
-            {
-                microphone ? (
-                    <div className="p-2 bg-zinc-800 rounded-md text-sm w-full">
-                        <p>{transcript}</p>
-                    </div>
-                ) : null
-            }
-            <CustomModal isOpen={showModal} onClose={() => setShowModal(false)}>
+            <CustomModal isOpen={showItemsModal} onClose={() => setShowItemsModal(false)}>
                 <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
                     <h2 className="text-xl font-bold mb-4 text-center">¿Estos son los items que quieres agregar?</h2>
                     <p className="text-sm mb-4 text-center">Puedes modificarlos en caso de que te haya entendido mal</p>
-                    {gptResponse && <ItemsForm items={gptResponse.items} lists={lists} closeModal={() => setShowModal(false)} />}
+                    {gptResponse && <ItemsForm items={gptResponse.items} lists={lists} closeModal={() => setShowItemsModal(false)} />}
+                </div>
+            </CustomModal >
+
+
+            <CustomModal isOpen={showTalkModal} onClose={() => setShowTalkModal(false)}>
+                <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
+                    <h2 className="text-xl font-bold mb-2 text-center">Habla conmigo</h2>
+                    <p className="text-sm mb-4 text-center">Puedes decirme que quieres agregar a tus listas</p>
+                    <p className="text-sm mb-4 text-center font-semibold">&ldquo;Agregar tres tomates, 2 cajas de leche y 1 kilo de carne a la lista de compras&rdquo;</p>
+                    {browserSupportsSpeechRecognition && (
+                        <>
+                            {
+                                !listening ? (
+                                    <div className="flex flex-col items-center">
+                                        <Button type="circle" onClick={handleListen}>
+                                            {loading ? <Spinner /> : <MicrophoneIcon className="h-6 w-6" />}
+                                        </Button >
+                                        <small className="text-xs text-center mt-2">Empezar a hablar</small>
+                                    </div>
+                                ) : <VoiceAnimation />
+                            }
+                        </>
+                    )
+                    }
                 </div>
             </CustomModal >
         </>
