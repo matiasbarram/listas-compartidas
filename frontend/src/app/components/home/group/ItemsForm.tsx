@@ -1,12 +1,14 @@
+"use client"
 import Select from 'react-select'
 import { XMarkIcon } from "@heroicons/react/24/solid"
-import { GptItem, IList } from "../../../../../types"
+import { GptItem, IList, IListItem } from "../../../../../types"
 import Button from "../../common/Button/Button"
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useContext, useEffect, useState } from 'react'
 import { API_URL } from '@/lib/constants'
 import { useParams } from 'next/navigation'
 import nextAuth from 'next-auth'
 import { useSession } from 'next-auth/react'
+import { ItemsContext } from '@/providers/ItemsProvider'
 
 
 interface ISpeakItemsFormProps {
@@ -89,7 +91,7 @@ function ItemsFields({ items, item, lists, setItems }: IItemsFieldsProps) {
     )
 }
 
-interface IResponseItem {
+interface IGptResponseItem {
     name: string
     list: {
         name: string
@@ -99,18 +101,24 @@ interface IResponseItem {
 
 }
 
-interface IResponseItems {
-    items: IResponseItem[]
+interface IGptResponseItems {
+    items: IGptResponseItem[]
+}
+
+interface IItemsCreated {
+    items: IListItem[]
 }
 
 export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItemsFormProps) {
     const params = useParams()
     const { data: session } = useSession()
     const [editedItems, setEditedItems] = useState(items)
+    const { listItems, setListItems } = useContext(ItemsContext)
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const items: IResponseItem[] = editedItems.map((item: GptItem) => {
+        const items: IGptResponseItem[] = editedItems.map((item: GptItem) => {
             return {
                 name: item.name,
                 list: {
@@ -120,15 +128,17 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
                 quantity: item.quantity
             }
         })
-        const response: IResponseItems = { items: items }
-        await fetch(API_URL + `/private/groups/${params.slug}/createItems`, {
+        const gptResponse: IGptResponseItems = { items: items }
+        const response = await fetch(API_URL + `/private/groups/${params.slug}/createItems`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${session?.token}`
             },
-            body: JSON.stringify(response)
+            body: JSON.stringify(gptResponse)
         })
+        const data: IItemsCreated = await response.json()
+        setListItems([...data.items])
         closeModal()
 
     }
@@ -142,7 +152,6 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <div className="flex flex-col gap-2">
-                {JSON.stringify(editedItems)}
                 {editedItems.map((item: GptItem, index: number) => (
                     <Fragment key={index}>
                         <ItemsFields items={editedItems} setItems={setEditedItems} item={item} lists={lists} />

@@ -16,10 +16,8 @@ export default async function ListItemPage({ params }: NestedParams) {
     if (itemsData === undefined) { return null }
     return (
         <div>
-            <ItemsProvider>
-                <BackBtn />
-                <ItemsGrid itemsData={itemsData} params={params} />
-            </ItemsProvider>
+            <BackBtn />
+            <ItemsGrid itemsData={itemsData} params={params} />
         </div >
     )
 

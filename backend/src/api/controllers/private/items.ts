@@ -289,7 +289,7 @@ export const createItems = async (req: Request, res: Response) => {
 ]
 
     */
-    const [itemsCreated, itemsNotCreated] = await prisma.$transaction([
+    const [totalCreated, itemsCreated] = await prisma.$transaction([
         prisma.items.createMany({
             data: items.map(item => {
                 return {
@@ -313,9 +313,7 @@ export const createItems = async (req: Request, res: Response) => {
         prisma.$disconnect()
     })
     return res.status(200).json({
-        groupId,
-        itemsCreated,
-        itemsNotCreated,
+        items: itemsCreated,
     });
 
 

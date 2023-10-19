@@ -20,11 +20,6 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
     const updateListItems = useCallback((newItems: IListItem[]) => setListItems(newItems), [setListItems]);
 
     useEffect(() => {
-        // Move 'updateListItems' inside the useEffect callback
-        updateListItems(itemsData.items);
-    }, [itemsData.items, updateListItems]);
-
-    useEffect(() => {
         updateListItems(itemsData.items);
     }, [itemsData.items, updateListItems]);
 
@@ -67,7 +62,6 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
 
     const addItem = (item: IListItem) => setListItems([...listItems, item]);
 
-
     useEffect(() => {
         listItemsRef.current = listItems;
     }, [listItems]);
@@ -82,14 +76,17 @@ export const ItemsGrid = ({ itemsData, params }: { itemsData: IListItemsResponse
     }, []);
 
     return (
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <>
             {<SavingStatus saving={saving} />}
-            <h2 className="text-2xl font-bold text-gray-100 pb-4">Pendientes</h2>
-            <RenderItems itemsData={listItems} isCompleted={false} toggleItemCompletion={toggleItemCompletion} />
-            <h2 className="text-2xl font-bold text-gray-100 pb-4">Completados ✅ </h2>
-            <RenderItems itemsData={listItems} isCompleted={true} toggleItemCompletion={toggleItemCompletion} />
+            <h2 className="text-2xl font-bold text-gray-100 py-4">Pendientes</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                <RenderItems itemsData={listItems} isCompleted={false} toggleItemCompletion={toggleItemCompletion} />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-100 py-4">Completados ✅ </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                <RenderItems itemsData={listItems} isCompleted={true} toggleItemCompletion={toggleItemCompletion} />
+            </div>
             <AddItemBtn params={params} addItem={addItem} />
-        </div>
+        </>
     );
 };
