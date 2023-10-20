@@ -1,18 +1,24 @@
+"use client"
 import { FormEvent, useContext, useState } from "react";
 import { IListItem, IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
 import CustomModal from "./Modal";
-import { ItemsContext } from "@/providers/ItemsProvider";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "../Spinner/Spinner";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { createItem, editItem } from "@/lib/actions/item/items";
+import { editItem } from "@/lib/actions/item/items";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function EditItemModal({ item, setShowModal, showModal }: { item: IListItem, setShowModal: any, showModal: boolean }) {
     const params = useParams()
-    const { listItems, setListItems } = useContext(ItemsContext)
+    const { data: session } = useSession()
+    const queryClient = useQueryClient()
 
+    const editParams: IListKeysProps = {
+        slug: params.slug.toString(),
+        listId: params.listId.toString()
+    }
     const {
         register,
         handleSubmit,
@@ -21,28 +27,20 @@ export default function EditItemModal({ item, setShowModal, showModal }: { item:
         resolver: zodResolver(schemaItem),
     });
 
-    const { data: session } = useSession()
-    if (!session) return null
-
-
-    const handleEditItem = async (data: INewItemValues) => {
-        const editedItem = await editItem({
-            itemId: item.id,
-            data,
-            params: params as unknown as IListKeysProps,
-            token: session.token
-        })
-        if (editedItem) {
-            const newListItems = listItems.map((listItem) => {
-                if (listItem.id === item.id) {
-                    return editedItem
-                } else {
-                    return listItem
-                }
-            })
-            setListItems(newListItems)
+    const { mutate: editItemFn, data: editedItem } = useMutation({
+        mutationKey: ["editItem", params.slug],
+        mutationFn: (data: INewItemValues) => editItem({ itemId: item.id, data, params: editParams, session }),
+        onSuccess() {
+            setShowModal(false)
+            queryClient.invalidateQueries(["items", params.slug, params.listId])
+        },
+        onError() {
             setShowModal(false)
         }
+    })
+
+    const handleEditItem = async (data: INewItemValues) => {
+        editItemFn(data)
     }
 
     return (

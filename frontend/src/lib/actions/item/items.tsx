@@ -1,5 +1,6 @@
 import { callApi, createToast } from "@/lib/common"
 import { ICompleted, ICreateItemResponse, IDeleteItemProps, IList, IListItem, IListItemsResponse, IListKeysProps, IMarkAsCompletedProps, INewItemValues, KeysWithSession } from "../../../../types"
+import { Session } from "next-auth"
 
 export const markAsCompleted = async ({ params, session, item }: IMarkAsCompletedProps) => {
     const status: ICompleted = !item.is_completed ? "completed" : "uncompleted"
@@ -45,9 +46,10 @@ export const createItem = async ({ data, params, token }: { data: INewItemValues
 }
 
 
-export const editItem = async ({ itemId, data, params, token }: { itemId: number, data: INewItemValues, params: IListKeysProps, token: string }) => {
+export const editItem = async ({ itemId, data, params, session }: { itemId: number, data: INewItemValues, params: IListKeysProps, session: Session | null }) => {
     const { comments, ...rest } = data;
     const body = { ...rest, notes: comments }
+    const token = session ? session.token : "";
     try {
         const res = await callApi({
             url: `/private/groups/${params.slug}/lists/${params.listId}/items/${itemId}/edit`,

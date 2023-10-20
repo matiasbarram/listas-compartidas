@@ -8,7 +8,6 @@ import NextTopLoader from 'nextjs-toploader';
 import AuthProviders from '@/providers/AuthProvider';
 import ReactQueryProvider from '@/providers/ReactQueryProvider';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import ItemsProvider from '@/providers/ItemsProvider';
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -30,14 +29,12 @@ export default function RootLayout({
           color='#6366f1'
         />
         <AuthProviders>
-          <ItemsProvider>
-            <ToastProvider>
-              <ReactQueryProvider>
-                <ReactQueryDevtools initialIsOpen={false} />
-                {children}
-              </ReactQueryProvider>
-            </ToastProvider>
-          </ItemsProvider>
+          <ToastProvider>
+            <ReactQueryProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+              {children}
+            </ReactQueryProvider>
+          </ToastProvider>
         </AuthProviders>
       </body>
     </html >

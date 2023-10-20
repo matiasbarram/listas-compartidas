@@ -8,7 +8,6 @@ import { API_URL } from '@/lib/constants'
 import { useParams } from 'next/navigation'
 import nextAuth from 'next-auth'
 import { useSession } from 'next-auth/react'
-import { ItemsContext } from '@/providers/ItemsProvider'
 
 
 interface ISpeakItemsFormProps {
@@ -118,8 +117,6 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
     const params = useParams()
     const { data: session } = useSession()
     const [editedItems, setEditedItems] = useState(items)
-    const { listItems, setListItems } = useContext(ItemsContext)
-
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -143,7 +140,6 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
             body: JSON.stringify(gptResponse)
         })
         const data: IItemsCreated = await response.json()
-        setListItems([...data.items])
         closeModal()
 
     }
