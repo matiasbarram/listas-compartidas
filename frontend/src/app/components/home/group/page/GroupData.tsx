@@ -20,7 +20,7 @@ export default function GroupData({ groupData: group, params }: { groupData: Gro
         initialData: group
     })
     return (
-        <div className="col-span-3">
+        <div>
             <h1 className="text-2xl font-bold mt-4 flex items-center">
                 <span className={`${isLoading ? 'w-full' : ''} truncate`}
                 > Listas de</span>

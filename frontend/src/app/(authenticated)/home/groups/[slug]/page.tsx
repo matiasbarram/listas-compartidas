@@ -31,10 +31,10 @@ export default async function GroupListsPage({ params }: IGroupParams) {
     return (
         <>
             <BackBtn />
-            <div className="flex flex-col gap-2 items-start mb-8">
-                <SpeakToText lists={lists} />
+            <SpeakToText lists={lists} />
+            <div className="flex gap-2 items-center justify-between mb-8">
                 <GroupData groupData={group} params={params} />
-                <div className="col-span-1 flex justify-end">
+                <div className="flex justify-end">
                     {group.type === "personal" ? null :
                         <Link
                             href={`/home/groups/${params.slug}/settings`}
