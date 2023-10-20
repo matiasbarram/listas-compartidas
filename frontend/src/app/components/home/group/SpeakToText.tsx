@@ -16,7 +16,6 @@ interface ISpeakToTextProps {
 }
 
 export default function SpeakToText({ lists }: ISpeakToTextProps) {
-    const [microphone, setMicrophone] = useState(false);
     const [loading, setLoading] = useState(false);
     const [gptResponse, setGptResponse] = useState<GptResponse>();
     const [showItemsModal, setShowItemsModal] = useState(false);
@@ -45,7 +44,7 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
                 const data = await response.json();
                 return data;
             } catch (error) {
-                throw error; // Re-lanzamos el error para que sea capturado en la parte principal.
+                throw error;
             }
         }
 
@@ -74,13 +73,11 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
 
     const handleListen = async () => {
         if (!listening) {
-            setMicrophone(true);
             SpeechRecognition.startListening({
                 continuous: false,
                 language: 'es-CL'
             })
         } else {
-            setMicrophone(false);
             SpeechRecognition.abortListening();
         }
     }

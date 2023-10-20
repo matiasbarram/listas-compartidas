@@ -110,6 +110,11 @@ interface IItemsCreated {
 }
 
 export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItemsFormProps) {
+
+    items.map((item, index) => {
+        item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1)
+    })
+
     const params = useParams()
     const { data: session } = useSession()
     const [editedItems, setEditedItems] = useState(items)
@@ -148,7 +153,6 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
             closeModal()
         }
     }, [editedItems, closeModal])
-
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <div className="flex flex-col gap-2">
