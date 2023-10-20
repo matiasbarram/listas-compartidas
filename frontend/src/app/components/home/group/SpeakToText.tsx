@@ -9,6 +9,7 @@ import Spinner from "../../common/Spinner/Spinner";
 import CustomModal from "../../common/Modals/Modal";
 import ItemsForm from "./ItemsForm";
 import VoiceAnimation from "../../common/VoiceAnimation/voice";
+import { createToast } from "@/lib/common";
 
 interface ISpeakToTextProps {
     lists: IList[]
@@ -29,30 +30,47 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
 
     useEffect(() => {
         const callOpenAIApi = async () => {
-            const response = await fetch("/api/speak", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: finalTranscript,
-                    lists: lists
-                })
-            })
-            const data = await response.json()
-            return data
+            try {
+                const response = await fetch("/api/speak", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: finalTranscript,
+                        lists: lists
+                    })
+                });
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                throw error; // Re-lanzamos el error para que sea capturado en la parte principal.
+            }
         }
 
-        if (finalTranscript.length > 0) {
-            setLoading(true)
-            callOpenAIApi().then(data => {
-                setGptResponse(data)
-                setLoading(false)
-                setShowTalkModal(false)
-                setShowItemsModal(true)
-            })
+        const fetchData = async () => {
+            if (finalTranscript.length > 0) {
+                setLoading(true);
+                try {
+                    const data = await callOpenAIApi();
+                    setGptResponse(data);
+                    setShowTalkModal(false);
+                    setShowItemsModal(true);
+                } catch (error) {
+                    createToast({
+                        message: "Error al procesar el mensaje",
+                        toastType: "error"
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            }
         }
-    }, [finalTranscript, lists])
+
+        fetchData();
+    }, [finalTranscript, lists]);
+
 
     const handleListen = async () => {
         if (!listening) {
@@ -101,7 +119,7 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
                                         <Button type="circle" onClick={handleListen}>
                                             {loading ? <Spinner /> : <MicrophoneIcon className="h-6 w-6" />}
                                         </Button >
-                                        <small className="text-xs text-center mt-2">Empezar a hablar</small>
+                                        {!loading && <small className="text-xs text-center mt-2">Empezar a hablar</small>}
                                     </div>
                                 ) : <VoiceAnimation />
                             }
