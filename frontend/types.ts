@@ -154,20 +154,18 @@ export interface INewList {
 }
 
 
-export interface ICompleted {
-    status: "completed" | "uncompleted" | "deleted"
-}
+export type ICompleted = "completed" | "uncompleted" | "deleted"
+
 export interface IDeleteItemProps {
     params: IListKeysProps;
-    session: Session;
+    session: Session | null;
     item: IListItem;
 }
 
 
 export interface IMarkAsCompletedProps {
-    isCompleted: boolean;
     params: IListKeysProps;
-    session: Session;
+    session: Session | null;
     item: IListItem;
 }
 
@@ -190,7 +188,7 @@ export interface IApiResponse<T> {
 export interface IApiConfig {
     url: string;
     method: string;
-    token?: string;
+    token?: string | null;
     body?: any;
 }
 
@@ -203,9 +201,8 @@ export interface IModalField {
     onChange: (e: any) => void
 }
 
-
 export interface KeysWithSession extends IListKeysProps {
-    session: Session;
+    session: Session | null
 }
 
 

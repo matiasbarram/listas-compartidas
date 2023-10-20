@@ -260,35 +260,6 @@ export const createItems = async (req: Request, res: Response) => {
         })
     }
 
-    /*
-    items = [
-    {
-        "name": "palta",
-        "list": {
-            "name": "Supermercado",
-            "id": 1
-        },
-        "quantity": 1
-    },
-    {
-        "name": "tomate",
-        "list": {
-            "name": "Supermercado",
-            "id": 1
-        },
-        "quantity": 1
-    },
-    {
-        "name": "lechuga",
-        "list": {
-            "name": "Supermercado",
-            "id": 1
-        },
-        "quantity": 1
-    }
-]
-
-    */
     const [totalCreated, itemsCreated] = await prisma.$transaction([
         prisma.items.createMany({
             data: items.map(item => {

@@ -4,20 +4,22 @@ import { MicrophoneIcon } from "@heroicons/react/24/solid";
 import Button from "../../common/Button/Button";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { useEffect, useState } from "react";
-import { GptResponse, IList } from "../../../../../types";
+import { IList } from "../../../../../types";
 import Spinner from "../../common/Spinner/Spinner";
 import CustomModal from "../../common/Modals/Modal";
 import ItemsForm from "./ItemsForm";
 import VoiceAnimation from "../../common/VoiceAnimation/voice";
 import { createToast } from "@/lib/common";
+import { useMutation } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { openAICreateItems } from "@/lib/actions/item/items";
 
 interface ISpeakToTextProps {
     lists: IList[]
 }
 
 export default function SpeakToText({ lists }: ISpeakToTextProps) {
-    const [loading, setLoading] = useState(false);
-    const [gptResponse, setGptResponse] = useState<GptResponse>();
+    const params = useParams();
     const [showItemsModal, setShowItemsModal] = useState(false);
     const [showTalkModal, setShowTalkModal] = useState(false);
     const {
@@ -27,49 +29,26 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
         browserSupportsSpeechRecognition
     } = useSpeechRecognition();
 
+    const { mutate: callOpenAIApi, isLoading, data: gptResponse } = useMutation({
+        mutationKey: ["speak", params.slug],
+        mutationFn: () => openAICreateItems({ finalTranscript, lists }),
+        onSuccess() {
+            setShowTalkModal(false);
+            setShowItemsModal(true);
+        },
+        onError() {
+            createToast({
+                message: "Error al procesar el mensaje",
+                toastType: "error"
+            });
+        },
+    })
+
     useEffect(() => {
-        const callOpenAIApi = async () => {
-            try {
-                const response = await fetch("/api/speak", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        message: finalTranscript,
-                        lists: lists
-                    })
-                });
-
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                throw error;
-            }
+        if (finalTranscript.length > 0) {
+            callOpenAIApi();
         }
-
-        const fetchData = async () => {
-            if (finalTranscript.length > 0) {
-                setLoading(true);
-                try {
-                    const data = await callOpenAIApi();
-                    setGptResponse(data);
-                    setShowTalkModal(false);
-                    setShowItemsModal(true);
-                } catch (error) {
-                    createToast({
-                        message: "Error al procesar el mensaje",
-                        toastType: "error"
-                    });
-                } finally {
-                    setLoading(false);
-                }
-            }
-        }
-
-        fetchData();
-    }, [finalTranscript, lists]);
-
+    }, [finalTranscript, callOpenAIApi])
 
     const handleListen = async () => {
         if (!listening) {
@@ -82,9 +61,7 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
         }
     }
 
-    if (!browserSupportsSpeechRecognition) {
-        return <span>Browser doesnt support speech recognition.</span>;
-    }
+    if (!browserSupportsSpeechRecognition) return
 
     return (
         <>
@@ -114,9 +91,9 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
                                 !listening ? (
                                     <div className="flex flex-col items-center">
                                         <Button type="circle" onClick={handleListen}>
-                                            {loading ? <Spinner /> : <MicrophoneIcon className="h-6 w-6" />}
+                                            {isLoading ? <Spinner /> : <MicrophoneIcon className="h-6 w-6" />}
                                         </Button >
-                                        {!loading && <small className="text-xs text-center mt-2">Empezar a hablar</small>}
+                                        {!isLoading && <small className="text-xs text-center mt-2">Empezar a hablar</small>}
                                     </div>
                                 ) : <VoiceAnimation />
                             }

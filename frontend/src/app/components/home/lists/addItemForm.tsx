@@ -3,16 +3,19 @@
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { IListItem, IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
+import { IListItem, IListItemsResponse, IListKeysProps, INewItemValues, schemaItem } from "../../../../../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createItem } from "@/lib/actions/item/items";
 import Spinner from "../../common/Spinner/Spinner";
 import { values } from "lodash";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createToast } from "@/lib/common";
 
 interface IAddItemForm {
     closeModal: () => void;
     addItem: (item: IListItem) => void;
 }
+
 
 
 export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
@@ -25,29 +28,44 @@ export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
     });
 
     const params = useParams()
+    const productParams: IListKeysProps = { slug: params.slug.toString(), listId: params.listId.toString() }
     const { data: session } = useSession();
-    const router = useRouter();
-    if (!session) return null;
+    const queryClient = useQueryClient()
 
+    const { mutate: mutateItem, data: itemMutated } = useMutation({
+        mutationKey: ["items", params.slug, params.listId],
+        mutationFn: (newItem: INewItemValues) => createItem({
+            data: newItem,
+            params: productParams,
+            token: session ? session.token : ""
+        }),
 
+        onSuccess: (itemMutated) => {
+            queryClient.setQueryData<IListItemsResponse>(["items", params.slug, params.listId], (old) => {
+                if (!old) return old;
+                const newItems = [...old.items, itemMutated];
+                return { ...old, items: newItems };
+            })
+            createToast({
+                message: "Producto agregado",
+                toastType: "success"
+            })
+        },
+        onError: (error) => {
+            createToast({
+                message: "Error al agregar producto",
+                toastType: "error"
+            })
+        }
+    })
 
     const handleCreateProduct = async (data: INewItemValues) => {
-        const paramsData: IListKeysProps = {
-            slug: params.slug.toString(),
-            listId: params.listId.toString()
-        }
         try {
             schemaItem.parse(data);
-            const newItem = await createItem({
-                data,
-                params: paramsData,
-                token: session?.token
-            });
+            mutateItem(data);
 
-            if (addItem) { newItem !== undefined ? addItem(newItem) : null; }
-
+            if (addItem) { itemMutated !== undefined ? addItem(itemMutated) : null; }
             closeModal();
-
         } catch (error) {
             console.log(error);
         }

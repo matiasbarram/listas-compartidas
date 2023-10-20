@@ -1,36 +1,54 @@
-import { IListItem, IListKeysProps } from "../../../../../types";
+"use client"
+
+import { IListItem, IListItemsResponse, IListKeysProps } from "../../../../../types";
 import CustomModal from "./Modal";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useContext } from "react";
-import { ItemsContext } from "@/providers/ItemsProvider";
 import { deleteItem } from "@/lib/actions/item/items";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createToast } from "@/lib/common";
 
 
 export default function DeleteItemModal({ item, setShowModal, showModal }: { item: IListItem, setShowModal: any, showModal: boolean }) {
     const params = useParams()
-
-    const { listItems, setListItems } = useContext(ItemsContext)
-
     const { data: session } = useSession()
-    if (!session) return null
+    const queryClient = useQueryClient()
 
-    const handleDeleteItem = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        await deleteItem({
+    const { mutate } = useMutation({
+        mutationKey: ["deleteItem", params.id, item.id],
+        mutationFn: (item: IListItem) => deleteItem({
             params: params as unknown as IListKeysProps,
             session: session,
             item,
-        })
+        }),
+        onSuccess: () => {
+            queryClient.setQueryData<IListItemsResponse>(["items", params.slug, params.listId], (old) => {
+                if (!old) return old;
+                const newItems = old.items.filter((i) => {
+                    if (i.id !== item.id) {
+                        return i;
+                    }
+                });
+                return { ...old, items: newItems };
+            })
+            createToast({
+                message: "Item eliminado correctamente",
+                toastType: "success"
+            })
+        }
+    })
+
+    const handleDeleteItem = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        mutate(item)
         setShowModal(false)
-        setListItems(listItems.filter((listItem) => listItem.id !== item.id))
     }
+
     return (
         <CustomModal isOpen={showModal} onClose={() => setShowModal(false)}>
             <form
                 className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative"
                 onSubmit={handleDeleteItem}
-
             >
                 <h2 className="text-2xl font-bold text-center mb-8">
                     Eliminar {item.description}
