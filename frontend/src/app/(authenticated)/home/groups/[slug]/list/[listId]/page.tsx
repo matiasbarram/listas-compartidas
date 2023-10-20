@@ -5,8 +5,6 @@ import { BackBtn } from "@/app/components/common/BackBtn";
 import { ItemsGrid } from "@/app/components/home/lists/grid/itemsGrid";
 import { getListItems } from "@/lib/actions/item/items";
 import { NestedParams } from "../../../../../../../../types";
-import ItemsProvider from "@/providers/ItemsProvider";
-
 
 export default async function ListItemPage({ params }: NestedParams) {
     const session = await getServerSession(authOptions);
@@ -17,7 +15,7 @@ export default async function ListItemPage({ params }: NestedParams) {
     return (
         <div>
             <BackBtn />
-            <ItemsGrid itemsData={itemsData} params={params} />
+            <ItemsGrid initialItems={itemsData} params={params} />
         </div >
     )
 

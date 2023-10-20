@@ -10,7 +10,7 @@ import styles from './modals.module.css'
 interface IAddItemBtnProps {
     params: IListKeysProps | PageProps,
     btnType?: "static" | "fixed",
-    addItem?: (item: IListItem) => void
+    addItem?: () => void
 }
 
 function isIListKeys(params: IListKeysProps | PageProps): { value: boolean, formType: "item" | "list" } {

@@ -8,7 +8,6 @@ import { API_URL } from '@/lib/constants'
 import { useParams } from 'next/navigation'
 import nextAuth from 'next-auth'
 import { useSession } from 'next-auth/react'
-import { ItemsContext } from '@/providers/ItemsProvider'
 
 
 interface ISpeakItemsFormProps {
@@ -110,11 +109,14 @@ interface IItemsCreated {
 }
 
 export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItemsFormProps) {
+
+    items.map((item, index) => {
+        item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1)
+    })
+
     const params = useParams()
     const { data: session } = useSession()
     const [editedItems, setEditedItems] = useState(items)
-    const { listItems, setListItems } = useContext(ItemsContext)
-
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -138,7 +140,6 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
             body: JSON.stringify(gptResponse)
         })
         const data: IItemsCreated = await response.json()
-        setListItems([...data.items])
         closeModal()
 
     }
@@ -148,7 +149,6 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
             closeModal()
         }
     }, [editedItems, closeModal])
-
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <div className="flex flex-col gap-2">
