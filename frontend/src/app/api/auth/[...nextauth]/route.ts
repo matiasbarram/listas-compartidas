@@ -6,7 +6,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { ILoginApiResponse } from "../../../../../types";
 import type { GoogleProfile } from "next-auth/providers/google";
 import { UserData } from "@/lib/next-auth";
-import { env } from "process";
 
 export const authOptions: NextAuthOptions = {
     pages: {
@@ -68,7 +67,7 @@ export const authOptions: NextAuthOptions = {
 
 
         async session({ session, token }) {
-            session.user = token.user
+            if (!session.user.email) session.user = token.user
             session.token = token.token
             return session
         },

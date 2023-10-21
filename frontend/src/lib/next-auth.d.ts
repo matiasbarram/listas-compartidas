@@ -2,6 +2,7 @@ import NextAuth from "next-auth/next";
 
 interface UserData {
     id: number,
+    image: string,
     name: string,
     email: string,
     created_at: string,
