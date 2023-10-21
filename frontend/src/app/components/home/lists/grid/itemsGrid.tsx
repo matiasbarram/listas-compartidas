@@ -60,7 +60,7 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                 <RenderItems itemsData={itemsData?.items} isCompleted={true} toggleItemCompletion={toggleItemCompletion} />
             </div>
-            <AddItemBtn params={params} type="item" />
+            <AddItemBtn params={params} />
         </>
     );
 }
