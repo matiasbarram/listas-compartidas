@@ -42,9 +42,6 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
                 });
                 return { ...old, items: newItems };
             });
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries(["items", params.slug, params.listId]);
         }
     });
     const toggleItemCompletion = (item: IListItem) => {
