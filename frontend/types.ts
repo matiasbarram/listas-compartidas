@@ -243,3 +243,7 @@ export interface GptItem {
 export interface GptResponse {
     items: GptItem[];
 }
+
+export interface IItemsCreated {
+    items: IListItem[]
+}

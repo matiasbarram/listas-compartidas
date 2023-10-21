@@ -35,6 +35,7 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
         onSuccess() {
             setShowTalkModal(false);
             setShowItemsModal(true);
+
         },
         onError() {
             createToast({
@@ -71,15 +72,6 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
                     <span className="text-sm">Comandos de voz</span>
                 </div>
             </Button >
-            <CustomModal isOpen={showItemsModal} onClose={() => setShowItemsModal(false)}>
-                <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
-                    <h2 className="text-xl font-bold mb-4 text-center">¿Estos son los items que quieres agregar?</h2>
-                    <p className="text-sm mb-4 text-center">Puedes modificarlos en caso de que te haya entendido mal</p>
-                    {gptResponse && <ItemsForm items={gptResponse.items} lists={lists} closeModal={() => setShowItemsModal(false)} />}
-                </div>
-            </CustomModal >
-
-
             <CustomModal isOpen={showTalkModal} onClose={() => setShowTalkModal(false)}>
                 <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
                     <h2 className="text-xl font-bold mb-2 text-center">Habla conmigo</h2>
@@ -100,6 +92,14 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
                         </>
                     )
                     }
+                </div>
+            </CustomModal >
+
+            <CustomModal isOpen={showItemsModal} onClose={() => setShowItemsModal(false)}>
+                <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
+                    <h2 className="text-xl font-bold mb-4 text-center">¿Estos son los items que quieres agregar?</h2>
+                    <p className="text-sm mb-4 text-center">Puedes modificarlos en caso de que te haya entendido mal</p>
+                    {gptResponse && <ItemsForm items={gptResponse.items} lists={lists} closeModal={() => setShowItemsModal(false)} />}
                 </div>
             </CustomModal >
         </>
