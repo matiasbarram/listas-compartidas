@@ -10,7 +10,6 @@ import styles from './modals.module.css'
 interface IAddItemBtnProps {
     params: IListKeysProps | PageProps,
     btnType?: "static" | "fixed",
-    addItem?: () => void
 }
 
 function isIListKeys(params: IListKeysProps | PageProps): { value: boolean, formType: "item" | "list" } {
@@ -18,7 +17,7 @@ function isIListKeys(params: IListKeysProps | PageProps): { value: boolean, form
     return { value: val, formType: val ? "item" : "list" }
 }
 
-export default function AddItemBtn({ params, btnType, addItem }: IAddItemBtnProps) {
+export default function AddItemBtn({ params, btnType }: IAddItemBtnProps) {
     const [showModal, setShowModal] = useState(false);
     const [showBtn, setShowBtn] = useState(true);
 
@@ -60,7 +59,7 @@ export default function AddItemBtn({ params, btnType, addItem }: IAddItemBtnProp
                 </button >
             }
             {
-                isListKeys ? <AddItemModal fields={formType} showModal={showModal} closeModal={closeModal} addItem={addItem} /> : <AddItemModal fields={formType} showModal={showModal} closeModal={closeModal} addItem={addItem} />
+                isListKeys ? <AddItemModal fields={formType} showModal={showModal} closeModal={closeModal} /> : <AddItemModal fields={formType} showModal={showModal} closeModal={closeModal} />
 
             }
 
