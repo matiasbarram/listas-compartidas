@@ -1,5 +1,5 @@
 import { callApi, createToast } from "@/lib/common"
-import { ICompleted, ICreateItemResponse, IDeleteItemProps, IList, IListItem, IListItemsResponse, IListKeysProps, IMarkAsCompletedProps, INewItemValues, KeysWithSession } from "../../../../types"
+import { ICompleted, ICreateItemResponse, IDeleteItemProps, IItemsCreated, IList, IListItem, IListItemsResponse, IListKeysProps, IMarkAsCompletedProps, INewItemValues, KeysWithSession } from "../../../../types"
 import { Session } from "next-auth"
 
 export const markAsCompleted = async ({ params, session, item }: IMarkAsCompletedProps) => {
@@ -88,4 +88,14 @@ export const openAICreateItems = async ({ finalTranscript, lists }: { finalTrans
     });
     const data = await response.json();
     return data;
+}
+
+export const createItems = async ({ gptResponse, params, session }: { gptResponse: any, params: IListKeysProps, session: Session | null }) => {
+    const response = await callApi({
+        method: "POST",
+        url: `/private/groups/${params.slug}/createItems`,
+        body: gptResponse,
+        token: session?.token
+    })
+    return response.data as IItemsCreated;
 }

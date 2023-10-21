@@ -5,7 +5,6 @@ import { NavBarMenu } from "../common/Header/NavBarMenu"
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import Spinner from "../common/Spinner/Spinner"
 
 interface MenuProps {

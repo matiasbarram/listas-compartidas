@@ -1,13 +1,16 @@
 "use client"
 import Select from 'react-select'
 import { XMarkIcon } from "@heroicons/react/24/solid"
-import { GptItem, IList, IListItem } from "../../../../../types"
+import { GptItem, IList, IListItem, IListItemsResponse } from "../../../../../types"
 import Button from "../../common/Button/Button"
 import { Fragment, useContext, useEffect, useState } from 'react'
 import { API_URL } from '@/lib/constants'
 import { useParams } from 'next/navigation'
 import nextAuth from 'next-auth'
 import { useSession } from 'next-auth/react'
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { createItems } from '@/lib/actions/item/items'
+import { createToast } from '@/lib/common'
 
 
 interface ISpeakItemsFormProps {
@@ -104,19 +107,48 @@ interface IGptResponseItems {
     items: IGptResponseItem[]
 }
 
-interface IItemsCreated {
-    items: IListItem[]
-}
+
 
 export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItemsFormProps) {
+    const queryClient = useQueryClient()
 
-    items.map((item, index) => {
-        item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1)
-    })
+    items.map(item => item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1))
 
     const params = useParams()
     const { data: session } = useSession()
     const [editedItems, setEditedItems] = useState(items)
+
+    const { data: newItems, mutate: createItemsMutation, isLoading } = useMutation({
+        mutationKey: ["speak", params.slug],
+        mutationFn: (items: IGptResponseItems) => createItems({
+            gptResponse: items,
+            params: {
+                slug: params.slug.toString(),
+                listId: params.listId.toString()
+            },
+            session: session
+        }),
+        async onSuccess(newItems) {
+            await queryClient.cancelQueries(["items", params.slug, params.listId]);
+            queryClient.setQueryData<IListItemsResponse>(["items", params.slug, params.listId], (old) => {
+                if (!old) return old;
+                const allItems = [...old.items, ...newItems.items];
+                return {
+                    ...old,
+                    items: allItems,
+                };
+            });
+            closeModal()
+        },
+        onError() {
+            createToast({
+                message: "Error al procesar el mensaje",
+                toastType: "error"
+            });
+        },
+    })
+
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -130,17 +162,8 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
                 quantity: item.quantity
             }
         })
-        const gptResponse: IGptResponseItems = { items: items }
-        const response = await fetch(API_URL + `/private/groups/${params.slug}/createItems`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${session?.token}`
-            },
-            body: JSON.stringify(gptResponse)
-        })
-        const data: IItemsCreated = await response.json()
-        closeModal()
+        const gptResponse: IGptResponseItems = { items }
+        createItemsMutation(gptResponse)
 
     }
 
@@ -149,6 +172,7 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
             closeModal()
         }
     }, [editedItems, closeModal])
+
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <div className="flex flex-col gap-2">
@@ -158,7 +182,7 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
                     </Fragment>
                 ))}
             </div>
-            <Button type="submit">Agregar items</Button>
+            <Button type="submit">{isLoading ? "Procesando..." : "Agregar items"}</Button>
         </form >
     )
 }

@@ -30,6 +30,7 @@ export interface IList {
     id: string,
     name: string,
     description: string,
+    group_id?: number;
 }
 
 export interface IListWithGroup extends IList {
@@ -125,12 +126,7 @@ export interface ICreateItemResponse {
 
 
 export interface IListItemsResponse {
-    list: {
-        id: number;
-        name: string;
-        description: string;
-        group_id: number;
-    }
+    list: IList;
     items: IListItem[]
 }
 
@@ -246,4 +242,8 @@ export interface GptItem {
 
 export interface GptResponse {
     items: GptItem[];
+}
+
+export interface IItemsCreated {
+    items: IListItem[]
 }
