@@ -28,8 +28,6 @@ export function checkJwt(req: Request, res: Response, next: NextFunction) {
         }
         payload as JwtToken;
         ['iat', 'exp'].forEach((keyToRemove) => delete payload[keyToRemove as keyof JwtToken]);
-        Logger.debug(payload);
-
         try {
             // Refresh and send a new token on every request
             const newToken = createJwt(payload as JwtPayload);

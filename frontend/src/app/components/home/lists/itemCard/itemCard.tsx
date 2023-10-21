@@ -5,6 +5,7 @@ import { useState, MouseEvent, useRef } from "react";
 import DropdownMenu from "./dropdownMenu";
 import EditItemModal from "@/app/components/common/Modals/editItemModal";
 import DeleteItemModal from "@/app/components/common/Modals/deleteItemModal";
+import { localDate } from "@/lib/common";
 
 interface IItemCardProps {
     item: IListItem;
@@ -25,7 +26,7 @@ export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
     return (
         <>
             < div
-                className={`bg-zinc-800 shadow rounded-lg cursor-pointer mx-auto py-4 w-full ${item.is_completed ? "grayscale" : ""}`
+                className={`bg-zinc-800 shadow rounded-lg cursor-pointer mx-auto py-4 w-full ${item.is_completed ? "!bg-neutral-800" : ""}`
                 }
             >
                 <div className="flex items-center space-x-4 w-11/12 mx-auto relative">
@@ -36,8 +37,9 @@ export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
                     >
                         <Checkbox postId={item.id} selected={item.is_completed} />
                         <div>
-                            <h3 className={`text-lg font-medium text-gray-100 ${item.is_completed ? "line-through" : ""}`}
+                            <h3 className={`text-lg font-medium text-gray-100 ${item.is_completed ? "line-through !text-gray-400" : ""}`}
                             >{item.description}</h3>
+                            <small className="text-gray-400">{localDate(item.modified_date)}</small>
                         </div>
                     </li >
                     <div className="flex gap-2">
@@ -47,7 +49,6 @@ export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
                         <button
                             className="rounded-fullhover:bg-zinc-600 cursor-pointer block"
                             type="button"
-                            // ref={menuRef}
                             onClick={handleDropdown}
                         >
                             <EllipsisHorizontalIcon className="h-5 w-5 text-gray-400" />

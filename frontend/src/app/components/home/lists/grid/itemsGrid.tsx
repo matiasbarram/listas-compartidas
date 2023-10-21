@@ -11,7 +11,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsResponse, params: IListKeysProps }) => {
     const { data: session } = useSession();
     const queryClient = useQueryClient();
-
     const { data: itemsData } = useQuery({
         queryFn: () => getListItems({
             slug: params.slug,
@@ -31,14 +30,16 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
         }),
         onMutate: async (newItem: IListItem) => {
             await queryClient.cancelQueries(["items", params.slug, params.listId]);
-
             queryClient.setQueryData<IListItemsResponse>(["items", params.slug, params.listId], (old) => {
                 if (!old) return old;
                 const newItems = old.items.map((item) => {
                     if (item.id === newItem.id) {
-                        return { ...item, is_completed: !item.is_completed };
+                        return { ...item, is_completed: !item.is_completed, modified_date: new Date().toISOString() };
                     }
                     return item;
+                });
+                newItems.sort((a, b) => {
+                    return new Date(b.modified_date).getTime() - new Date(a.modified_date).getTime();
                 });
                 return { ...old, items: newItems };
             });
@@ -51,15 +52,10 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
     return (
         <>
             {markAsCompletedMutation.isLoading && <SavingStatus saving={true} />}
-
             < h2 className="text-2xl font-bold text-gray-100 py-4">Pendientes</h2 >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                <RenderItems itemsData={itemsData?.items} isCompleted={false} toggleItemCompletion={toggleItemCompletion} />
-            </div>
+            <RenderItems itemsData={itemsData?.items} isCompleted={false} toggleItemCompletion={toggleItemCompletion} />
             <h2 className="text-2xl font-bold text-gray-100 py-4">Completados ✅</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                <RenderItems itemsData={itemsData?.items} isCompleted={true} toggleItemCompletion={toggleItemCompletion} />
-            </div>
+            <RenderItems itemsData={itemsData?.items} isCompleted={true} toggleItemCompletion={toggleItemCompletion} />
             <AddItemBtn params={params} />
         </>
     );

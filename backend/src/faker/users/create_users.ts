@@ -9,8 +9,9 @@ export async function createUsers(prisma: PrismaClient) {
         try {
             let userCreated = await prisma.users.create({
                 data: user,
+            }).finally(() => {
+                prisma.$disconnect()
             })
-            console.log(userCreated)
         }
         catch (e) {
             console.error(e)

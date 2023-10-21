@@ -44,3 +44,14 @@ export async function callApi<T>({ method, token, body, url }: IApiConfig): Prom
         return { ok: false, error: error.message, status: error.status };
     }
 }
+
+
+export const localDate = (date: string) => {
+    const now = new Date()
+    const newDate = new Date(date)
+    if (now.getDate() === newDate.getDate())
+        return newDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    else {
+        return newDate.toLocaleDateString()
+    }
+}

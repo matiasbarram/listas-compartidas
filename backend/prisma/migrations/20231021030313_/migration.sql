@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "items" ALTER COLUMN "creation_date" SET DATA TYPE TIMESTAMP(3),
+ALTER COLUMN "modified_date" SET DATA TYPE TIMESTAMP(3);
