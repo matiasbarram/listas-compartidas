@@ -5,6 +5,8 @@ import { NavBarMenu } from "../common/Header/NavBarMenu"
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import Spinner from "../common/Spinner/Spinner"
 
 interface MenuProps {
     onClickOutside: () => void;
@@ -28,20 +30,6 @@ function Menu({ onClickOutside }: MenuProps) {
     return (
         <div ref={ref}
             className="absolute right-0 w-48 py-2 mt-2 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 bg-zinc-900">
-            {/* <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-500"
-            >
-                Your Profile
-            </a>
-
-            <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-500"
-            >
-                Settings
-            </a> */}
-
             <Link
                 href="/api/auth/signout"
                 className="block px-4 py-2 text-sm text-gray-500"
@@ -56,6 +44,8 @@ export function Header() {
 
     const session = useSession()
     const [showMenu, setShowMenu] = useState(false)
+
+    const icon = session.data?.user.image ? session.data?.user.image : "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
 
     return (
         <header className="mb-8">
@@ -90,39 +80,40 @@ export function Header() {
                                 <NavBarMenu />
                             </div>
 
-                            <button
-                                type="button"
-                                className="group flex shrink-0 items-center rounded-lg transition"
-                                onClick={() => {
-                                    setShowMenu(!showMenu)
-                                }}
-                            >
-                                <span className="sr-only">Menu</span>
-                                <img
-                                    alt="Man"
-                                    src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                                    className="h-10 w-10 rounded-full object-cover"
-                                />
-
-                                <p className="ms-2 text-left text-xs">
-                                    <strong className="block font-medium">{session.data?.user.name}</strong>
-
-                                    <span className="text-gray-500"> {session.data?.user.email} </span>
-                                </p>
-
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="ms-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
+                            {session.status === "authenticated" ? (
+                                <button
+                                    type="button"
+                                    className="group flex shrink-0 items-center rounded-lg transition"
+                                    onClick={() => {
+                                        setShowMenu(!showMenu)
+                                    }}
                                 >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
+                                    <span className="sr-only">Menu</span>
+                                    <img
+                                        alt={session.data?.user.name}
+                                        src={icon}
+                                        className="h-10 w-10 rounded-full object-cover"
                                     />
-                                </svg>
-                            </button>
+
+                                    <p className="ms-2 text-left text-xs">
+                                        <strong className="block font-medium">{session.data?.user.name}</strong>
+                                        <span className="text-gray-500"> {session.data?.user.email} </span>
+                                    </p>
+
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="ms-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                            ) : <Spinner />}
                         </div>
                     </div>
                 </div>
