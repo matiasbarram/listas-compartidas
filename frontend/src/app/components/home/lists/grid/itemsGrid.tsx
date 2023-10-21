@@ -36,9 +36,13 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
                 if (!old) return old;
                 const newItems = old.items.map((item) => {
                     if (item.id === newItem.id) {
-                        return { ...item, is_completed: !item.is_completed };
+                        return { ...item, is_completed: !item.is_completed, modified_date: new Date().toISOString() };
                     }
                     return item;
+                });
+                // sort by modified date
+                newItems.sort((a, b) => {
+                    return new Date(b.modified_date).getTime() - new Date(a.modified_date).getTime();
                 });
                 return { ...old, items: newItems };
             });
@@ -53,13 +57,9 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
             {markAsCompletedMutation.isLoading && <SavingStatus saving={true} />}
 
             < h2 className="text-2xl font-bold text-gray-100 py-4">Pendientes</h2 >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                <RenderItems itemsData={itemsData?.items} isCompleted={false} toggleItemCompletion={toggleItemCompletion} />
-            </div>
+            <RenderItems itemsData={itemsData?.items} isCompleted={false} toggleItemCompletion={toggleItemCompletion} />
             <h2 className="text-2xl font-bold text-gray-100 py-4">Completados ✅</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                <RenderItems itemsData={itemsData?.items} isCompleted={true} toggleItemCompletion={toggleItemCompletion} />
-            </div>
+            <RenderItems itemsData={itemsData?.items} isCompleted={true} toggleItemCompletion={toggleItemCompletion} />
             <AddItemBtn params={params} />
         </>
     );

@@ -9,7 +9,8 @@ interface RenderItemsProps {
 
 export default function RenderItems({ itemsData, toggleItemCompletion, isCompleted }: RenderItemsProps) {
     return (
-        <>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 z-10">
+
             {
                 itemsData.map((item: IListItem) => {
                     if (item.is_completed === isCompleted) {
@@ -20,6 +21,6 @@ export default function RenderItems({ itemsData, toggleItemCompletion, isComplet
                     return null
                 })
             }
-        </>
+        </div>
     )
 }

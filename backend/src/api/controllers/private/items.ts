@@ -153,7 +153,7 @@ export const changeStatus = async (req: Request, res: Response) => {
         },
         data: {
             is_completed: status === "completed" ? true : false,
-            modified_date: new Date(),
+            modified_date: new Date().toISOString(),
         }
     }).finally(() => {
         prisma.$disconnect()
