@@ -7,6 +7,7 @@ import SavingStatus from "../../../common/Toast/savingStatusToast";
 import RenderItems from "./renderItems";
 import { getListItems, markAsCompleted } from "@/lib/actions/item/items";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import SpeakToText from "../../group/SpeakToText";
 
 export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsResponse, params: IListKeysProps }) => {
     const { data: session } = useSession();
@@ -52,6 +53,7 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
     return (
         <>
             {markAsCompletedMutation.isLoading && <SavingStatus saving={true} />}
+            <SpeakToText lists={[initialItems.list]} />
             < h2 className="text-2xl font-bold text-gray-100 py-4">Pendientes</h2 >
             <RenderItems itemsData={itemsData?.items} isCompleted={false} toggleItemCompletion={toggleItemCompletion} />
             <h2 className="text-2xl font-bold text-gray-100 py-4">Completados ✅</h2>
