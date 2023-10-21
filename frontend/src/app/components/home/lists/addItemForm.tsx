@@ -13,12 +13,11 @@ import { createToast } from "@/lib/common";
 
 interface IAddItemForm {
     closeModal: () => void;
-    addItem: (item: IListItem) => void;
 }
 
 
 
-export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
+export default function AddItemForm({ closeModal }: IAddItemForm) {
     const {
         register,
         handleSubmit,
@@ -63,8 +62,6 @@ export default function AddItemForm({ closeModal, addItem }: IAddItemForm) {
         try {
             schemaItem.parse(data);
             mutateItem(data);
-
-            if (addItem) { itemMutated !== undefined ? addItem(itemMutated) : null; }
             closeModal();
         } catch (error) {
             console.log(error);

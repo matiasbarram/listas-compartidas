@@ -1,7 +1,6 @@
 import CustomModal from "./Modal"
 import AddListForm from "../../home/group/createGroup/addListForm";
 import AddItemForm from "../../home/lists/addItemForm";
-import { IListItem } from "../../../../../types";
 
 AddItemForm
 
@@ -9,10 +8,9 @@ interface IAddItemModal {
     fields: "item" | "list"
     showModal: boolean;
     closeModal: () => void;
-    addItem?: (item: IListItem) => void
 }
 
-export default function AddItemModal({ fields, showModal, closeModal, addItem }: IAddItemModal) {
+export default function AddItemModal({ fields, showModal, closeModal }: IAddItemModal) {
 
     return (
         <CustomModal isOpen={showModal} onClose={closeModal}>
@@ -20,14 +18,11 @@ export default function AddItemModal({ fields, showModal, closeModal, addItem }:
                 <h2 className="text-2xl font-bold text-center mb-8">
                     Agregar {fields === "item" ? "producto" : "lista"}
                 </h2>
-                {fields === "list" ? (
-                    <AddListForm closeModal={closeModal} />
-                ) : (
-                    addItem ? (
-                        <AddItemForm addItem={addItem} closeModal={closeModal} />
-                    ) : null
-                )}
-
+                {
+                    fields === "list" ? (
+                        <AddListForm closeModal={closeModal} />
+                    ) : < AddItemForm closeModal={closeModal} />
+                }
             </div>
         </CustomModal>
     );

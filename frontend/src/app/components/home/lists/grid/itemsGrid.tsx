@@ -47,17 +47,9 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
             queryClient.invalidateQueries(["items", params.slug, params.listId]);
         }
     });
-
-    const addItemMutation = useMutation({
-    })
-
     const toggleItemCompletion = (item: IListItem) => {
         markAsCompletedMutation.mutate(item);
     };
-
-    const addItem = () => {
-        console.log("add item")
-    }
 
     return (
         <>
@@ -71,7 +63,7 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                 <RenderItems itemsData={itemsData?.items} isCompleted={true} toggleItemCompletion={toggleItemCompletion} />
             </div>
-            <AddItemBtn params={params} addItem={addItem} />
+            <AddItemBtn params={params} type="item" />
         </>
     );
 }
