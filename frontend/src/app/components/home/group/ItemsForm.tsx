@@ -124,7 +124,7 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
             gptResponse: items,
             params: {
                 slug: params.slug.toString(),
-                listId: params.listId.toString()
+                listId: items.items[0].list.id.toString()
             },
             session: session
         }),
@@ -138,9 +138,13 @@ export default function SpeakItemsForm({ items, lists, closeModal }: ISpeakItems
                     items: allItems,
                 };
             });
+            createToast({
+                message: "Items agregados correctamente",
+                toastType: "success"
+            });
             closeModal()
         },
-        onError() {
+        onError(error) {
             createToast({
                 message: "Error al procesar el mensaje",
                 toastType: "error"
