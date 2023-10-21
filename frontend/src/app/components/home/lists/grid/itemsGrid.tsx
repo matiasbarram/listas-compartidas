@@ -11,7 +11,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsResponse, params: IListKeysProps }) => {
     const { data: session } = useSession();
     const queryClient = useQueryClient();
-
     const { data: itemsData } = useQuery({
         queryFn: () => getListItems({
             slug: params.slug,
@@ -31,7 +30,6 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
         }),
         onMutate: async (newItem: IListItem) => {
             await queryClient.cancelQueries(["items", params.slug, params.listId]);
-
             queryClient.setQueryData<IListItemsResponse>(["items", params.slug, params.listId], (old) => {
                 if (!old) return old;
                 const newItems = old.items.map((item) => {
@@ -40,7 +38,6 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
                     }
                     return item;
                 });
-                // sort by modified date
                 newItems.sort((a, b) => {
                     return new Date(b.modified_date).getTime() - new Date(a.modified_date).getTime();
                 });
@@ -55,7 +52,6 @@ export const ItemsGrid = ({ initialItems, params }: { initialItems: IListItemsRe
     return (
         <>
             {markAsCompletedMutation.isLoading && <SavingStatus saving={true} />}
-
             < h2 className="text-2xl font-bold text-gray-100 py-4">Pendientes</h2 >
             <RenderItems itemsData={itemsData?.items} isCompleted={false} toggleItemCompletion={toggleItemCompletion} />
             <h2 className="text-2xl font-bold text-gray-100 py-4">Completados ✅</h2>

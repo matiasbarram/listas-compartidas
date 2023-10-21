@@ -5,6 +5,7 @@ import { useState, MouseEvent, useRef } from "react";
 import DropdownMenu from "./dropdownMenu";
 import EditItemModal from "@/app/components/common/Modals/editItemModal";
 import DeleteItemModal from "@/app/components/common/Modals/deleteItemModal";
+import { localDate } from "@/lib/common";
 
 interface IItemCardProps {
     item: IListItem;
@@ -20,16 +21,6 @@ export function ItemCard({ item, onToggleCompletion }: IItemCardProps) {
         e.stopPropagation()
         e.preventDefault()
         setShowDropdown(!showDropdown)
-    }
-
-    const localDate = (date: string) => {
-        const now = new Date()
-        const newDate = new Date(date)
-        if (now.getDate() === newDate.getDate())
-            return newDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        else {
-            return newDate.toLocaleDateString()
-        }
     }
 
     return (
