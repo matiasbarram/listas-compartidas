@@ -15,6 +15,13 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Listas compartidas',
   description: 'Crear listas que se pueden compartir con otras personas',
+  manifest: '/manifest.json',
+  icons: {
+    apple: "/icon.png"
+  },
+  themeColor: '#6466e9',
+  colorScheme: 'dark',
+  creator: 'matiasbarram',
 }
 
 export default function RootLayout({
