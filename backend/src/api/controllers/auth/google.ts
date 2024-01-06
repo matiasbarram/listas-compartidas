@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client"
-import { NextFunction, Request, Response } from "express"
+import { Request, Response } from "express"
+import { encryptText } from "../../../utils/encrypt"
 import { createJwt, createPayload } from "../../../utils/jwt/createJwt"
 import { createGroup } from "./group/createGroup"
 import { createUser } from "./user/createUser"
-import { encryptText } from "../../../utils/encrypt"
 
 interface GoogleUser {
     email: string
@@ -13,11 +13,7 @@ interface GoogleUser {
     password: string
 }
 
-export const loginGoogle = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-) => {
+export const loginGoogle = async (req: Request, res: Response) => {
     const { email, name, password } = req.body as GoogleUser
     const prisma = new PrismaClient()
     const encryptedPassword = await encryptText(password)

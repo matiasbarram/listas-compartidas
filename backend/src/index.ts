@@ -1,10 +1,10 @@
 import dotenv from "dotenv"
 dotenv.config()
 
-import express, { Express, Request, Response, Application } from "express"
+import { Application } from "express"
+import AppConfig from "./config/appConfig"
 import { createServer } from "./server"
 import Logger from "./utils/logger"
-import AppConfig from "./config/appConfig"
 
 const PORT = AppConfig.app.port
 const app: Application = createServer()

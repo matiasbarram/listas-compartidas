@@ -1,7 +1,5 @@
 import { Router } from "express"
-import { createCipheriv, randomBytes, scrypt } from "crypto"
-import { promisify } from "util"
-import { encryptText, decryptText } from "../../../utils/encrypt"
+import { decryptText, encryptText } from "../../../utils/encrypt"
 
 const mainRouter: Router = Router()
 

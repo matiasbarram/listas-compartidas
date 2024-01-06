@@ -1,6 +1,5 @@
-import { Request, Response } from "express"
-import { validateJwt } from "../../../utils/jwt/validateJwt"
 import { PrismaClient } from "@prisma/client"
+import { Request, Response } from "express"
 import { payloadData } from "../../../utils/jwt/payloadData"
 
 export const getGroups = async (req: Request, res: Response) => {
@@ -38,10 +37,10 @@ export const getGroups = async (req: Request, res: Response) => {
 
     const groups = user_groups.map((user_group) => {
         const users = user_group.user_group.map((user) => {
-            const { password, ...rest } = user.users
+            const { ...rest } = user.users
             return rest
         })
-        const { user_group: _, ...rest } = user_group
+        const { ...rest } = user_group
         return {
             ...rest,
             users,
@@ -156,7 +155,7 @@ export const deleteMemberFromGroup = async (req: Request, res: Response) => {
     return res.status(200).json({
         message: "User deleted from group",
         users: users.map((user) => {
-            const { password, ...rest } = user.users
+            const { ...rest } = user.users
             return rest
         }),
     })

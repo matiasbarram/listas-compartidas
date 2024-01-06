@@ -13,3 +13,4 @@ export interface JwtToken extends JwtPayload {
 }
 
 export type DeleteStatus = "completed" | "all" | "incomplete"
+export type ItemsIds = number[]

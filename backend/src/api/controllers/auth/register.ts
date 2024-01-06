@@ -1,14 +1,10 @@
 import { PrismaClient } from "@prisma/client"
-import { NextFunction, Request, Response } from "express"
+import { Request, Response } from "express"
 import { encryptText } from "../../../utils/encrypt"
 import { createJwt, createPayload } from "../../../utils/jwt/createJwt"
 import { createGroup } from "./group/createGroup"
 
-export const register = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-) => {
+export const register = async (req: Request, res: Response) => {
     const prisma = new PrismaClient()
     const { name, email, password } = req.body
 
@@ -23,7 +19,7 @@ export const register = async (
             },
         })
 
-        const { group, user_group } = await createGroup({
+        const { user_group } = await createGroup({
             user_id: user.id,
             prisma,
         })

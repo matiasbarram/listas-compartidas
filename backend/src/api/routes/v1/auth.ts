@@ -1,11 +1,11 @@
 import { Request, Response, Router } from "express"
 
+import { payloadData } from "../../../utils/jwt/payloadData"
+import { loginGoogle } from "../../controllers/auth/google"
 import { login } from "../../controllers/auth/login"
 import { register } from "../../controllers/auth/register"
 import { checkJwt } from "../../middlewares/auth/checkJwt"
-import { validateLogin, validateRegister } from "../../middlewares/auth/login"
-import { payloadData } from "../../../utils/jwt/payloadData"
-import { loginGoogle } from "../../controllers/auth/google"
+import { validateLogin } from "../../middlewares/auth/login"
 
 const authRouter: Router = Router()
 

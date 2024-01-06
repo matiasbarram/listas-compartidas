@@ -2,26 +2,7 @@ import { PrismaClient } from "@prisma/client"
 import { Request, Response } from "express"
 import { payloadData } from "../../../utils/jwt/payloadData"
 import Logger from "../../../utils/logger"
-import { DeleteStatus } from "../../interfaces/interfaces"
-
-interface IItem {
-    id: number
-    list_id: number
-    creation_date: Date
-    modified_date: Date
-    description: string | null
-    is_completed: boolean | null
-    quantity: number | null
-    notes: string | null
-    priority: string | null
-    due_date: Date | null
-    assigned_to: string | null
-    reminder: string | null
-    url: string | null
-    cost: string | null
-    location: string | null
-    recurring: string | null
-}
+import { DeleteStatus, ItemsIds } from "../../interfaces/interfaces"
 
 export const getItems = async (req: Request, res: Response) => {
     const payload = payloadData(req, res)
@@ -34,7 +15,7 @@ export const getItems = async (req: Request, res: Response) => {
     const groupId = Number(req.params.groupId)
     const listId = Number(req.params.listId)
     const prisma = new PrismaClient()
-    let list_items = await prisma.lists
+    const list_items = await prisma.lists
         .findUnique({
             where: {
                 group_id: groupId,
@@ -205,7 +186,7 @@ export const deleteItems = async (req: Request, res: Response) => {
     const listId = Number(req.params.listId)
     const groupId = Number(req.params.groupId)
     const status = req.body.status as DeleteStatus
-    const itemsIds = req.body.itemsIds
+    const itemsIds = req.body.itemsIds as ItemsIds
     const prisma = new PrismaClient()
     try {
         const items = await prisma.items
@@ -277,7 +258,6 @@ interface ICreateItem {
 type ICreateItems = ICreateItem[]
 
 export const createItems = async (req: Request, res: Response) => {
-    const groupId = Number(req.params.groupId)
     const items: ICreateItems = req.body.items
     const prisma = new PrismaClient()
 
@@ -293,7 +273,7 @@ export const createItems = async (req: Request, res: Response) => {
         })
     }
 
-    const [totalCreated, itemsCreated] = await prisma
+    const itemsCreated = await prisma
         .$transaction([
             prisma.items.createMany({
                 data: items.map((item) => {

@@ -1,7 +1,7 @@
-import { Request, Response } from "express"
-import { payloadData } from "../../../../utils/jwt/payloadData"
 import { PrismaClient } from "@prisma/client"
+import { Request, Response } from "express"
 import validator from "validator"
+import { payloadData } from "../../../../utils/jwt/payloadData"
 
 interface INewGroup {
     name: string
@@ -9,7 +9,7 @@ interface INewGroup {
     emails: string[]
 }
 
-const validateEmails = (emails: string[], res: Response) => {
+const validateEmails = (emails: string[]) => {
     const invalidEmails = emails.filter((email) => !validator.isEmail(email))
     return {
         valid: invalidEmails.length === 0,
@@ -37,7 +37,7 @@ export const createGroup = async (req: Request, res: Response) => {
         })
     }
 
-    const checkMails = validateEmails(emails, res)
+    const checkMails = validateEmails(emails)
     if (!checkMails.valid) {
         return res.status(400).json({
             error: "Invalid emails",

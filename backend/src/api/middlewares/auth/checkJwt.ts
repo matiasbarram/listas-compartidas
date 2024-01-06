@@ -1,8 +1,7 @@
-import { Request, Response, NextFunction } from "express"
-import { validateJwt } from "../../../utils/jwt/validateJwt"
-import Logger from "../../../utils/logger"
-import { JwtPayload, JwtToken } from "../../interfaces/interfaces"
+import { NextFunction, Request, Response } from "express"
 import { createJwt } from "../../../utils/jwt/createJwt"
+import { validateJwt } from "../../../utils/jwt/validateJwt"
+import { JwtPayload, JwtToken } from "../../interfaces/interfaces"
 
 export function checkJwt(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.get("Authorization")

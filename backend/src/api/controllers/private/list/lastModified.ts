@@ -1,10 +1,10 @@
+import { PrismaClient } from "@prisma/client"
 import { Request, Response } from "express"
 import { payloadData } from "../../../../utils/jwt/payloadData"
-import { Prisma, PrismaClient } from "@prisma/client"
 
 export const getLastModifiedLists = async (req: Request, res: Response) => {
     // get the last modified lists of the current user
-    const payload = payloadData(req, res)
+    const payload = payloadData(req)
     if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,
