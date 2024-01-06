@@ -18,7 +18,7 @@ const validateEmails = (emails: string[]) => {
 }
 
 export const createGroup = async (req: Request, res: Response) => {
-    const payload = payloadData(req, res)
+    const payload = payloadData(req)
     if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,

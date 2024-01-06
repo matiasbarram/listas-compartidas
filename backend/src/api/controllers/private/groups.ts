@@ -3,7 +3,7 @@ import { Request, Response } from "express"
 import { payloadData } from "../../../utils/jwt/payloadData"
 
 export const getGroups = async (req: Request, res: Response) => {
-    const payload = payloadData(req, res)
+    const payload = payloadData(req)
     if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,
@@ -53,7 +53,7 @@ export const getGroups = async (req: Request, res: Response) => {
 }
 
 export const inviteUsersToGroup = async (req: Request, res: Response) => {
-    const payload = payloadData(req, res)
+    const payload = payloadData(req)
     if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,
@@ -102,7 +102,7 @@ export const inviteUsersToGroup = async (req: Request, res: Response) => {
 }
 
 export const deleteMemberFromGroup = async (req: Request, res: Response) => {
-    const payload = payloadData(req, res)
+    const payload = payloadData(req)
     if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,
@@ -162,7 +162,7 @@ export const deleteMemberFromGroup = async (req: Request, res: Response) => {
 }
 
 export const usersGroup = async (req: Request, res: Response) => {
-    const payload = payloadData(req, res)
+    const payload = payloadData(req)
     if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,
