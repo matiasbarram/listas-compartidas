@@ -15,6 +15,6 @@ const AppConfig = {
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
     },
-};
+}
 
-export default Object.freeze(AppConfig);
+export default Object.freeze(AppConfig)

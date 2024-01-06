@@ -1,18 +1,18 @@
-import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client"
+import { Request, Response } from "express"
 
 interface SearchUsersRequest extends Request {
     query: {
-        email: string;
-    };
+        email: string
+    }
 }
 
 export default async function searchUsers(
     req: SearchUsersRequest,
     res: Response,
 ) {
-    const searchEmail = req.query.email;
-    const prisma = new PrismaClient();
+    const searchEmail = req.query.email
+    const prisma = new PrismaClient()
     const users = await prisma.users
         .findMany({
             where: {
@@ -26,10 +26,10 @@ export default async function searchUsers(
             },
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
 
     return res.status(200).json({
         users,
-    });
+    })
 }

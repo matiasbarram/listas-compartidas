@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { checkJwt } from "../../middlewares/auth/checkJwt";
+import { Router } from "express"
+import { checkJwt } from "../../middlewares/auth/checkJwt"
 import {
     deleteMemberFromGroup,
     editGroupInfo,
@@ -7,8 +7,8 @@ import {
     groupsInfo,
     inviteUsersToGroup,
     usersGroup,
-} from "../../controllers/private/groups";
-import { createList, lists } from "../../controllers/private/lists";
+} from "../../controllers/private/groups"
+import { createList, lists } from "../../controllers/private/lists"
 import {
     changeStatus,
     createItem,
@@ -16,57 +16,55 @@ import {
     getItems,
     editItem,
     createItems,
-} from "../../controllers/private/items";
-import { createGroup } from "../../controllers/private/group/create";
-import searchUsers from "../../controllers/private/searchUsers";
-import { getLastModifiedLists } from "../../controllers/private/list/lastModified";
+} from "../../controllers/private/items"
+import { createGroup } from "../../controllers/private/group/create"
+import searchUsers from "../../controllers/private/searchUsers"
+import { getLastModifiedLists } from "../../controllers/private/list/lastModified"
 
-const privateRouter: Router = Router();
+const privateRouter: Router = Router()
 
-privateRouter.route("/users/search").get([checkJwt], searchUsers);
+privateRouter.route("/users/search").get([checkJwt], searchUsers)
 
-privateRouter.route("/groups").get([checkJwt], getGroups);
-privateRouter.route("/lists/last").get([checkJwt], getLastModifiedLists);
-privateRouter.route("/groups/create").post([checkJwt], createGroup);
+privateRouter.route("/groups").get([checkJwt], getGroups)
+privateRouter.route("/lists/last").get([checkJwt], getLastModifiedLists)
+privateRouter.route("/groups/create").post([checkJwt], createGroup)
 
-privateRouter.route("/groups/:id/users").get([checkJwt], usersGroup);
-privateRouter.route("/groups/:id/lists").get([checkJwt], lists);
+privateRouter.route("/groups/:id/users").get([checkJwt], usersGroup)
+privateRouter.route("/groups/:id/lists").get([checkJwt], lists)
 
-privateRouter.route("/groups/:groupId/info").get([checkJwt], groupsInfo);
-privateRouter
-    .route("/groups/:groupId/info/edit")
-    .put([checkJwt], editGroupInfo);
+privateRouter.route("/groups/:groupId/info").get([checkJwt], groupsInfo)
+privateRouter.route("/groups/:groupId/info/edit").put([checkJwt], editGroupInfo)
 
 privateRouter
     .route("/groups/:groupId/members/add")
-    .put([checkJwt], inviteUsersToGroup);
+    .put([checkJwt], inviteUsersToGroup)
 privateRouter
     .route("/groups/:groupId/members/delete")
-    .delete([checkJwt], deleteMemberFromGroup);
+    .delete([checkJwt], deleteMemberFromGroup)
 
 privateRouter
     .route("/groups/:groupId/lists/create")
-    .post([checkJwt], createList);
+    .post([checkJwt], createList)
 privateRouter
     .route("/groups/:groupId/lists/:listId/items")
-    .get([checkJwt], getItems);
+    .get([checkJwt], getItems)
 
 privateRouter
     .route("/groups/:groupId/lists/:listId/items/create")
-    .post([checkJwt], createItem);
+    .post([checkJwt], createItem)
 
 privateRouter
     .route("/groups/:groupId/createItems")
-    .post([checkJwt], createItems);
+    .post([checkJwt], createItems)
 
 privateRouter
     .route("/groups/:groupId/lists/:listId/items/:itemId/edit")
-    .put([checkJwt], editItem);
+    .put([checkJwt], editItem)
 privateRouter
     .route("/groups/:groupId/lists/:listId/items/:itemId/delete")
-    .delete([checkJwt], deleteItem);
+    .delete([checkJwt], deleteItem)
 privateRouter
     .route("/groups/:groupId/lists/:listId/items/:itemId/change")
-    .put([checkJwt], changeStatus);
+    .put([checkJwt], changeStatus)
 
-export default privateRouter;
+export default privateRouter

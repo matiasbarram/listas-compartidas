@@ -1,38 +1,39 @@
-import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
-import { payloadData } from "../../../utils/jwt/payloadData";
-import Logger from "../../../utils/logger";
+import { PrismaClient } from "@prisma/client"
+import { Request, Response } from "express"
+import { payloadData } from "../../../utils/jwt/payloadData"
+import Logger from "../../../utils/logger"
+import { DeleteStatus } from "../../interfaces/interfaces"
 
 interface IItem {
-    id: number;
-    list_id: number;
-    creation_date: Date;
-    modified_date: Date;
-    description: string | null;
-    is_completed: boolean | null;
-    quantity: number | null;
-    notes: string | null;
-    priority: string | null;
-    due_date: Date | null;
-    assigned_to: string | null;
-    reminder: string | null;
-    url: string | null;
-    cost: string | null;
-    location: string | null;
-    recurring: string | null;
+    id: number
+    list_id: number
+    creation_date: Date
+    modified_date: Date
+    description: string | null
+    is_completed: boolean | null
+    quantity: number | null
+    notes: string | null
+    priority: string | null
+    due_date: Date | null
+    assigned_to: string | null
+    reminder: string | null
+    url: string | null
+    cost: string | null
+    location: string | null
+    recurring: string | null
 }
 
 export const getItems = async (req: Request, res: Response) => {
-    const payload = payloadData(req, res);
+    const payload = payloadData(req, res)
     if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,
-        });
+        })
     }
 
-    const groupId = Number(req.params.groupId);
-    const listId = Number(req.params.listId);
-    const prisma = new PrismaClient();
+    const groupId = Number(req.params.groupId)
+    const listId = Number(req.params.listId)
+    const prisma = new PrismaClient()
     let list_items = await prisma.lists
         .findUnique({
             where: {
@@ -48,13 +49,13 @@ export const getItems = async (req: Request, res: Response) => {
             },
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
 
     if (!list_items) {
         return res.status(404).json({
             error: "List not found",
-        });
+        })
     }
 
     const listData = {
@@ -62,36 +63,36 @@ export const getItems = async (req: Request, res: Response) => {
         name: list_items.name,
         description: list_items.description,
         group_id: list_items.group_id,
-    };
+    }
 
     return res.status(200).json({
         list: listData,
         items: [...list_items.items],
-    });
-};
+    })
+}
 
 export const createItem = async (req: Request, res: Response) => {
-    const listId = Number(req.params.listId);
-    const groupId = Number(req.params.groupId);
-    const prisma = new PrismaClient();
+    const listId = Number(req.params.listId)
+    const groupId = Number(req.params.groupId)
+    const prisma = new PrismaClient()
 
     const { description, quantity }: { description: string; quantity: number } =
-        req.body;
-    const validations = [];
+        req.body
+    const validations = []
     if (!description) {
         validations.push({
             error: "Description is required",
-        });
+        })
     }
     if (!quantity) {
         validations.push({
             error: "Quantity is required",
-        });
+        })
     }
     if (validations.length > 0) {
         return res.status(400).json({
             validations,
-        });
+        })
     }
 
     const existDescription = await prisma.items
@@ -102,13 +103,13 @@ export const createItem = async (req: Request, res: Response) => {
             },
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
 
     if (existDescription) {
         return res.status(400).json({
             error: "Description already exists",
-        });
+        })
     }
 
     const item = await prisma.items
@@ -120,36 +121,36 @@ export const createItem = async (req: Request, res: Response) => {
             },
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
 
     return res.status(200).json({
         groupId,
         listId,
         item,
-    });
-};
+    })
+}
 
 export const changeStatus = async (req: Request, res: Response) => {
-    const allStatus = ["completed", "uncompleted"];
-    const status = req.body.status;
+    const allStatus = ["completed", "uncompleted"]
+    const status = req.body.status
     if (!status) {
         return res.status(400).json({
             error: "Status is required",
-        });
+        })
     }
 
     if (!allStatus.includes(status)) {
         return res.status(400).json({
             error: "Status is invalid",
-        });
+        })
     }
 
-    const listId = Number(req.params.listId);
-    const groupId = Number(req.params.groupId);
+    const listId = Number(req.params.listId)
+    const groupId = Number(req.params.groupId)
 
-    const itemId = Number(req.params.itemId);
-    const prisma = new PrismaClient();
+    const itemId = Number(req.params.itemId)
+    const prisma = new PrismaClient()
 
     const item = await prisma.items
         .update({
@@ -162,22 +163,22 @@ export const changeStatus = async (req: Request, res: Response) => {
             },
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
 
     return res.status(200).json({
         groupId,
         listId,
         item,
-    });
-};
+    })
+}
 
 export const deleteItem = async (req: Request, res: Response) => {
-    const listId = Number(req.params.listId);
-    const groupId = Number(req.params.groupId);
-    const itemId = Number(req.params.itemId);
+    const listId = Number(req.params.listId)
+    const groupId = Number(req.params.groupId)
+    const itemId = Number(req.params.itemId)
 
-    const prisma = new PrismaClient();
+    const prisma = new PrismaClient()
     try {
         const item = await prisma.items
             .delete({
@@ -186,53 +187,57 @@ export const deleteItem = async (req: Request, res: Response) => {
                 },
             })
             .finally(() => {
-                prisma.$disconnect();
-            });
+                prisma.$disconnect()
+            })
         return res.status(200).json({
             groupId,
             listId,
             item,
-        });
+        })
     } catch (error) {
         return res.status(400).json({
             error: "Item not found",
-        });
+        })
     }
-};
+}
 
 export const deleteItems = async (req: Request, res: Response) => {
-    const listId = Number(req.params.listId);
-    const groupId = Number(req.params.groupId);
-    const status = req.body.status;
-    const prisma = new PrismaClient();
+    const listId = Number(req.params.listId)
+    const groupId = Number(req.params.groupId)
+    const status = req.body.status as DeleteStatus
+    const itemsIds = req.body.itemsIds
+    const prisma = new PrismaClient()
     try {
         const items = await prisma.items
             .deleteMany({
                 where: {
-                    list_id: listId,
+                    id: {
+                        in: itemsIds,
+                    },
+                    is_completed: status === "completed" ? true : false,
                 },
             })
             .finally(() => {
-                prisma.$disconnect();
-            });
+                prisma.$disconnect()
+            })
         return res.status(200).json({
             groupId,
             listId,
             items,
-        });
+        })
     } catch (error) {
         return res.status(400).json({
-            error: "Item not found",
-        });
+            error: "Items not found",
+        })
     }
-};
+}
 
 export const editItem = async (req: Request, res: Response) => {
-    const listId = Number(req.params.listId);
-    const groupId = Number(req.params.groupId);
-    const itemId = Number(req.params.itemId);
+    const listId = Number(req.params.listId)
+    const groupId = Number(req.params.groupId)
+    const itemId = Number(req.params.itemId)
 
-    const prisma = new PrismaClient();
+    const prisma = new PrismaClient()
     try {
         const item = await prisma.items
             .update({
@@ -245,47 +250,47 @@ export const editItem = async (req: Request, res: Response) => {
                 },
             })
             .finally(() => {
-                prisma.$disconnect();
-            });
+                prisma.$disconnect()
+            })
         return res.status(200).json({
             groupId,
             listId,
             item,
-        });
+        })
     } catch (error) {
-        Logger.error(error);
+        Logger.error(error)
         return res.status(400).json({
             error: "Item not found",
-        });
+        })
     }
-};
-
-interface ICreateItem {
-    name: string;
-    quantity: number;
-    list: {
-        name: string;
-        id: number;
-    };
 }
 
-type ICreateItems = ICreateItem[];
+interface ICreateItem {
+    name: string
+    quantity: number
+    list: {
+        name: string
+        id: number
+    }
+}
+
+type ICreateItems = ICreateItem[]
 
 export const createItems = async (req: Request, res: Response) => {
-    const groupId = Number(req.params.groupId);
-    const items: ICreateItems = req.body.items;
-    const prisma = new PrismaClient();
+    const groupId = Number(req.params.groupId)
+    const items: ICreateItems = req.body.items
+    const prisma = new PrismaClient()
 
-    const validations = [];
+    const validations = []
     if (!items) {
         validations.push({
             error: "Items are required",
-        });
+        })
     }
     if (validations.length > 0) {
         return res.status(400).json({
             validations,
-        });
+        })
     }
 
     const [totalCreated, itemsCreated] = await prisma
@@ -296,7 +301,7 @@ export const createItems = async (req: Request, res: Response) => {
                         description: item.name,
                         quantity: item.quantity,
                         list_id: item.list.id,
-                    };
+                    }
                 }),
             }),
             prisma.items.findMany({
@@ -311,9 +316,9 @@ export const createItems = async (req: Request, res: Response) => {
             }),
         ])
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
     return res.status(200).json({
         items: itemsCreated,
-    });
-};
+    })
+}

@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client"
 
 interface ICreateUser {
-    prisma: PrismaClient;
+    prisma: PrismaClient
     user: {
-        email: string;
-        name: string;
-        password: string;
-    };
+        email: string
+        name: string
+        password: string
+    }
 }
 
 export const createUser = async ({ user, prisma }: ICreateUser) => {
@@ -19,7 +19,7 @@ export const createUser = async ({ user, prisma }: ICreateUser) => {
             },
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
-    return newUser;
-};
+            prisma.$disconnect()
+        })
+    return newUser
+}

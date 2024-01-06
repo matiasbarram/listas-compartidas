@@ -1,18 +1,18 @@
-import { Request, Response } from "express";
-import { payloadData } from "../../../../utils/jwt/payloadData";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Request, Response } from "express"
+import { payloadData } from "../../../../utils/jwt/payloadData"
+import { Prisma, PrismaClient } from "@prisma/client"
 
 export const getLastModifiedLists = async (req: Request, res: Response) => {
     // get the last modified lists of the current user
-    const payload = payloadData(req, res);
+    const payload = payloadData(req, res)
     if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,
-        });
+        })
     }
-    const userId = payload.id;
+    const userId = payload.id
 
-    const prisma = new PrismaClient();
+    const prisma = new PrismaClient()
     const userGroups = await prisma.user_group
         .findMany({
             where: {
@@ -23,10 +23,10 @@ export const getLastModifiedLists = async (req: Request, res: Response) => {
             },
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
 
-    const userGroupsIds = userGroups.map((userGroup) => userGroup.group_id);
+    const userGroupsIds = userGroups.map((userGroup) => userGroup.group_id)
     const lists = await prisma.lists
         .findMany({
             where: {
@@ -51,8 +51,8 @@ export const getLastModifiedLists = async (req: Request, res: Response) => {
             take: 5,
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
     const listResponse = lists.map((list) => {
         return {
             id: list.id,
@@ -60,10 +60,10 @@ export const getLastModifiedLists = async (req: Request, res: Response) => {
             description: list.description,
             groupId: list.group_id,
             groupName: list.groups.name,
-        };
-    });
+        }
+    })
 
     return res.status(200).json({
         lists: listResponse,
-    });
-};
+    })
+}

@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client"
 
 interface ICreateGroup {
-    user_id: number;
-    prisma: PrismaClient;
+    user_id: number
+    prisma: PrismaClient
 }
 
 export const createGroup = async ({ user_id, prisma }: ICreateGroup) => {
@@ -15,8 +15,8 @@ export const createGroup = async ({ user_id, prisma }: ICreateGroup) => {
             },
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
 
     const user_group = await prisma.user_group
         .create({
@@ -26,8 +26,8 @@ export const createGroup = async ({ user_id, prisma }: ICreateGroup) => {
             },
         })
         .finally(() => {
-            prisma.$disconnect();
-        });
+            prisma.$disconnect()
+        })
 
-    return { group, user_group };
-};
+    return { group, user_group }
+}
