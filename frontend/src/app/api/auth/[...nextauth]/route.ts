@@ -1,11 +1,16 @@
-import { API_URL, JWT_EXPIRATION_TIME, clientId, clientSecret } from "@/lib/constants";
-import { NextAuthOptions, User } from "next-auth";
-import NextAuth from "next-auth/next";
-import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
-import { ILoginApiResponse } from "../../../../../types";
-import type { GoogleProfile } from "next-auth/providers/google";
-import { UserData } from "@/lib/next-auth";
+import {
+    API_URL,
+    JWT_EXPIRATION_TIME,
+    clientId,
+    clientSecret,
+} from "@/lib/constants"
+import { NextAuthOptions, User } from "next-auth"
+import NextAuth from "next-auth/next"
+import CredentialsProvider from "next-auth/providers/credentials"
+import GoogleProvider from "next-auth/providers/google"
+import { ILoginApiResponse } from "../../../../../types"
+import type { GoogleProfile } from "next-auth/providers/google"
+import { UserData } from "@/lib/next-auth"
 
 export const authOptions: NextAuthOptions = {
     pages: {
@@ -24,7 +29,7 @@ export const authOptions: NextAuthOptions = {
             name: "Credentials",
             credentials: {
                 email: { label: "Email", type: "text", placeholder: "jsmith" },
-                password: { label: "Password", type: "password" }
+                password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
                 if (!credentials?.email || !credentials?.password) return null
@@ -32,13 +37,13 @@ export const authOptions: NextAuthOptions = {
                 const res = await fetch(API_URL + "/auth/login", {
                     method: "POST",
                     body: JSON.stringify({ email, password }),
-                    headers: { "Content-Type": "application/json" }
+                    headers: { "Content-Type": "application/json" },
                 })
                 if (res.status === 401 || res.status === 400) return null
 
                 const user = await res.json()
                 return user
-            }
+            },
         }),
         GoogleProvider({
             name: "Google",
@@ -51,7 +56,7 @@ export const authOptions: NextAuthOptions = {
                     response_type: "code",
                 },
             },
-        })
+        }),
     ],
 
     callbacks: {
@@ -59,12 +64,13 @@ export const authOptions: NextAuthOptions = {
             if (token.iat) {
                 const expDate = new Date(token.iat * 1000)
                 const now = new Date()
-                if (now < expDate) { return token }
+                if (now < expDate) {
+                    return token
+                }
             }
             if (user) return { ...token, ...user }
             return token
         },
-
 
         async session({ session, token }) {
             if (!session.user.email) session.user = token.user
@@ -73,32 +79,32 @@ export const authOptions: NextAuthOptions = {
         },
 
         async signIn({ user, account, profile }) {
-            const randomVal = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+            const randomVal =
+                Math.random().toString(36).substring(2, 15) +
+                Math.random().toString(36).substring(2, 15)
             if (account && account.provider === "google" && profile) {
                 user as unknown as User
                 const googleProfile = profile as unknown as GoogleProfile
                 const googleUser = {
                     name: googleProfile.name,
                     email: googleProfile.email,
-                    password: googleProfile.name + randomVal + googleProfile.email
+                    password:
+                        googleProfile.name + randomVal + googleProfile.email,
                 }
                 const res = await fetch(API_URL + "/auth/google", {
                     method: "POST",
                     body: JSON.stringify(googleUser),
-                    headers: { "Content-Type": "application/json" }
+                    headers: { "Content-Type": "application/json" },
                 })
-                const { token, user: responseUser }: ILoginApiResponse = await res.json()
+                const { token, user: responseUser }: ILoginApiResponse =
+                    await res.json()
                 user.token = token
                 user.user = responseUser as UserData
             }
             return true
-        }
+        },
     },
     secret: process.env.SECRET,
-
 }
 const handler = NextAuth(authOptions)
-export {
-    handler as GET,
-    handler as POST
-}
+export { handler as GET, handler as POST }

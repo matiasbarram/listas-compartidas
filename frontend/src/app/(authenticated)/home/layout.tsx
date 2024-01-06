@@ -1,13 +1,14 @@
 "use client"
 
-import { Header } from "@/app/components/Header/Header"
-import Spinner from "@/app/components/common/Spinner/Spinner"
+import { Header } from "@/components/Header/Header"
+import Spinner from "@/components/common/Spinner/Spinner"
 import { API_URL } from "@/lib/constants"
-import { set } from "lodash"
 import { signOut, useSession } from "next-auth/react"
 import React, { useEffect, useState } from "react"
 
-export default function DashboardLayout({ children }: {
+export default function DashboardLayout({
+    children,
+}: {
     children: React.ReactNode
 }) {
     const { data: session, status } = useSession()
@@ -28,7 +29,6 @@ export default function DashboardLayout({ children }: {
         if (status === "authenticated") {
             checkJwt()
         }
-
     }, [session, status])
 
     return (

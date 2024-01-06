@@ -1,12 +1,11 @@
-import React, { Fragment } from "react"
-import { getServerSession } from "next-auth"
-import CreateGroupModal from "@/app/components/home/group/createGroup/createGroupModal"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import CreateGroupModal from "@/components/home/group/createGroup/createGroupModal"
+import { GroupCard } from "@/components/home/groupCard"
 import { getGroups } from "@/lib/actions/group/groups"
-import { GroupCard } from "@/app/components/home/groupCard"
 import { getLastUpdatedLists } from "@/lib/actions/lists/lists"
+import { getServerSession } from "next-auth"
+import { Fragment } from "react"
 import LastUpdatedLists from "./lastUpdated"
-
 
 export default async function HomePage() {
     const session = await getServerSession(authOptions)
@@ -19,25 +18,31 @@ export default async function HomePage() {
     return (
         <>
             <div className="flex items-center justify-between">
-                <h2 className="text-xl my-6"> Mis grupos {groups.length > 0 && `(${groups.length})`}</h2>
+                <h2 className="text-xl my-6">
+                    {" "}
+                    Mis grupos {groups.length > 0 && `(${groups.length})`}
+                </h2>
                 <CreateGroupModal />
             </div>
             <div className="overflow-x-auto">
-                <div className="flex my-4" style={{ width: `calc(100% * ${groups.length} * 0.6)` }}>
-                    {
-                        groups.map((group, index) => (
-                            <GroupCard props={group} index={index} key={index} />
-                        ))
-                    }
+                <div
+                    className="flex my-4"
+                    style={{ width: `calc(100% * ${groups.length} * 0.6)` }}
+                >
+                    {groups.map((group, index) => (
+                        <GroupCard props={group} index={index} key={index} />
+                    ))}
                 </div>
-
-            </div >
+            </div>
             <h2 className="text-xl my-6">Últimas listas modificadas</h2>
             <Fragment>
                 <div className="text-center text-gray-500">
-                    <LastUpdatedLists lists={lists} token={session?.token as string} />
+                    <LastUpdatedLists
+                        lists={lists}
+                        token={session?.token as string}
+                    />
                 </div>
-                < div />
+                <div />
             </Fragment>
         </>
     )

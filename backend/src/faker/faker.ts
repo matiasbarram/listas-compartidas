@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { createUsers } from "./users/create_users";
-
+import { PrismaClient } from "@prisma/client"
+import { createUsers } from "./users/create_users"
 
 const prisma = new PrismaClient()
 
@@ -17,4 +16,3 @@ main()
         await prisma.$disconnect()
         process.exit(1)
     })
-

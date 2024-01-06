@@ -1,18 +1,16 @@
-"use client";
+"use client"
 
-import React from "react";
-import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
-import { createToast } from "@/lib/common";
-import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import Spinner from "@/app/components/common/Spinner/Spinner";
-import { signUp } from "@/lib/actions/auth/auth";
-import { registerSchema, ILoginFormValues } from "../../../../../types";
+import Spinner from "@/components/common/Spinner/Spinner"
+import { signUp } from "@/lib/actions/auth/auth"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { signIn } from "next-auth/react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { ILoginFormValues, registerSchema } from "../../../../../types"
 
 export default function RegisterPage() {
-    const router = useRouter();
+    const router = useRouter()
 
     const {
         register,
@@ -20,21 +18,20 @@ export default function RegisterPage() {
         formState: { errors, isSubmitting },
     } = useForm<ILoginFormValues>({
         resolver: zodResolver(registerSchema),
-    });
-
+    })
 
     const registerUser = async (data: ILoginFormValues) => {
         await signUp({
             name: data.username,
             email: data.email,
             password: data.password,
-        });
+        })
         await signIn("credentials", {
             email: data.email,
             password: data.password,
             redirect: true,
             callbackUrl: "/home",
-        });
+        })
     }
 
     return (
@@ -45,23 +42,35 @@ export default function RegisterPage() {
                         <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
                             Regístrate en tu cuenta
                         </h1>
-                        <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(registerUser)}>
+                        <form
+                            className="space-y-4 md:space-y-6"
+                            onSubmit={handleSubmit(registerUser)}
+                        >
                             <div>
-                                <label htmlFor="name" className="block mb-2 text-sm font-medium text-white">
+                                <label
+                                    htmlFor="name"
+                                    className="block mb-2 text-sm font-medium text-white"
+                                >
                                     Nombre
                                 </label>
                                 <input
-                                    type="text"                                    {
-                                    ...register("username")
-                                    }
+                                    type="text"
+                                    {...register("username")}
                                     id="name"
                                     className="bordersm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="Nombre completo"
                                 />
-                                {errors.username && <p className="text-xs text-red-500">{errors.username.message}</p>}
+                                {errors.username && (
+                                    <p className="text-xs text-red-500">
+                                        {errors.username.message}
+                                    </p>
+                                )}
                             </div>
                             <div>
-                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-white">
+                                <label
+                                    htmlFor="email"
+                                    className="block mb-2 text-sm font-medium text-white"
+                                >
                                     Correo
                                 </label>
                                 <input
@@ -71,10 +80,17 @@ export default function RegisterPage() {
                                     className="border sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="name@company.com"
                                 />
-                                {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
+                                {errors.email && (
+                                    <p className="text-xs text-red-500">
+                                        {errors.email.message}
+                                    </p>
+                                )}
                             </div>
                             <div>
-                                <label htmlFor="password" className="block mb-2 text-sm font-medium text-white">
+                                <label
+                                    htmlFor="password"
+                                    className="block mb-2 text-sm font-medium text-white"
+                                >
                                     Contraseña
                                 </label>
                                 <input
@@ -84,10 +100,17 @@ export default function RegisterPage() {
                                     placeholder="••••••••"
                                     className="border sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                                 />
-                                {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+                                {errors.password && (
+                                    <p className="text-xs text-red-500">
+                                        {errors.password.message}
+                                    </p>
+                                )}
                             </div>
                             <div>
-                                <label htmlFor="password" className="block mb-2 text-sm font-medium text-white">
+                                <label
+                                    htmlFor="password"
+                                    className="block mb-2 text-sm font-medium text-white"
+                                >
                                     Repetir contraseña
                                 </label>
                                 <input
@@ -96,7 +119,11 @@ export default function RegisterPage() {
                                     placeholder="••••••••"
                                     className="border sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                                 />
-                                {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+                                {errors.password && (
+                                    <p className="text-xs text-red-500">
+                                        {errors.password.message}
+                                    </p>
+                                )}
                             </div>
                             <button
                                 type="submit"
@@ -107,11 +134,17 @@ export default function RegisterPage() {
                             </button>
                         </form>
                         <p className="text-sm font-light text-gray-400">
-                            ¿Ya tienes una cuenta? <Link href="/auth/login" className="font-medium text-primary-600 hover:underline text-primary-500">Inicia sesión</Link>
+                            ¿Ya tienes una cuenta?{" "}
+                            <Link
+                                href="/auth/login"
+                                className="font-medium text-primary-600 hover:underline text-primary-500"
+                            >
+                                Inicia sesión
+                            </Link>
                         </p>
                     </div>
                 </div>
             </div>
-        </section >
-    );
+        </section>
+    )
 }

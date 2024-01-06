@@ -1,23 +1,27 @@
 "use client"
 
-import { PlusIcon } from "@heroicons/react/24/solid";
-import { GroupInfoResponse } from "../../../../../../../types";
-import { Fragment, useState } from "react";
-import { UserCard } from "@/app/components/home/group/settings/UserCard";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { callApi, createToast } from "@/lib/common";
-import { editGroupInfo, inviteMember } from "@/lib/actions/group/groups";
-import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { AnimatePresence, motion } from 'framer-motion'
-import CustomModal from "@/app/components/common/Modals/Modal";
-import EmailList from "@/app/components/home/group/createGroup/addEmail";
-import Spinner from "@/app/components/common/Spinner/Spinner";
+import CustomModal from "@/components/common/Modals/Modal"
+import Spinner from "@/components/common/Spinner/Spinner"
+import EmailList from "@/components/home/group/createGroup/addEmail"
+import { UserCard } from "@/components/home/group/settings/UserCard"
+import { editGroupInfo, inviteMember } from "@/lib/actions/group/groups"
+import { createToast } from "@/lib/common"
+import { PlusIcon } from "@heroicons/react/24/solid"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { AnimatePresence, motion } from "framer-motion"
+import { useSession } from "next-auth/react"
+import { useParams } from "next/navigation"
+import { Fragment, useState } from "react"
+import { GroupInfoResponse } from "../../../../../../../types"
 
-export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element {
+export function FormGroup({
+    group,
+}: {
+    group: GroupInfoResponse
+}): JSX.Element {
     const [newData, setNewData] = useState({
         name: group.name,
-        description: group.description
+        description: group.description,
     })
     const [showSaveBtn, setShowSaveBtn] = useState(false)
     const params = useParams()
@@ -25,25 +29,29 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
 
     const queryClient = useQueryClient()
 
-    const { mutate: submitChange, isLoading, isError } = useMutation({
-        mutationFn: () => editGroupInfo({
-            token: session?.token as string,
-            slug: params.slug as string,
-            data: newData
-        }),
+    const {
+        mutate: submitChange,
+        isLoading,
+        isError,
+    } = useMutation({
+        mutationFn: () =>
+            editGroupInfo({
+                token: session?.token as string,
+                slug: params.slug as string,
+                data: newData,
+            }),
         onSuccess: () => {
-            queryClient.invalidateQueries(['groupInfo', params.slug])
+            queryClient.invalidateQueries(["groupInfo", params.slug])
             createToast({
                 message: "Grupo editado correctamente",
-                toastType: "success"
+                toastType: "success",
             })
             setShowSaveBtn(false)
         },
         onError: () => {
             console.log("Error al editar el grupo")
-        }
+        },
     })
-
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -51,13 +59,12 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name, value } = e.target
         setNewData((prevState) => ({
             ...prevState,
-            [name]: value
+            [name]: value,
         }))
         setShowSaveBtn(true)
-
     }
 
     return (
@@ -66,7 +73,12 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
                 <h2 className="text-xl font-bold">Información</h2>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div className="grid grid-cols-4 gap-2">
-                        <label htmlFor="name" className="text-sm text-gray-500 col-span-1 py-2">Nombre</label>
+                        <label
+                            htmlFor="name"
+                            className="text-sm text-gray-500 col-span-1 py-2"
+                        >
+                            Nombre
+                        </label>
                         <input
                             type="text"
                             id="name"
@@ -78,7 +90,12 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
                         />
                     </div>
                     <div className="grid grid-cols-4 gap-2">
-                        <label htmlFor="description" className="text-sm text-gray-500 col-span-1 py-2">Descripción</label>
+                        <label
+                            htmlFor="description"
+                            className="text-sm text-gray-500 col-span-1 py-2"
+                        >
+                            Descripción
+                        </label>
                         <input
                             type="text"
                             id="description"
@@ -93,27 +110,29 @@ export function FormGroup({ group }: { group: GroupInfoResponse }): JSX.Element 
                         <motion.div
                             className="fixed bottom-4 left-0 w-full my-auto flex justify-center"
                             initial={{ opacity: 0 }}
-                            animate={showSaveBtn ? { opacity: 1 } : { opacity: 0 }}
+                            animate={
+                                showSaveBtn ? { opacity: 1 } : { opacity: 0 }
+                            }
                             transition={{ delay: 0.2 }}
-
                         >
-                            <button className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-10/12"
-                                disabled={isLoading}>
+                            <button
+                                className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-10/12"
+                                disabled={isLoading}
+                            >
                                 <small>Guardar cambios</small>
                             </button>
-
                         </motion.div>
                     </AnimatePresence>
-                </form >
-            </div >
+                </form>
+            </div>
         </>
-    );
+    )
 }
 
 interface IGroupInfo {
-    name: string;
-    description: string;
-    emails: string[];
+    name: string
+    description: string
+    emails: string[]
 }
 export function GroupUsers({ group }: { group: GroupInfoResponse }) {
     const { data: session } = useSession()
@@ -122,36 +141,41 @@ export function GroupUsers({ group }: { group: GroupInfoResponse }) {
     const [newUsers, setNewUsers] = useState<IGroupInfo>({
         name: group.name,
         description: group.description,
-        emails: []
+        emails: [],
     })
     const queryClient = useQueryClient()
 
-    const { mutate: submitChange, isLoading, isError } = useMutation({
-        mutationFn: () => inviteMember({
-            token: session?.token as string,
-            slug: params.slug as string,
-            emails: newUsers.emails
-        }),
+    const {
+        mutate: submitChange,
+        isLoading,
+        isError,
+    } = useMutation({
+        mutationFn: () =>
+            inviteMember({
+                token: session?.token as string,
+                slug: params.slug as string,
+                emails: newUsers.emails,
+            }),
 
         onSuccess: () => {
-            queryClient.invalidateQueries(['groupInfo'])
+            queryClient.invalidateQueries(["groupInfo"])
             setShowAddUser(false)
             setNewUsers((prevState) => ({
                 ...prevState,
-                emails: []
+                emails: [],
             }))
             createToast({
                 message: "Miembros agregados correctamente",
-                toastType: "success"
+                toastType: "success",
             })
         },
         onError: () => {
             console.log("Error al editar el grupo")
             createToast({
                 message: "Error al agregar miembros",
-                toastType: "error"
+                toastType: "error",
             })
-        }
+        },
     })
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -172,23 +196,40 @@ export function GroupUsers({ group }: { group: GroupInfoResponse }) {
             </div>
 
             <div className="flex flex-col items-center space-y-4">
-                {
-                    group && group.users.map((user, index) => (
+                {group &&
+                    group.users.map((user, index) => (
                         <Fragment key={index}>
                             <UserCard user={user} />
                         </Fragment>
-                    ))
-                }
+                    ))}
             </div>
-            <CustomModal isOpen={showAddUser} onClose={() => setShowAddUser(false)}>
+            <CustomModal
+                isOpen={showAddUser}
+                onClose={() => setShowAddUser(false)}
+            >
                 <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
                     <h2 className="text-xl font-bold">Agregar miembro</h2>
-                    <p className="text-sm text-gray-500">Agrega los emails de los usuarios que desees agregar a tu grupo</p>
+                    <p className="text-sm text-gray-500">
+                        Agrega los emails de los usuarios que desees agregar a
+                        tu grupo
+                    </p>
                     <form onSubmit={handleSubmit} className="my-4">
-                        <EmailList emails={newUsers.emails} setGroup={setNewUsers} />
+                        <EmailList
+                            emails={newUsers.emails}
+                            setGroup={setNewUsers}
+                        />
                         <div className="mt-4">
-                            <button className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-full" disabled={isLoading}>
-                                {isLoading ? <span><Spinner /></span> : "Agregar miembros"}
+                            <button
+                                className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-full"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <span>
+                                        <Spinner />
+                                    </span>
+                                ) : (
+                                    "Agregar miembros"
+                                )}
                             </button>
                         </div>
                     </form>
@@ -210,7 +251,7 @@ export function DangerZone() {
             mensaje: "Una vez eliminado el grupo no se podrá recuperar",
             botonTexto: "Eliminar",
         },
-    ];
+    ]
 
     return (
         <>
@@ -221,7 +262,9 @@ export function DangerZone() {
                         <div key={index}>
                             <section className="flex gap-2">
                                 <div>
-                                    <h3 className="font-bold">{seccion.titulo}</h3>
+                                    <h3 className="font-bold">
+                                        {seccion.titulo}
+                                    </h3>
                                     <p className="text-sm">{seccion.mensaje}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -230,11 +273,13 @@ export function DangerZone() {
                                     </button>
                                 </div>
                             </section>
-                            {index !== secciones.length - 1 && <br className="mt-4" />}
+                            {index !== secciones.length - 1 && (
+                                <br className="mt-4" />
+                            )}
                         </div>
                     ))}
                 </div>
-            </div >
+            </div>
         </>
     )
 }
