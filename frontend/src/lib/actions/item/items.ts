@@ -43,7 +43,7 @@ export const deleteCompletedItems = async ({
     params: IListKeysProps
     session: Session | null
 }) => {
-    callApi({
+    await callApi({
         url: `/private/groups/${params.slug}/lists/${params.listId}/items/delete/completed`,
         method: "DELETE",
         token: session ? session.token : "",

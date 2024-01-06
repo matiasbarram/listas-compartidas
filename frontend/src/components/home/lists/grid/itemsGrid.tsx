@@ -38,8 +38,8 @@ export const ItemsGrid = ({
     })
 
     const cleanCompletedItems = useMutation({
-        mutationKey: ["complete", params.slug, params.listId],
-        mutationFn: () => {
+        mutationKey: ["delete", params.slug, params.listId],
+        mutationFn: async () => {
             deleteCompletedItems({
                 session,
                 params,
