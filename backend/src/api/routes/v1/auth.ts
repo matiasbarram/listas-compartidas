@@ -10,7 +10,7 @@ import { validateLogin } from "../../middlewares/auth/login"
 const authRouter: Router = Router()
 
 authRouter.route("/me").get([checkJwt], (req: Request, res: Response) => {
-    const payload = payloadData(req, res)
+    const payload = payloadData(req)
     return res.status(200).json({ payload })
 })
 authRouter.route("/google").post(loginGoogle)
