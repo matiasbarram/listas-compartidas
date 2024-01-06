@@ -1,46 +1,48 @@
 import { PrismaClient } from "@prisma/client";
 import { NextFunction } from "express";
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 import { encryptText } from "../../../utils/encrypt";
 import { JwtPayload } from "../../interfaces/interfaces";
 import { createJwt, createPayload } from "../../../utils/jwt/createJwt";
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
-    const prisma = new PrismaClient()
-    const { email, password }: { email: string, password: string } = req.body
+export const login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    const prisma = new PrismaClient();
+    const { email, password }: { email: string; password: string } = req.body;
 
-    const encodedPassword = await encryptText(password)
+    const encodedPassword = await encryptText(password);
     try {
-        const user = await prisma.users.findUnique({
-            where: {
-                email: email,
-                password: encodedPassword
-            }
-        }).finally(() => {
-            prisma.$disconnect()
-        })
+        const user = await prisma.users
+            .findUnique({
+                where: {
+                    email: email,
+                    password: encodedPassword,
+                },
+            })
+            .finally(() => {
+                prisma.$disconnect();
+            });
 
         if (!user) {
             return res.status(400).json({
-                message: 'Invalid email or password',
+                message: "Invalid email or password",
             });
         }
 
-        const payload: JwtPayload = createPayload(user)
-        const jwtToken = createJwt(payload)
+        const payload: JwtPayload = createPayload(user);
+        const jwtToken = createJwt(payload);
         res.status(200).json({
             token: jwtToken,
-            user: payload
+            user: payload,
         });
         return next();
-
-    }
-    catch (e) {
-        console.error(e)
+    } catch (e) {
+        console.error(e);
         return res.status(500).json({
-            message: 'Internal server error',
+            message: "Internal server error",
         });
     }
-
-
-}
+};

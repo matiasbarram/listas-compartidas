@@ -1,13 +1,13 @@
 import cors from "cors";
 import express, { Application } from "express";
-import routesV1 from './api/routes/v1';
+import routesV1 from "./api/routes/v1";
 
 import AppConfig from "./config/appConfig";
 
 export function createServer(): Application {
     const app = express();
     const corsOptions = {
-        origin: '*',
+        origin: "*",
         credentials: true,
     };
 

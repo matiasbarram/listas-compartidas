@@ -1,19 +1,24 @@
 "use client"
 
-import { CloseBtn } from "./closeBtn";
-import { Dialog, Transition } from "@headlessui/react";
-import { Session } from "next-auth";
-import { Fragment } from "react";
+import { CloseBtn } from "./closeBtn"
+import { Dialog, Transition } from "@headlessui/react"
+import { Session } from "next-auth"
+import { Fragment } from "react"
 
 interface ICreateGroupForm {
-    isOpen: boolean;
-    authSession: any;
-    router: any;
-    session: Session;
-    closeModal: () => void;
+    isOpen: boolean
+    authSession: any
+    router: any
+    session: Session
+    closeModal: () => void
 }
 
-export default function CreateListModal({ isOpen, closeModal, session, router }: ICreateGroupForm) {
+export default function CreateListModal({
+    isOpen,
+    closeModal,
+    session,
+    router,
+}: ICreateGroupForm) {
     return (
         <>
             <Transition.Root show={isOpen} as={Fragment}>
@@ -22,7 +27,10 @@ export default function CreateListModal({ isOpen, closeModal, session, router }:
                     className="fixed inset-0 z-10 overflow-y-auto"
                     onClose={closeModal}
                 >
-                    <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+                    <div
+                        className="fixed inset-0 bg-black/30"
+                        aria-hidden="true"
+                    />
 
                     <div className="flex items-center justify-center min-h-screen p-4 text-center">
                         <Transition.Child
@@ -48,12 +56,16 @@ export default function CreateListModal({ isOpen, closeModal, session, router }:
                         >
                             <div className="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-zinc-800 shadow-xl rounded-2xl relative">
                                 <CloseBtn closeModal={closeModal} />
-                                <Dialog.Title as="h3" className="text-lg font-medium text-indigo-500">
+                                <Dialog.Title
+                                    as="h3"
+                                    className="text-lg font-medium text-indigo-500"
+                                >
                                     Crear nuevo grupo
                                 </Dialog.Title>
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-500">
-                                        En un grupo podrás crear y compartir listas con tus amigos.
+                                        En un grupo podrás crear y compartir
+                                        listas con tus amigos.
                                     </p>
                                 </div>
                             </div>

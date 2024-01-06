@@ -1,4 +1,4 @@
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid"
 
 export function CloseBtn({ closeModal }: { closeModal: () => void }) {
     return (
@@ -9,7 +9,6 @@ export function CloseBtn({ closeModal }: { closeModal: () => void }) {
             onClick={closeModal}
         >
             <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-
         </button>
     )
 }

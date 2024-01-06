@@ -1,15 +1,15 @@
-import { ChangeEventHandler, FormEventHandler } from "react";
-import Label from "../Label";
+import { ChangeEventHandler, FormEventHandler } from "react"
+import Label from "../Label"
 
 interface InputProps {
-    type: string;
-    name: string;
-    id: string;
-    placeholder: string;
-    tag?: "input" | "textarea";
-    labelText: string;
-    inputChangeFn?: ChangeEventHandler<HTMLInputElement>;
-    textareaChangeFn?: ChangeEventHandler<HTMLTextAreaElement>;
+    type: string
+    name: string
+    id: string
+    placeholder: string
+    tag?: "input" | "textarea"
+    labelText: string
+    inputChangeFn?: ChangeEventHandler<HTMLInputElement>
+    textareaChangeFn?: ChangeEventHandler<HTMLTextAreaElement>
 }
 
 export default function Input({
@@ -20,12 +20,12 @@ export default function Input({
     tag,
     inputChangeFn,
     textareaChangeFn,
-    labelText
+    labelText,
 }: InputProps) {
-    const posibleTags = ["input", "textarea"];
-    const Tag = tag || "input";
+    const posibleTags = ["input", "textarea"]
+    const Tag = tag || "input"
     if (!posibleTags.includes(Tag)) {
-        throw new Error(`Tag ${Tag} is not supported`);
+        throw new Error(`Tag ${Tag} is not supported`)
     }
 
     return (
@@ -52,6 +52,5 @@ export default function Input({
                 />
             )}
         </div>
-    );
-
+    )
 }

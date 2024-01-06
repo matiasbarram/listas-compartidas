@@ -14,13 +14,12 @@ const validateEmails = (emails: string[], res: Response) => {
     return {
         valid: invalidEmails.length === 0,
         invalidEmails,
-    }
-
-}
+    };
+};
 
 export const createGroup = async (req: Request, res: Response) => {
     const payload = payloadData(req, res);
-    if (typeof payload === 'string') {
+    if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,
         });
@@ -29,13 +28,13 @@ export const createGroup = async (req: Request, res: Response) => {
     const { name, description, emails }: INewGroup = req.body;
     if (!name) {
         return res.status(400).json({
-            error: "Name is required"
-        })
+            error: "Name is required",
+        });
     }
     if (!description) {
         return res.status(400).json({
-            error: "Description is required"
-        })
+            error: "Description is required",
+        });
     }
 
     const checkMails = validateEmails(emails, res);
@@ -43,45 +42,47 @@ export const createGroup = async (req: Request, res: Response) => {
         return res.status(400).json({
             error: "Invalid emails",
             emails: checkMails.invalidEmails,
-        })
+        });
     }
 
-    const group = await prisma.groups.create({
-        data: {
-            name,
-            description,
-        }
-    }).finally(() => {
-        prisma.$disconnect()
-    })
+    const group = await prisma.groups
+        .create({
+            data: {
+                name,
+                description,
+            },
+        })
+        .finally(() => {
+            prisma.$disconnect();
+        });
 
-
-    const users = await prisma.users.findMany({
-        where: {
-            email: {
-                in: emails,
-            }
-        }
-    }).finally(() => {
-        prisma.$disconnect()
-    })
-
+    const users = await prisma.users
+        .findMany({
+            where: {
+                email: {
+                    in: emails,
+                },
+            },
+        })
+        .finally(() => {
+            prisma.$disconnect();
+        });
 
     const usersIds = users.map((user) => user.id);
     usersIds.push(payload.id);
 
-    await prisma.user_group.createMany({
-        data: usersIds.map((userId) => ({
-            group_id: group.id,
-            user_id: userId,
-        }))
-    }).finally(() => {
-        prisma.$disconnect()
-    })
-
+    await prisma.user_group
+        .createMany({
+            data: usersIds.map((userId) => ({
+                group_id: group.id,
+                user_id: userId,
+            })),
+        })
+        .finally(() => {
+            prisma.$disconnect();
+        });
 
     return res.status(200).json({
         group,
     });
-
-}
+};

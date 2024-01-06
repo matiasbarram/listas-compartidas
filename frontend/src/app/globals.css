@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 24 24 27;
-  --background-end-rgb: 24 24 27;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 24 24 27;
+    --background-end-rgb: 24 24 27;
 
-  --toastify-color-dark: rgb(24, 24, 27) !important;
-  --toastify-icon-color-success: rgb(46, 204, 113) !important;
-  --toastify-color-progress-success: rgb(46, 204, 113) !important;
+    --toastify-color-dark: rgb(24, 24, 27) !important;
+    --toastify-icon-color-success: rgb(46, 204, 113) !important;
+    --toastify-color-progress-success: rgb(46, 204, 113) !important;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -25,107 +25,109 @@
 } */
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+            to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))
+        )
+        rgb(var(--background-start-rgb));
 }
 
 ::placeholder {
-  color: rgba(var(--foreground-rgb), 0.5);
+    color: rgba(var(--foreground-rgb), 0.5);
 }
 
 input {
-  color: white !important;
+    color: white !important;
 }
 
 input[type="checkbox"] {
-  appearance: none;
-  margin: 0;
-  font: inherit;
-  width: 1.15em;
-  height: 1.15em;
-  border: 0.15em solid currentColor;
-  border-radius: 0.15em;
-  transform: translateY(-0.075em);
-  display: grid;
-  place-content: center;
+    appearance: none;
+    margin: 0;
+    font: inherit;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid currentColor;
+    border-radius: 0.15em;
+    transform: translateY(-0.075em);
+    display: grid;
+    place-content: center;
 }
 
 input[type="checkbox"]::before {
-  content: "";
-  width: 0.65em;
-  height: 0.65em;
-  transform: scale(0);
-  transition: 120ms transform ease-in-out;
-  box-shadow: inset 1em 1em var(--toastify-icon-color-success);
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--toastify-icon-color-success);
 }
 
 input[type="checkbox"]:checked::before {
-  transform: scale(1);
-  transform-origin: bottom left;
-  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(1);
+    transform-origin: bottom left;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
 input[type="checkbox"]:focus {
-  outline: max(2px, 0.15em) solid currentColor;
-  outline-offset: max(2px, 0.15em);
+    outline: max(2px, 0.15em) solid currentColor;
+    outline-offset: max(2px, 0.15em);
 }
 
 input[type="checkbox"]:disabled {
-  --form-control-color: var(--form-control-disabled);
+    --form-control-color: var(--form-control-disabled);
 
-  color: var(--form-control-disabled);
-  cursor: not-allowed;
+    color: var(--form-control-disabled);
+    cursor: not-allowed;
 }
 
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  margin: 0;
-  -webkit-appearance: none;
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
 }
 
 .custom-number-input input:focus {
-  outline: none !important;
+    outline: none !important;
 }
 
 .custom-number-input button:focus {
-  outline: none !important;
+    outline: none !important;
 }
 
 @layer components {
-  .input-field {
-    @apply block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md bg-zinc-700 py-2 indent-4;
-  }
+    .input-field {
+        @apply block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md bg-zinc-700 py-2 indent-4;
+    }
 }
 
-
 .react-select__control {
-  background-color: #3f3f45 !important;
-  color: #fff !important;
-  border: unset !important;
+    background-color: #3f3f45 !important;
+    color: #fff !important;
+    border: unset !important;
 }
 
 .react-select__control:active {
-  border: unset !important;
+    border: unset !important;
 }
 
 .react-select__control__is-focused {
-  border: unset !important;
-  box-shadow: unset !important;
+    border: unset !important;
+    box-shadow: unset !important;
 }
 
 .react-select__menu {
-  border: unset !important;
-  box-shadow: unset !important;
-  background-color: #3f3f45 !important;
+    border: unset !important;
+    box-shadow: unset !important;
+    background-color: #3f3f45 !important;
 }
 
 .react-select__option {
-  background-color: #3f3f45 !important;
-  color: #fff !important;
+    background-color: #3f3f45 !important;
+    color: #fff !important;
 }
 
 .react-select__single-value {
-  color: #fff !important;
+    color: #fff !important;
 }

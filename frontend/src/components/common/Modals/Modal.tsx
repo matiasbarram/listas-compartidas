@@ -1,10 +1,10 @@
-import { Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react"
+import { Dialog, Transition } from "@headlessui/react"
 
 interface ModalProps {
-    children: React.ReactNode;
-    isOpen: boolean;
-    onClose: () => void;
+    children: React.ReactNode
+    isOpen: boolean
+    onClose: () => void
 }
 
 const CustomModal = ({ children, isOpen, onClose }: ModalProps) => {
@@ -45,8 +45,6 @@ const CustomModal = ({ children, isOpen, onClose }: ModalProps) => {
             </Dialog>
         </Transition.Root>
     )
-
 }
 
-
-export default CustomModal;
+export default CustomModal

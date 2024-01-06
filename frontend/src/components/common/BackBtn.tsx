@@ -13,9 +13,7 @@ export const BackBtn = () => {
             onClick={() => router.back()}
         >
             <ChevronLeftIcon className="h-4 w-4 text-gray-500" />
-            <p className="text-gray-500">
-                Volver
-            </p>
+            <p className="text-gray-500">Volver</p>
         </button>
     )
 }

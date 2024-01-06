@@ -8,27 +8,29 @@ import { useSession } from "next-auth/react"
 import Spinner from "../common/Spinner/Spinner"
 
 interface MenuProps {
-    onClickOutside: () => void;
+    onClickOutside: () => void
 }
 
 function Menu({ onClickOutside }: MenuProps) {
-    const ref = useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (ref.current && !ref.current.contains(event.target as Node)) {
-                onClickOutside && onClickOutside();
+                onClickOutside && onClickOutside()
             }
-        };
-        document.addEventListener('click', handleClickOutside, true);
+        }
+        document.addEventListener("click", handleClickOutside, true)
         return () => {
-            document.removeEventListener('click', handleClickOutside, true);
-        };
-    }, [onClickOutside]);
+            document.removeEventListener("click", handleClickOutside, true)
+        }
+    }, [onClickOutside])
 
     return (
-        <div ref={ref}
-            className="absolute right-0 w-48 py-2 mt-2 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 bg-zinc-900">
+        <div
+            ref={ref}
+            className="absolute right-0 w-48 py-2 mt-2 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 bg-zinc-900"
+        >
             <Link
                 href="/api/auth/signout"
                 className="block px-4 py-2 text-sm text-gray-500"
@@ -40,11 +42,12 @@ function Menu({ onClickOutside }: MenuProps) {
 }
 
 export function Header() {
-
     const session = useSession()
     const [showMenu, setShowMenu] = useState(false)
 
-    const icon = session.data?.user.image ? session.data?.user.image : "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+    const icon = session.data?.user.image
+        ? session.data?.user.image
+        : "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
 
     return (
         <header className="mb-8">
@@ -52,9 +55,7 @@ export function Header() {
                 <div className="mx-auto px-4 py-4 sm:py-8 sm:px-6 lg:px-8 container">
                     <div className="flex items-center sm:justify-between sm:gap-4">
                         <SearchBar />
-                        <div
-                            className="flex flex-1 items-center justify-between gap-8 sm:justify-end"
-                        >
+                        <div className="flex flex-1 items-center justify-between gap-8 sm:justify-end">
                             <div className="flex gap-4">
                                 <button
                                     type="button"
@@ -95,8 +96,13 @@ export function Header() {
                                     />
 
                                     <p className="ms-2 text-left text-xs">
-                                        <strong className="block font-medium">{session.data?.user.name}</strong>
-                                        <span className="text-gray-500"> {session.data?.user.email} </span>
+                                        <strong className="block font-medium">
+                                            {session.data?.user.name}
+                                        </strong>
+                                        <span className="text-gray-500">
+                                            {" "}
+                                            {session.data?.user.email}{" "}
+                                        </span>
                                     </p>
 
                                     <svg
@@ -112,7 +118,9 @@ export function Header() {
                                         />
                                     </svg>
                                 </button>
-                            ) : <Spinner />}
+                            ) : (
+                                <Spinner />
+                            )}
                         </div>
                     </div>
                 </div>

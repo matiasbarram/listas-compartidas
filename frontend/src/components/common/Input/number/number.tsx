@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
-import NumberButton from './btn';
-
-
+import React, { useState } from "react"
+import NumberButton from "./btn"
 
 function InputNumber() {
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(0)
 
     const handleIncrement = () => {
-        setCount(count + 1);
-    };
+        setCount(count + 1)
+    }
 
     const handleDecrement = () => {
         if (count > 0) {
-            setCount(count - 1);
+            setCount(count - 1)
         }
-    };
+    }
 
     return (
         <div className="w-32  rounded-lg p-1">
@@ -28,10 +26,9 @@ function InputNumber() {
                     readOnly
                 />
                 <NumberButton onClick={handleIncrement} text="+" type="r" />
-
             </div>
         </div>
-    );
+    )
 }
 
-export default InputNumber;
+export default InputNumber
