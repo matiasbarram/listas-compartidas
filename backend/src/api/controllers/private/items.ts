@@ -2,10 +2,10 @@ import { PrismaClient } from "@prisma/client"
 import { Request, Response } from "express"
 import { payloadData } from "../../../utils/jwt/payloadData"
 import Logger from "../../../utils/logger"
-import { DeleteStatus, ItemsIds } from "../../interfaces/interfaces"
+import { ItemsIds } from "../../interfaces/interfaces"
 
 export const getItems = async (req: Request, res: Response) => {
-    const payload = payloadData(req, res)
+    const payload = payloadData(req)
     if (typeof payload === "string") {
         return res.status(401).json({
             error: payload,
@@ -183,9 +183,6 @@ export const deleteItem = async (req: Request, res: Response) => {
 }
 
 export const deleteItems = async (req: Request, res: Response) => {
-    const listId = Number(req.params.listId)
-    const groupId = Number(req.params.groupId)
-    const status = req.body.status as DeleteStatus
     const itemsIds = req.body.itemsIds as ItemsIds
     const prisma = new PrismaClient()
     try {
@@ -195,15 +192,13 @@ export const deleteItems = async (req: Request, res: Response) => {
                     id: {
                         in: itemsIds,
                     },
-                    is_completed: status === "completed" ? true : false,
+                    is_completed: true,
                 },
             })
             .finally(() => {
                 prisma.$disconnect()
             })
         return res.status(200).json({
-            groupId,
-            listId,
             items,
         })
     } catch (error) {

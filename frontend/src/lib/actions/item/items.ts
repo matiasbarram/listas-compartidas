@@ -27,17 +27,27 @@ export const markAsCompleted = async ({
     })
 }
 
-export const deleteItem = async ({
-    params,
-    session,
-    item,
-}: IDeleteItemProps) => {
+export const deleteItem = async ({ params, session }: IDeleteItemProps) => {
     callApi({
-        url: `/private/groups/${params.slug}/lists/${params.listId}/items/${item.id}/delete`,
+        url: `/private/groups/${params.slug}/lists/${params.listId}/items/delete/completed`,
         method: "DELETE",
         token: session ? session.token : "",
     })
-    console.log({ params, session, item })
+    console.log({ params, session })
+}
+
+export const deleteCompletedItems = async ({
+    params,
+    session,
+}: {
+    params: IListKeysProps
+    session: Session | null
+}) => {
+    callApi({
+        url: `/private/groups/${params.slug}/lists/${params.listId}/items/delete/completed`,
+        method: "DELETE",
+        token: session ? session.token : "",
+    })
 }
 
 export const getListItems = async ({

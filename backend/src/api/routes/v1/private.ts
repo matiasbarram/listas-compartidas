@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { checkJwt } from "../../middlewares/auth/checkJwt"
+import { createGroup } from "../../controllers/private/group/create"
 import {
     deleteMemberFromGroup,
     editGroupInfo,
@@ -8,18 +8,19 @@ import {
     inviteUsersToGroup,
     usersGroup,
 } from "../../controllers/private/groups"
-import { createList, lists } from "../../controllers/private/lists"
 import {
     changeStatus,
     createItem,
-    deleteItem,
-    getItems,
-    editItem,
     createItems,
+    deleteItem,
+    deleteItems,
+    editItem,
+    getItems,
 } from "../../controllers/private/items"
-import { createGroup } from "../../controllers/private/group/create"
-import searchUsers from "../../controllers/private/searchUsers"
 import { getLastModifiedLists } from "../../controllers/private/list/lastModified"
+import { createList, lists } from "../../controllers/private/lists"
+import searchUsers from "../../controllers/private/searchUsers"
+import { checkJwt } from "../../middlewares/auth/checkJwt"
 
 const privateRouter: Router = Router()
 
@@ -66,5 +67,10 @@ privateRouter
 privateRouter
     .route("/groups/:groupId/lists/:listId/items/:itemId/change")
     .put([checkJwt], changeStatus)
+
+// private/groups/${params.slug}/lists/${params.listId}/items/completed
+privateRouter
+    .route("/groups/:groupId/lists/:listId/items/delete/completed")
+    .delete([checkJwt], deleteItems)
 
 export default privateRouter

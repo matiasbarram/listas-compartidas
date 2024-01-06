@@ -1,6 +1,10 @@
 "use client"
 
-import { getListItems, markAsCompleted } from "@/lib/actions/item/items"
+import {
+    deleteCompletedItems,
+    getListItems,
+    markAsCompleted,
+} from "@/lib/actions/item/items"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 import {
@@ -31,6 +35,39 @@ export const ItemsGrid = ({
             }),
         queryKey: ["items", params.slug, params.listId],
         initialData: initialItems,
+    })
+
+    const cleanCompletedItems = useMutation({
+        mutationKey: ["complete", params.slug, params.listId],
+        mutationFn: () => {
+            deleteCompletedItems({
+                session,
+                params,
+            })
+        },
+        onMutate: async () => {
+            await queryClient.cancelQueries([
+                "items",
+                params.slug,
+                params.listId,
+            ])
+            queryClient.setQueryData<IListItemsResponse>(
+                ["items", params.slug, params.listId],
+                (old) => {
+                    if (!old) return old
+                    const newItems = old.items.filter(
+                        (item) => !item.is_completed,
+                    )
+                    newItems.sort((a, b) => {
+                        return (
+                            new Date(b.modified_date).getTime() -
+                            new Date(a.modified_date).getTime()
+                        )
+                    })
+                    return { ...old, items: newItems }
+                },
+            )
+        },
     })
 
     const markAsCompletedMutation = useMutation({
@@ -72,6 +109,7 @@ export const ItemsGrid = ({
             )
         },
     })
+
     const toggleItemCompletion = (item: IListItem) => {
         markAsCompletedMutation.mutate(item)
     }
@@ -94,7 +132,10 @@ export const ItemsGrid = ({
                 <h2 className="text-2xl font-bold text-gray-100 py-4">
                     Completados ✅
                 </h2>
-                <button className="text-gray-100 bg-gray-700 px-4 py-1 rounded-md text-sm hover:bg-gray-600 transition-colors duration-300 ease-in-out active:bg-gray-500">
+                <button
+                    onClick={() => cleanCompletedItems.mutate()}
+                    className="text-gray-100 bg-gray-700 px-4 py-1 rounded-md text-sm hover:bg-gray-600 transition-colors duration-300 ease-in-out active:bg-gray-500"
+                >
                     Limpiar
                 </button>
             </div>
