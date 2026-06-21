@@ -38,7 +38,6 @@ export const ItemsGrid = ({
     })
 
     const cleanCompletedItems = useMutation({
-        mutationKey: ["delete", params.slug, params.listId],
         mutationFn: async () => {
             deleteCompletedItems({
                 session,
@@ -46,11 +45,11 @@ export const ItemsGrid = ({
             })
         },
         onMutate: async () => {
-            await queryClient.cancelQueries([
+            await queryClient.cancelQueries({ queryKey: [
                 "items",
                 params.slug,
                 params.listId,
-            ])
+            ]})
             queryClient.setQueryData<IListItemsResponse>(
                 ["items", params.slug, params.listId],
                 (old) => {
@@ -71,7 +70,6 @@ export const ItemsGrid = ({
     })
 
     const markAsCompletedMutation = useMutation({
-        mutationKey: ["items", params.slug, params.listId],
         mutationFn: (item: IListItem) =>
             markAsCompleted({
                 params,
@@ -79,11 +77,11 @@ export const ItemsGrid = ({
                 item,
             }),
         onMutate: async (newItem: IListItem) => {
-            await queryClient.cancelQueries([
+            await queryClient.cancelQueries({ queryKey: [
                 "items",
                 params.slug,
                 params.listId,
-            ])
+            ]})
             queryClient.setQueryData<IListItemsResponse>(
                 ["items", params.slug, params.listId],
                 (old) => {
@@ -116,7 +114,7 @@ export const ItemsGrid = ({
 
     return (
         <>
-            {markAsCompletedMutation.isLoading && (
+            {markAsCompletedMutation.isPending && (
                 <SavingStatus saving={true} />
             )}
             <SpeakToText lists={[initialItems.list]} />
