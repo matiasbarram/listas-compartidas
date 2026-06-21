@@ -1,11 +1,25 @@
+"use client"
+
+import { createToast } from "@/lib/common"
 import { signIn } from "next-auth/react"
 
 export default function SocialLogin() {
+    const handleGoogleSignIn = async () => {
+        try {
+            await signIn("google", { callbackUrl: "/home" })
+        } catch {
+            createToast({
+                toastType: "error",
+                message: "Google login no está configurado en este entorno",
+            })
+        }
+    }
+
     return (
         <div className="flex justify-center">
             <div
                 className="flex items-center bg-zinc-700 text-white rounded-md cursor-pointer hover:bg-zinc-600 px-4 py-2 gap-2 w-full"
-                onClick={() => signIn("google", { callbackUrl: "/home" })}
+                onClick={handleGoogleSignIn}
             >
                 <svg
                     aria-hidden="true"
