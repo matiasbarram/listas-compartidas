@@ -34,6 +34,7 @@ export default function AddItemForm({ closeModal }: IAddItemForm) {
         },
     })
 
+    // eslint-disable-next-line react-hooks/incompatible-library
     const quantityValue = watch("quantity")
 
     const params = useParams()
