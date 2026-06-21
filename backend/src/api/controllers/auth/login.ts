@@ -14,7 +14,7 @@ export const login = async (
 
     const encodedPassword = await encryptText(password)
     try {
-        const user = await prisma.users.findUnique({
+        const user = await prisma.users.findFirst({
             where: {
                 email: email,
                 password: encodedPassword,

@@ -1,4 +1,3 @@
-import { throwEnvError } from "@/lib/erros"
 import { API_URL, JWT_EXPIRATION_TIME } from "@/lib/constants"
 import { NextAuthOptions, User } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -8,10 +7,52 @@ import { ILoginApiResponse } from "../../types"
 import { UserData } from "@/lib/next-auth"
 
 function getGoogleClientId() {
-    return process.env.GOOGLE_CLIENT_ID || throwEnvError("GOOGLE_CLIENT_ID")
+    return process.env.GOOGLE_CLIENT_ID
 }
 function getGoogleClientSecret() {
-    return process.env.GOOGLE_CLIENT_SECRET || throwEnvError("GOOGLE_CLIENT_SECRET")
+    return process.env.GOOGLE_CLIENT_SECRET
+}
+
+const providers: NextAuthOptions["providers"] = [
+    CredentialsProvider({
+        name: "Credentials",
+        credentials: {
+            email: { label: "Email", type: "text", placeholder: "jsmith" },
+            password: { label: "Password", type: "password" },
+        },
+        async authorize(credentials, req) {
+            if (!credentials?.email || !credentials?.password) return null
+            const { email, password } = credentials
+            const res = await fetch(API_URL + "/auth/login", {
+                method: "POST",
+                body: JSON.stringify({ email, password }),
+                headers: { "Content-Type": "application/json" },
+            })
+            if (res.status === 401 || res.status === 400) return null
+
+            const user = await res.json()
+            return user
+        },
+    }),
+]
+
+const googleClientId = getGoogleClientId()
+const googleClientSecret = getGoogleClientSecret()
+if (googleClientId && googleClientSecret) {
+    providers.push(
+        GoogleProvider({
+            name: "Google",
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code",
+                },
+            },
+        }),
+    )
 }
 
 export const authOptions: NextAuthOptions = {
@@ -26,40 +67,7 @@ export const authOptions: NextAuthOptions = {
         strategy: "jwt",
         maxAge: JWT_EXPIRATION_TIME,
     },
-    providers: [
-        CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                email: { label: "Email", type: "text", placeholder: "jsmith" },
-                password: { label: "Password", type: "password" },
-            },
-            async authorize(credentials, req) {
-                if (!credentials?.email || !credentials?.password) return null
-                const { email, password } = credentials
-                const res = await fetch(API_URL + "/auth/login", {
-                    method: "POST",
-                    body: JSON.stringify({ email, password }),
-                    headers: { "Content-Type": "application/json" },
-                })
-                if (res.status === 401 || res.status === 400) return null
-
-                const user = await res.json()
-                return user
-            },
-        }),
-        GoogleProvider({
-            name: "Google",
-            clientId: getGoogleClientId(),
-            clientSecret: getGoogleClientSecret(),
-            authorization: {
-                params: {
-                    prompt: "consent",
-                    access_type: "offline",
-                    response_type: "code",
-                },
-            },
-        }),
-    ],
+    providers,
 
     callbacks: {
         async jwt({ token, user }) {
@@ -106,5 +114,5 @@ export const authOptions: NextAuthOptions = {
             return true
         },
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.SECRET,
 }
