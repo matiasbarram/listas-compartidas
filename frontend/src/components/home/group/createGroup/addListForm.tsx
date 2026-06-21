@@ -30,7 +30,7 @@ export default function AddListForm({ closeModal }: IAddListFormProps) {
             schemaList.parse(data)
             await createList({
                 data,
-                groupId: params.slug.toString(),
+                groupId: params.slug!.toString(),
                 token: session?.token,
             })
             closeModal()

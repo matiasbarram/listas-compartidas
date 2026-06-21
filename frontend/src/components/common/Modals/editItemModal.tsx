@@ -28,8 +28,8 @@ export default function EditItemModal({
     const queryClient = useQueryClient()
 
     const editParams: IListKeysProps = {
-        slug: params.slug.toString(),
-        listId: params.listId.toString(),
+        slug: params.slug!.toString(),
+        listId: params.listId!.toString(),
     }
     const {
         register,
@@ -39,21 +39,19 @@ export default function EditItemModal({
         resolver: zodResolver(schemaItem),
     })
 
-    const { mutate: editItemFn, data: editedItem } = useMutation({
-        mutationKey: ["editItem", params.slug],
+    const { mutateAsync } = useMutation({
         mutationFn: (data: INewItemValues) =>
             editItem({ itemId: item.id, data, params: editParams, session }),
-        onSuccess() {
-            setShowModal(false)
-            queryClient.invalidateQueries(["items", params.slug, params.listId])
-        },
-        onError() {
-            setShowModal(false)
-        },
     })
 
     const handleEditItem = async (data: INewItemValues) => {
-        editItemFn(data)
+        try {
+            await mutateAsync(data)
+            setShowModal(false)
+            queryClient.invalidateQueries({ queryKey: ["items", params.slug!, params.listId!]})
+        } catch {
+            setShowModal(false)
+        }
     }
 
     return (

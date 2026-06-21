@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
+import { Suspense, use } from "react"
 import { useForm } from "react-hook-form"
 import { ISignUpFormValues, signUpSchema } from "../../../../../types"
 import SocialLogin from "./socialLogin"
@@ -23,7 +24,8 @@ const ForgotPassword = () => {
     )
 }
 
-const checkErrors = (searchParams: ReadonlyURLSearchParams): void => {
+function LoginForm() {
+    const searchParams = useSearchParams()
     const error = searchParams.getAll("error")
     if (error.length > 0) {
         createToast({
@@ -31,11 +33,6 @@ const checkErrors = (searchParams: ReadonlyURLSearchParams): void => {
             message: "Error al iniciar sesión, por favor intenta de nuevo.",
         })
     }
-}
-
-export default function LoginPage() {
-    const searchParams = useSearchParams()
-    checkErrors(searchParams)
 
     const {
         register,
@@ -138,5 +135,13 @@ export default function LoginPage() {
                 </div>
             </div>
         </section>
+    )
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spinner /></div>}>
+            <LoginForm />
+        </Suspense>
     )
 }

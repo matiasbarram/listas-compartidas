@@ -4,8 +4,8 @@ import { Request, Response } from "express"
 export const lists = async (req: Request, res: Response) => {
     const groupId = Number(req.params.id)
     const prisma = new PrismaClient()
-    const lists = await prisma.lists
-        .findMany({
+    try {
+        const lists = await prisma.lists.findMany({
             where: {
                 group_id: groupId,
             },
@@ -15,44 +15,44 @@ export const lists = async (req: Request, res: Response) => {
                 description: true,
             },
         })
-        .finally(() => {
-            prisma.$disconnect()
-        })
 
-    return res.status(200).json({
-        groupId,
-        lists,
-    })
+        return res.status(200).json({
+            groupId,
+            lists,
+        })
+    } finally {
+        await prisma.$disconnect()
+    }
 }
 
 export const createList = async (req: Request, res: Response) => {
     const id = Number(req.params.groupId)
     const prisma = new PrismaClient()
-    const { name, description } = req.body
-    if (!name) {
-        return res.status(400).json({
-            error: "Name is required",
-        })
-    }
-    if (!description) {
-        return res.status(400).json({
-            error: "Description is required",
-        })
-    }
-    const list = await prisma.lists
-        .create({
+    try {
+        const { name, description } = req.body
+        if (!name) {
+            return res.status(400).json({
+                error: "Name is required",
+            })
+        }
+        if (!description) {
+            return res.status(400).json({
+                error: "Description is required",
+            })
+        }
+        const list = await prisma.lists.create({
             data: {
                 group_id: id,
                 name,
                 description: description,
             },
         })
-        .finally(() => {
-            prisma.$disconnect()
-        })
 
-    return res.status(200).json({
-        groupId: id,
-        list,
-    })
+        return res.status(200).json({
+            groupId: id,
+            list,
+        })
+    } finally {
+        await prisma.$disconnect()
+    }
 }

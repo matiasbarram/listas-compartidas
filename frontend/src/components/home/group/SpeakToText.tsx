@@ -31,28 +31,21 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition()
 
-    const {
-        mutate: callOpenAIApi,
-        isLoading,
-        data: gptResponse,
-    } = useMutation({
-        mutationKey: ["speak", params.slug],
+    const { mutateAsync: callOpenAIApi, isPending, data: gptResponse } = useMutation({
         mutationFn: () => openAICreateItems({ finalTranscript, lists }),
-        onSuccess() {
-            setShowTalkModal(false)
-            setShowItemsModal(true)
-        },
-        onError() {
-            createToast({
-                message: "Error al procesar el mensaje",
-                toastType: "error",
-            })
-        },
     })
 
     useEffect(() => {
         if (finalTranscript.length > 0) {
-            callOpenAIApi()
+            callOpenAIApi().then(() => {
+                setShowTalkModal(false)
+                setShowItemsModal(true)
+            }).catch(() => {
+                createToast({
+                    message: "Error al procesar el mensaje",
+                    toastType: "error",
+                })
+            })
         }
     }, [finalTranscript, callOpenAIApi])
 
@@ -103,13 +96,13 @@ export default function SpeakToText({ lists }: ISpeakToTextProps) {
                                         type="circle"
                                         onClick={handleListen}
                                     >
-                                        {isLoading ? (
+                                        {isPending ? (
                                             <Spinner />
                                         ) : (
                                             <MicrophoneIcon className="h-6 w-6" />
                                         )}
                                     </Button>
-                                    {!isLoading && (
+                                    {!isPending && (
                                         <small className="text-xs text-center mt-2">
                                             Empezar a hablar
                                         </small>

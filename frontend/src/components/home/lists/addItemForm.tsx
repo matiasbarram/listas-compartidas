@@ -30,22 +30,25 @@ export default function AddItemForm({ closeModal }: IAddItemForm) {
 
     const params = useParams()
     const productParams: IListKeysProps = {
-        slug: params.slug.toString(),
-        listId: params.listId.toString(),
+        slug: params.slug!.toString(),
+        listId: params.listId!.toString(),
     }
     const { data: session } = useSession()
     const queryClient = useQueryClient()
 
-    const { mutate: mutateItem, data: itemMutated } = useMutation({
-        mutationKey: ["items", params.slug, params.listId],
+    const { mutateAsync } = useMutation({
         mutationFn: (newItem: INewItemValues) =>
             createItem({
                 data: newItem,
                 params: productParams,
                 token: session ? session.token : "",
             }),
+    })
 
-        onSuccess: (itemMutated) => {
+    const handleCreateProduct = async (data: INewItemValues) => {
+        try {
+            schemaItem.parse(data)
+            const itemMutated = await mutateAsync(data)
             queryClient.setQueryData<IListItemsResponse>(
                 ["items", params.slug, params.listId],
                 (old) => {
@@ -58,22 +61,12 @@ export default function AddItemForm({ closeModal }: IAddItemForm) {
                 message: "Producto agregado",
                 toastType: "success",
             })
-        },
-        onError: (error) => {
+            closeModal()
+        } catch (error) {
             createToast({
                 message: "Error al agregar producto",
                 toastType: "error",
             })
-        },
-    })
-
-    const handleCreateProduct = async (data: INewItemValues) => {
-        try {
-            schemaItem.parse(data)
-            mutateItem(data)
-            closeModal()
-        } catch (error) {
-            console.log(error)
         }
     }
 

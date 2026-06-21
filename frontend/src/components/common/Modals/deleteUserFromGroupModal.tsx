@@ -22,24 +22,13 @@ export const DeleteUserModal = ({
     const { data: session } = useSession()
     const queryClient = useQueryClient()
 
-    const {
-        mutate: submitChange,
-        isLoading,
-        isError,
-    } = useMutation({
+    const { mutateAsync: submitChange, isPending, isError } = useMutation({
         mutationFn: () =>
             removeMember({
                 token: session?.token as string,
                 slug: params.slug as string,
                 userId: user.id,
             }),
-        onSuccess: () => {
-            queryClient.invalidateQueries(["groupInfo"])
-            closeModal()
-        },
-        onError: () => {
-            console.log("Error al editar el grupo")
-        },
     })
     return (
         <CustomModal isOpen={isOpen} onClose={() => setDeleteModal(false)}>
@@ -60,7 +49,14 @@ export const DeleteUserModal = ({
                 <div className="flex mt-4">
                     <button
                         type="button"
-                        onClick={() => submitChange()}
+                        onClick={() =>
+                            submitChange().then(() => {
+                                queryClient.invalidateQueries({ queryKey: ["groupInfo"]})
+                                closeModal()
+                            }).catch(() => {
+                                console.log("Error al editar el grupo")
+                            })
+                        }
                         className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-900 hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                     >
                         Eliminar

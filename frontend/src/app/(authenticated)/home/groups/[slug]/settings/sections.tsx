@@ -29,33 +29,27 @@ export function FormGroup({
 
     const queryClient = useQueryClient()
 
-    const {
-        mutate: submitChange,
-        isLoading,
-        isError,
-    } = useMutation({
+    const { mutateAsync: submitChange, isPending } = useMutation({
         mutationFn: () =>
             editGroupInfo({
                 token: session?.token as string,
                 slug: params.slug as string,
                 data: newData,
             }),
-        onSuccess: () => {
-            queryClient.invalidateQueries(["groupInfo", params.slug])
+    })
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        submitChange().then(() => {
+            queryClient.invalidateQueries({ queryKey: ["groupInfo", params.slug]})
             createToast({
                 message: "Grupo editado correctamente",
                 toastType: "success",
             })
             setShowSaveBtn(false)
-        },
-        onError: () => {
+        }).catch(() => {
             console.log("Error al editar el grupo")
-        },
-    })
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        submitChange()
+        })
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +111,7 @@ export function FormGroup({
                         >
                             <button
                                 className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-10/12"
-                                disabled={isLoading}
+                                disabled={isPending}
                             >
                                 <small>Guardar cambios</small>
                             </button>
@@ -145,20 +139,19 @@ export function GroupUsers({ group }: { group: GroupInfoResponse }) {
     })
     const queryClient = useQueryClient()
 
-    const {
-        mutate: submitChange,
-        isLoading,
-        isError,
-    } = useMutation({
+    const { mutateAsync: submitChange, isPending } = useMutation({
         mutationFn: () =>
             inviteMember({
                 token: session?.token as string,
                 slug: params.slug as string,
                 emails: newUsers.emails,
             }),
+    })
 
-        onSuccess: () => {
-            queryClient.invalidateQueries(["groupInfo"])
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        submitChange().then(() => {
+            queryClient.invalidateQueries({ queryKey: ["groupInfo"]})
             setShowAddUser(false)
             setNewUsers((prevState) => ({
                 ...prevState,
@@ -168,19 +161,13 @@ export function GroupUsers({ group }: { group: GroupInfoResponse }) {
                 message: "Miembros agregados correctamente",
                 toastType: "success",
             })
-        },
-        onError: () => {
+        }).catch(() => {
             console.log("Error al editar el grupo")
             createToast({
                 message: "Error al agregar miembros",
                 toastType: "error",
             })
-        },
-    })
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        submitChange()
+        })
     }
     return (
         <>
@@ -221,9 +208,9 @@ export function GroupUsers({ group }: { group: GroupInfoResponse }) {
                         <div className="mt-4">
                             <button
                                 className="bg-indigo-500 text-white font-bold px-2 py-2 rounded-md w-full"
-                                disabled={isLoading}
+                                disabled={isPending}
                             >
-                                {isLoading ? (
+                                {isPending ? (
                                     <span>
                                         <Spinner />
                                     </span>

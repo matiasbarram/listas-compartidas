@@ -1,7 +1,7 @@
 import AuthProviders from "@/providers/AuthProvider"
 import ReactQueryProvider from "@/providers/ReactQueryProvider"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import NextTopLoader from "nextjs-toploader"
 import { ReactNode } from "react"
@@ -17,9 +17,12 @@ export const metadata: Metadata = {
     icons: {
         apple: "/icon.png",
     },
+    creator: "matiasbarram",
+}
+
+export const viewport: Viewport = {
     themeColor: "#6466e9",
     colorScheme: "dark",
-    creator: "matiasbarram",
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

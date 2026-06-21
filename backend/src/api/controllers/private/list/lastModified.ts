@@ -13,8 +13,8 @@ export const getLastModifiedLists = async (req: Request, res: Response) => {
     const userId = payload.id
 
     const prisma = new PrismaClient()
-    const userGroups = await prisma.user_group
-        .findMany({
+    try {
+        const userGroups = await prisma.user_group.findMany({
             where: {
                 user_id: userId,
             },
@@ -22,13 +22,9 @@ export const getLastModifiedLists = async (req: Request, res: Response) => {
                 group_id: true,
             },
         })
-        .finally(() => {
-            prisma.$disconnect()
-        })
 
-    const userGroupsIds = userGroups.map((userGroup) => userGroup.group_id)
-    const lists = await prisma.lists
-        .findMany({
+        const userGroupsIds = userGroups.map((userGroup) => userGroup.group_id)
+        const lists = await prisma.lists.findMany({
             where: {
                 group_id: {
                     in: userGroupsIds,
@@ -50,9 +46,6 @@ export const getLastModifiedLists = async (req: Request, res: Response) => {
             },
             take: 5,
         })
-        .finally(() => {
-            prisma.$disconnect()
-        })
     const listResponse = lists.map((list) => {
         return {
             id: list.id,
@@ -63,7 +56,10 @@ export const getLastModifiedLists = async (req: Request, res: Response) => {
         }
     })
 
-    return res.status(200).json({
-        lists: listResponse,
-    })
+        return res.status(200).json({
+            lists: listResponse,
+        })
+    } finally {
+        await prisma.$disconnect()
+    }
 }

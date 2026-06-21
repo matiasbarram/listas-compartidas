@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 import CreateGroupModal from "@/components/home/group/createGroup/createGroupModal"
 import { GroupCard } from "@/components/home/groupCard"
 import { getGroups } from "@/lib/actions/group/groups"

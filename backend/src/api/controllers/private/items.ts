@@ -56,60 +56,55 @@ export const createItem = async (req: Request, res: Response) => {
     const listId = Number(req.params.listId)
     const groupId = Number(req.params.groupId)
     const prisma = new PrismaClient()
+    try {
+        const { description, quantity }: { description: string; quantity: number } =
+            req.body
+        const validations = []
+        if (!description) {
+            validations.push({
+                error: "Description is required",
+            })
+        }
+        if (!quantity) {
+            validations.push({
+                error: "Quantity is required",
+            })
+        }
+        if (validations.length > 0) {
+            return res.status(400).json({
+                validations,
+            })
+        }
 
-    const { description, quantity }: { description: string; quantity: number } =
-        req.body
-    const validations = []
-    if (!description) {
-        validations.push({
-            error: "Description is required",
-        })
-    }
-    if (!quantity) {
-        validations.push({
-            error: "Quantity is required",
-        })
-    }
-    if (validations.length > 0) {
-        return res.status(400).json({
-            validations,
-        })
-    }
-
-    const existDescription = await prisma.items
-        .findFirst({
+        const existDescription = await prisma.items.findFirst({
             where: {
                 description,
                 list_id: listId,
             },
         })
-        .finally(() => {
-            prisma.$disconnect()
-        })
 
-    if (existDescription) {
-        return res.status(400).json({
-            error: "Description already exists",
-        })
-    }
+        if (existDescription) {
+            return res.status(400).json({
+                error: "Description already exists",
+            })
+        }
 
-    const item = await prisma.items
-        .create({
+        const item = await prisma.items.create({
             data: {
                 list_id: listId,
                 description,
                 quantity,
             },
         })
-        .finally(() => {
-            prisma.$disconnect()
-        })
 
-    return res.status(200).json({
-        groupId,
-        listId,
-        item,
-    })
+        return res.status(200).json({
+            groupId,
+            listId,
+            item,
+        })
+    } finally {
+        await prisma.$disconnect()
+    }
 }
 
 export const changeStatus = async (req: Request, res: Response) => {
@@ -175,7 +170,7 @@ export const deleteItem = async (req: Request, res: Response) => {
             listId,
             item,
         })
-    } catch (error) {
+    } catch (_error) {
         return res.status(400).json({
             error: "Item not found",
         })
@@ -201,7 +196,7 @@ export const deleteItems = async (req: Request, res: Response) => {
         return res.status(200).json({
             items,
         })
-    } catch (error) {
+    } catch (_error) {
         return res.status(400).json({
             error: "Items not found",
         })
