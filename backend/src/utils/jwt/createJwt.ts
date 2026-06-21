@@ -15,7 +15,7 @@ export function createPayload(user: users): JwtPayload {
 
 export function createJwt(payload: JwtPayload): string {
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-        expiresIn: process.env.JWT_EXPIRATION_TIME,
+        expiresIn: process.env.JWT_EXPIRATION_TIME || "30d",
     })
 
     return token
