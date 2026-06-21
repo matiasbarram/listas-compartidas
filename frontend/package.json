@@ -9,17 +9,24 @@
     "@tailwindcss/postcss": "^4.3.1",
     "@tanstack/react-query": "^5",
     "@tanstack/react-query-devtools": "^5",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/lodash": "^4.17.24",
     "@types/node": "22.15.3",
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
     "@types/react-speech-recognition": "^3.9.6",
+    "@vitejs/plugin-react": "^6.0.2",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^1.18.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.19",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "framer-motion": "^10.18.0",
+    "jsdom": "^29.1.1",
     "lodash": "^4.18.1",
     "next": "15.5.19",
     "next-auth": "^4.24.14",
@@ -35,6 +42,8 @@
     "tailwindcss": "^4.3.1",
     "typescript": "5.8.3",
     "use-constant": "^1.1.1",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.9",
     "zod": "^3.25.76",
     "zustand": "^4.5.7"
   },
@@ -43,6 +52,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx"
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
   }
 }

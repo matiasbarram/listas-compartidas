@@ -17,7 +17,7 @@ const CustomModal = ({ children, isOpen, onClose }: ModalProps) => {
             >
                 <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-                <div className="flex items-center justify-center min-h-screen p-4 text-center">
+                <div className="flex sm:items-center items-end justify-center min-h-screen p-4 text-center">
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
