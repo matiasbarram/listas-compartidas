@@ -1,7 +1,7 @@
 import { Session } from "next-auth";
 import { SessionContextValue } from "next-auth/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { type } from "os";
+
 import { ComponentType, Dispatch, ReactNode, SetStateAction } from "react";
 import { z } from "zod";
 
@@ -20,10 +20,10 @@ export interface IListKeysProps {
 }
 
 export interface NestedParams {
-    params: IListKeysProps;
+    params: Promise<IListKeysProps>;
 }
 export interface IGroupParams {
-    params: PageProps;
+    params: Promise<PageProps>;
 }
 
 export interface IList {

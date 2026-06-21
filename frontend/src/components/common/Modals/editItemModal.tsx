@@ -28,8 +28,8 @@ export default function EditItemModal({
     const queryClient = useQueryClient()
 
     const editParams: IListKeysProps = {
-        slug: params.slug.toString(),
-        listId: params.listId.toString(),
+        slug: params.slug!.toString(),
+        listId: params.listId!.toString(),
     }
     const {
         register,
@@ -40,12 +40,12 @@ export default function EditItemModal({
     })
 
     const { mutate: editItemFn, data: editedItem } = useMutation({
-        mutationKey: ["editItem", params.slug],
+        mutationKey: ["editItem", params.slug!],
         mutationFn: (data: INewItemValues) =>
             editItem({ itemId: item.id, data, params: editParams, session }),
         onSuccess() {
             setShowModal(false)
-            queryClient.invalidateQueries(["items", params.slug, params.listId])
+            queryClient.invalidateQueries(["items", params.slug!, params.listId!])
         },
         onError() {
             setShowModal(false)

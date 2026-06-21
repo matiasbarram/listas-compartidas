@@ -1,19 +1,16 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 import { BackBtn } from "@/components/common/BackBtn"
 import { groupInfo } from "@/lib/actions/group/groups"
 import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
 import Configs from "./configs"
 
-export default async function GroupListsPage({
-    params,
-    searchParams,
-}: {
-    params: { slug: string }
-    searchParams: { page: string }
+export default async function GroupListsPage(props: {
+    params: Promise<{ slug: string }>
 }) {
+    const params = await props.params;
     const session = await getServerSession(authOptions)
-    if (!session)
-        return { redirect: { destination: "/auth/login", permanent: false } }
+    if (!session) redirect("/auth/login")
 
     const group = await groupInfo({
         token: session.token,

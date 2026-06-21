@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 import { BackBtn } from "@/components/common/BackBtn"
 import AddItemBtn from "@/components/home/addItemBtn"
 import SpeakToText from "@/components/home/group/SpeakToText"
@@ -16,7 +16,8 @@ interface IGroupResponse {
     lists: IList[]
 }
 
-export default async function GroupListsPage({ params }: IGroupParams) {
+export default async function GroupListsPage(props: IGroupParams) {
+    const params = await props.params;
     const session = await getServerSession(authOptions)
     if (!session) return null
 

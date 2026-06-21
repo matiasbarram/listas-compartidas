@@ -144,7 +144,7 @@ export default function SpeakItemsForm({
             createItems({
                 gptResponse: items,
                 params: {
-                    slug: params.slug.toString(),
+                    slug: params.slug!.toString(),
                     listId: items.items[0].list.id.toString(),
                 },
                 session: session,

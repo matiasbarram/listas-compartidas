@@ -30,8 +30,8 @@ export default function AddItemForm({ closeModal }: IAddItemForm) {
 
     const params = useParams()
     const productParams: IListKeysProps = {
-        slug: params.slug.toString(),
-        listId: params.listId.toString(),
+        slug: params.slug!.toString(),
+        listId: params.listId!.toString(),
     }
     const { data: session } = useSession()
     const queryClient = useQueryClient()
