@@ -9,6 +9,9 @@
     "migrate-and-start": "prisma migrate deploy && prisma generate && ts-node src/index.ts",
     "faker": "ts-node src/faker/faker.ts"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
