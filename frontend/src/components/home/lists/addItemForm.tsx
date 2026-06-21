@@ -80,60 +80,67 @@ export default function AddItemForm({ closeModal }: IAddItemForm) {
     return (
         <>
             <form onSubmit={handleSubmit(handleCreateProduct)}>
-                <div className="flex flex-col mb-4">
-                    <label className="mb-2 text-lg" htmlFor="description">
-                        Producto
-                    </label>
-                    <input
-                        className={`input-field ${
-                            errors.description ? "input-error" : ""
-                        }`}
-                        type="text"
-                        placeholder="Nombre del producto"
-                        {...register("description")}
-                    />
-                    {errors.description && (
-                        <span className="text-red-500 text-sm">
-                            {errors.description.message}
-                        </span>
-                    )}
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1">
+                        <label className="text-base sm:text-lg" htmlFor="description">
+                            Producto
+                        </label>
+                        <input
+                            className={`input-field py-3 ${
+                                errors.description ? "input-error" : ""
+                            }`}
+                            type="text"
+                            placeholder="Nombre del producto"
+                            {...register("description")}
+                        />
+                        {errors.description && (
+                            <span className="text-red-500 text-sm">
+                                {errors.description.message}
+                            </span>
+                        )}
+                    </div>
 
-                    <label className="mb-2 text-lg" htmlFor="quantity">
-                        Cantidad
-                    </label>
-                    <input
-                        className={`input-field ${
-                            errors.quantity ? "input-error" : ""
-                        }`}
-                        type="number"
-                        inputMode="decimal"
-                        placeholder="Cantidad"
-                        {...register("quantity", {
-                            setValueAs: (value: any) => {
-                                if (value === "") return 1
-                                return Number(value)
-                            },
-                        })}
-                    />
-                    {errors.quantity && (
-                        <span className="text-red-500 text-sm">
-                            {errors.quantity.message}
-                        </span>
-                    )}
-                    <label className="mb-2 text-lg" htmlFor="comments">
-                        Comentarios
-                    </label>
-                    <textarea
-                        className={`input-field ${
-                            errors.comments ? "input-error" : ""
-                        }`}
-                        id="comments"
-                        placeholder="Comentarios"
-                        {...register("comments")}
-                    />
+                    <div className="flex flex-col gap-1">
+                        <label className="text-base sm:text-lg" htmlFor="quantity">
+                            Cantidad
+                        </label>
+                        <input
+                            className={`input-field py-3 ${
+                                errors.quantity ? "input-error" : ""
+                            }`}
+                            type="number"
+                            inputMode="decimal"
+                            placeholder="Cantidad"
+                            {...register("quantity", {
+                                setValueAs: (value: any) => {
+                                    if (value === "") return 1
+                                    return Number(value)
+                                },
+                            })}
+                        />
+                        {errors.quantity && (
+                            <span className="text-red-500 text-sm">
+                                {errors.quantity.message}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                        <label className="text-base sm:text-lg" htmlFor="comments">
+                            Comentarios
+                        </label>
+                        <textarea
+                            className={`input-field py-3 ${
+                                errors.comments ? "input-error" : ""
+                            }`}
+                            id="comments"
+                            placeholder="Comentarios"
+                            {...register("comments")}
+                        />
+                    </div>
                 </div>
                 <button
-                    className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500 w-full"
+                    className="mt-4 px-4 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500 w-full text-base"
                     type="submit"
                     disabled={isSubmitting}
                 >
