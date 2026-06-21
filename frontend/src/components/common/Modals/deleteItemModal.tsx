@@ -25,15 +25,18 @@ export default function DeleteItemModal({
     const { data: session } = useSession()
     const queryClient = useQueryClient()
 
-    const { mutate } = useMutation({
-        mutationKey: ["deleteItem", params.id, item.id],
+    const { mutateAsync } = useMutation({
         mutationFn: (item: IListItem) =>
             deleteItem({
                 params: params as unknown as IListKeysProps,
                 session: session,
                 item,
             }),
-        onSuccess: () => {
+    })
+
+    const handleDeleteItem = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        await mutateAsync(item).then(() => {
             queryClient.setQueryData<IListItemsResponse>(
                 ["items", params.slug, params.listId],
                 (old) => {
@@ -50,12 +53,7 @@ export default function DeleteItemModal({
                 message: "Item eliminado correctamente",
                 toastType: "success",
             })
-        },
-    })
-
-    const handleDeleteItem = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        mutate(item)
+        })
         setShowModal(false)
     }
 

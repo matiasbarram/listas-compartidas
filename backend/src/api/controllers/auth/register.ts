@@ -6,11 +6,11 @@ import { createGroup } from "./group/createGroup"
 
 export const register = async (req: Request, res: Response) => {
     const prisma = new PrismaClient()
-    const { name, email, password } = req.body
-
-    const encryptedPassword = await encryptText(password)
-
     try {
+        const { name, email, password } = req.body
+
+        const encryptedPassword = await encryptText(password)
+
         const user = await prisma.users.create({
             data: {
                 name: name,
@@ -33,9 +33,11 @@ export const register = async (req: Request, res: Response) => {
             user: user,
             user_group: user_group,
         })
-    } catch (error) {
+    } catch (_error) {
         return res.status(409).json({
             message: "User already exists",
         })
+    } finally {
+        await prisma.$disconnect()
     }
 }

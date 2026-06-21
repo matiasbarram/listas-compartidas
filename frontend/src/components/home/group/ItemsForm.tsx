@@ -134,12 +134,7 @@ export default function SpeakItemsForm({
     const { data: session } = useSession()
     const [editedItems, setEditedItems] = useState(items)
 
-    const {
-        data: newItems,
-        mutate: createItemsMutation,
-        isLoading,
-    } = useMutation({
-        mutationKey: ["speak", params.slug],
+    const { mutateAsync, isPending } = useMutation({
         mutationFn: (items: IGptResponseItems) =>
             createItems({
                 gptResponse: items,
@@ -149,35 +144,6 @@ export default function SpeakItemsForm({
                 },
                 session: session,
             }),
-        async onSuccess(newItems) {
-            await queryClient.cancelQueries([
-                "items",
-                params.slug,
-                params.listId,
-            ])
-            queryClient.setQueryData<IListItemsResponse>(
-                ["items", params.slug, params.listId],
-                (old) => {
-                    if (!old) return old
-                    const allItems = [...old.items, ...newItems.items]
-                    return {
-                        ...old,
-                        items: allItems,
-                    }
-                },
-            )
-            createToast({
-                message: "Items agregados correctamente",
-                toastType: "success",
-            })
-            closeModal()
-        },
-        onError(error) {
-            createToast({
-                message: "Error al procesar el mensaje",
-                toastType: "error",
-            })
-        },
     })
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -196,7 +162,35 @@ export default function SpeakItemsForm({
             }
         })
         const gptResponse: IGptResponseItems = { items }
-        createItemsMutation(gptResponse)
+        try {
+            const newItems = await mutateAsync(gptResponse)
+            await queryClient.cancelQueries({ queryKey: [
+                "items",
+                params.slug,
+                params.listId,
+            ]})
+            queryClient.setQueryData<IListItemsResponse>(
+                ["items", params.slug, params.listId],
+                (old) => {
+                    if (!old) return old
+                    const allItems = [...old.items, ...newItems.items]
+                    return {
+                        ...old,
+                        items: allItems,
+                    }
+                },
+            )
+            createToast({
+                message: "Items agregados correctamente",
+                toastType: "success",
+            })
+            closeModal()
+        } catch {
+            createToast({
+                message: "Error al procesar el mensaje",
+                toastType: "error",
+            })
+        }
     }
 
     useEffect(() => {
@@ -220,7 +214,7 @@ export default function SpeakItemsForm({
                 ))}
             </div>
             <Button type="submit">
-                {isLoading ? "Procesando..." : "Agregar items"}
+                {isPending ? "Procesando..." : "Agregar items"}
             </Button>
         </form>
     )

@@ -25,7 +25,6 @@ export function checkJwt(req: Request, res: Response, next: NextFunction) {
                 message: "Not authenticated",
             })
         }
-        payload as JwtToken
         ;["iat", "exp"].forEach(
             (keyToRemove) => delete payload[keyToRemove as keyof JwtToken],
         )

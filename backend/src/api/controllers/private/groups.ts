@@ -60,45 +60,39 @@ export const inviteUsersToGroup = async (req: Request, res: Response) => {
         })
     }
     const prisma = new PrismaClient()
-    const groupId = Number(req.params.groupId)
-    const { emails } = req.body
-    if (!emails) {
-        return res.status(400).json({
-            error: "Emails is required",
-        })
-    }
-    const users = await prisma.users
-        .findMany({
+    try {
+        const groupId = Number(req.params.groupId)
+        const { emails } = req.body
+        if (!emails) {
+            return res.status(400).json({
+                error: "Emails is required",
+            })
+        }
+        const users = await prisma.users.findMany({
             where: {
                 email: {
                     in: emails,
                 },
             },
         })
-        .finally(() => {
-            prisma.$disconnect()
-        })
-    if (!users.length) {
-        return res.status(400).json({
-            error: "Users not found",
-        })
-    }
-    const user_group = users.map((user) => {
-        return {
+        if (!users.length) {
+            return res.status(400).json({
+                error: "Users not found",
+            })
+        }
+        const user_group = users.map((user) => ({
             user_id: user.id,
             group_id: groupId,
-        }
-    })
-    await prisma.user_group
-        .createMany({
+        }))
+        await prisma.user_group.createMany({
             data: user_group,
         })
-        .finally(() => {
-            prisma.$disconnect()
+        return res.status(200).json({
+            message: "Users invited to group",
         })
-    return res.status(200).json({
-        message: "Users invited to group",
-    })
+    } finally {
+        await prisma.$disconnect()
+    }
 }
 
 export const deleteMemberFromGroup = async (req: Request, res: Response) => {
@@ -109,38 +103,28 @@ export const deleteMemberFromGroup = async (req: Request, res: Response) => {
         })
     }
     const prisma = new PrismaClient()
-    const groupId = Number(req.params.groupId)
-    // get userId from the body
-    const userId = Number(req.body.userId)
-    const userGroup = await prisma.user_group
-        .findFirst({
+    try {
+        const groupId = Number(req.params.groupId)
+        const userId = Number(req.body.userId)
+        const userGroup = await prisma.user_group.findFirst({
             where: {
                 user_id: userId,
                 group_id: groupId,
             },
         })
-        .finally(() => {
-            prisma.$disconnect()
-        })
-    if (!userGroup) {
-        return res.status(400).json({
-            error: "User not in group",
-        })
-    }
-    // delete userId from groupId
-    await prisma.user_group
-        .deleteMany({
+        if (!userGroup) {
+            return res.status(400).json({
+                error: "User not in group",
+            })
+        }
+        await prisma.user_group.deleteMany({
             where: {
                 user_id: userId,
                 group_id: groupId,
             },
-        })
-        .finally(() => {
-            prisma.$disconnect()
         })
 
-    const users = await prisma.user_group
-        .findMany({
+        const users = await prisma.user_group.findMany({
             where: {
                 group_id: groupId,
             },
@@ -148,17 +132,17 @@ export const deleteMemberFromGroup = async (req: Request, res: Response) => {
                 users: true,
             },
         })
-        .finally(() => {
-            prisma.$disconnect()
-        })
 
-    return res.status(200).json({
-        message: "User deleted from group",
-        users: users.map((user) => {
-            const { ...rest } = user.users
-            return rest
-        }),
-    })
+        return res.status(200).json({
+            message: "User deleted from group",
+            users: users.map((user) => {
+                const { ...rest } = user.users
+                return rest
+            }),
+        })
+    } finally {
+        await prisma.$disconnect()
+    }
 }
 
 export const usersGroup = async (req: Request, res: Response) => {
