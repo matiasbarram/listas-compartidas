@@ -8,12 +8,12 @@ import type { GoogleProfile } from "next-auth/providers/google"
 import { ILoginApiResponse } from "../../../../../types"
 import { UserData } from "@/lib/next-auth"
 
-const googleClientId =
-    process.env.GOOGLE_CLIENT_ID ||
-    throwEnvError("GOOGLE_CLIENT_ID")
-const googleClientSecret =
-    process.env.GOOGLE_CLIENT_SECRET ||
-    throwEnvError("GOOGLE_CLIENT_SECRET")
+function getGoogleClientId() {
+    return process.env.GOOGLE_CLIENT_ID || throwEnvError("GOOGLE_CLIENT_ID")
+}
+function getGoogleClientSecret() {
+    return process.env.GOOGLE_CLIENT_SECRET || throwEnvError("GOOGLE_CLIENT_SECRET")
+}
 
 export const authOptions: NextAuthOptions = {
     pages: {
@@ -50,8 +50,8 @@ export const authOptions: NextAuthOptions = {
         }),
         GoogleProvider({
             name: "Google",
-            clientId: googleClientId,
-            clientSecret: googleClientSecret,
+            clientId: getGoogleClientId(),
+            clientSecret: getGoogleClientSecret(),
             authorization: {
                 params: {
                     prompt: "consent",
