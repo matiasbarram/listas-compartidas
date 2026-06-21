@@ -6,8 +6,8 @@ FRONTEND = frontend
 
 install:
 	@echo "Instalando dependencias..."
-	cd $(BACKEND) && npm install
-	cd $(FRONTEND) && npm install
+	cd $(BACKEND) && bun install
+	cd $(FRONTEND) && bun install
 
 db-up:
 	@echo "Levantando PostgreSQL..."

@@ -14,6 +14,7 @@ import {
     schemaItem,
 } from "../../../../types"
 import Spinner from "../../common/Spinner/Spinner"
+import { useEffect } from "react"
 
 interface IAddItemForm {
     closeModal: () => void
@@ -23,10 +24,18 @@ export default function AddItemForm({ closeModal }: IAddItemForm) {
     const {
         register,
         handleSubmit,
+        watch,
+        setValue,
         formState: { errors, isSubmitting },
     } = useForm<INewItemValues>({
         resolver: zodResolver(schemaItem),
+        defaultValues: {
+            quantity: 1,
+        },
     })
+
+    // eslint-disable-next-line react-hooks/incompatible-library
+    const quantityValue = watch("quantity")
 
     const params = useParams()
     const productParams: IListKeysProps = {
@@ -70,9 +79,26 @@ export default function AddItemForm({ closeModal }: IAddItemForm) {
         }
     }
 
+    useEffect(() => {
+        const handleFocus = (e: Event) => {
+            const target = e.currentTarget as HTMLElement
+            setTimeout(() => {
+                target.scrollIntoView({ block: "center", behavior: "smooth" })
+            }, 300)
+        }
+
+        const form = document.querySelector("#add-item-form")
+        const inputs = form?.querySelectorAll<HTMLElement>("input, textarea") ?? []
+        inputs.forEach((input) => input.addEventListener("focus", handleFocus))
+
+        return () => {
+            inputs.forEach((input) => input.removeEventListener("focus", handleFocus))
+        }
+    }, [])
+
     return (
         <>
-            <form onSubmit={handleSubmit(handleCreateProduct)}>
+            <form id="add-item-form" onSubmit={handleSubmit(handleCreateProduct)}>
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1">
                         <label className="text-base sm:text-lg" htmlFor="description">
@@ -83,7 +109,10 @@ export default function AddItemForm({ closeModal }: IAddItemForm) {
                                 errors.description ? "input-error" : ""
                             }`}
                             type="text"
+                            id="description"
                             placeholder="Nombre del producto"
+                            enterKeyHint="next"
+                            autoFocus
                             {...register("description")}
                         />
                         {errors.description && (
@@ -94,23 +123,39 @@ export default function AddItemForm({ closeModal }: IAddItemForm) {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label className="text-base sm:text-lg" htmlFor="quantity">
+                        <label className="text-base sm:text-lg">
                             Cantidad
                         </label>
-                        <input
-                            className={`input-field py-3 ${
-                                errors.quantity ? "input-error" : ""
-                            }`}
-                            type="number"
-                            inputMode="decimal"
-                            placeholder="Cantidad"
-                            {...register("quantity", {
-                                setValueAs: (value: any) => {
-                                    if (value === "") return 1
-                                    return Number(value)
-                                },
-                            })}
-                        />
+                        <div className="flex items-center gap-3">
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setValue(
+                                        "quantity",
+                                        Math.max(1, (quantityValue ?? 1) - 1),
+                                    )
+                                }
+                                className="w-10 h-10 rounded-full bg-zinc-700 text-white text-lg flex items-center justify-center hover:bg-zinc-600 active:scale-95 transition-all"
+                            >
+                                −
+                            </button>
+                            <span className="text-xl w-8 text-center tabular-nums">
+                                {quantityValue ?? 1}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setValue(
+                                        "quantity",
+                                        Math.min(100, (quantityValue ?? 1) + 1),
+                                    )
+                                }
+                                className="w-10 h-10 rounded-full bg-zinc-700 text-white text-lg flex items-center justify-center hover:bg-zinc-600 active:scale-95 transition-all"
+                            >
+                                +
+                            </button>
+                            <input type="hidden" {...register("quantity", { valueAsNumber: true })} />
+                        </div>
                         {errors.quantity && (
                             <span className="text-red-500 text-sm">
                                 {errors.quantity.message}
