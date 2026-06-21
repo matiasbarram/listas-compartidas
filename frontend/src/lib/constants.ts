@@ -5,7 +5,7 @@ import { throwEnvError } from "./erros"
 const apiURL = process.env.NEXT_PUBLIC_API_URL
 if (!apiURL) {
     throw new Error(
-        "Please define the API_URL environment variable inside .env.local",
+        "Please define the NEXT_PUBLIC_API_URL environment variable in Vercel project settings",
     )
 }
 export const API_URL = apiURL
@@ -23,8 +23,7 @@ export const defaultDataList: INewList = {
 
 export const DEBOUNCE_DELAY = 1000
 export const JWT_EXPIRATION_TIME =
-    Number(process.env.NEXT_PUBLIC_JWT_EXPIRATION_TIME) ||
-    throwEnvError("JWT_EXPIRATION_TIME")
+    Number(process.env.NEXT_PUBLIC_JWT_EXPIRATION_TIME) || 30 * 24 * 60 * 60
 
 export const responseSchema = {
     $schema: "http://json-schema.org/draft-04/schema#",
