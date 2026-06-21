@@ -1,16 +1,19 @@
-import {
-    API_URL,
-    JWT_EXPIRATION_TIME,
-    clientId,
-    clientSecret,
-} from "@/lib/constants"
+import { throwEnvError } from "@/lib/erros"
+import { API_URL, JWT_EXPIRATION_TIME } from "@/lib/constants"
 import { NextAuthOptions, User } from "next-auth"
 import NextAuth from "next-auth/next"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
-import { ILoginApiResponse } from "../../../../../types"
 import type { GoogleProfile } from "next-auth/providers/google"
+import { ILoginApiResponse } from "../../../../../types"
 import { UserData } from "@/lib/next-auth"
+
+const googleClientId =
+    process.env.GOOGLE_CLIENT_ID ||
+    throwEnvError("GOOGLE_CLIENT_ID")
+const googleClientSecret =
+    process.env.GOOGLE_CLIENT_SECRET ||
+    throwEnvError("GOOGLE_CLIENT_SECRET")
 
 export const authOptions: NextAuthOptions = {
     pages: {
@@ -47,8 +50,8 @@ export const authOptions: NextAuthOptions = {
         }),
         GoogleProvider({
             name: "Google",
-            clientId: clientId,
-            clientSecret: clientSecret,
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
             authorization: {
                 params: {
                     prompt: "consent",
